@@ -5,32 +5,23 @@
  * @format
  */
 
-import {Text} from 'react-native';
-
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {PaperProvider} from 'react-native-paper';
 import {NavigationContainer} from '@react-navigation/native';
-import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-function Home(): React.JSX.Element {
-  return (
-    <PaperProvider>
-      <GestureHandlerRootView style={{flex: 1}}>
-        <Text>Home</Text>
-      </GestureHandlerRootView>
-    </PaperProvider>
-  );
-}
+import React from 'react';
+import Home from './src/Screens/Home';
+import {HomeHeaders} from './src/Screens/headers/HomeHeaders';
+import {PaperProvider} from 'react-native-paper';
 const Stack = createNativeStackNavigator();
 
 function App(): React.JSX.Element {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
-      </Stack.Navigator>
-      {/* <App /> */}
-    </NavigationContainer>
+    <PaperProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={Home} options={HomeHeaders} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
 export default App;
