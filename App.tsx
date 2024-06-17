@@ -9,7 +9,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import Home from './src/Screens/Home';
-import {HomeHeaders} from './src/Screens/headers/HomeHeaders';
+import {HomeHeaderOptions} from './src/Screens/headers/HomeHeaderOptions';
 import {PaperProvider} from 'react-native-paper';
 const Stack = createNativeStackNavigator();
 
@@ -18,7 +18,11 @@ function App(): React.JSX.Element {
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Home" component={Home} options={HomeHeaders} />
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            options={HomeHeaderOptions}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
