@@ -8,6 +8,8 @@ export const colors = {
   messageLink: '#53BDEB',
   messageBgSelf: '#005C4B',
   messageRead: '#50B9E5',
+  primaryLightTransparent: 'rgba(3,91,73,0.6)',
+  secondary: '#222b34',
 };
 
 export const sizes = {

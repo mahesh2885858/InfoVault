@@ -2,9 +2,10 @@ import {NativeStackNavigationOptions} from '@react-navigation/native-stack/lib/t
 import {colors} from '../../globals';
 import HomeHeader from './HomeHeader';
 import React from 'react';
+import HomeHeaderTitle from './HomeHeaderTitle';
 
 export const HomeHeaderOptions: NativeStackNavigationOptions = {
-  headerTitle: 'WhatsApp',
+  headerTitle: () => <HomeHeaderTitle />,
   headerStyle: {backgroundColor: colors.background},
   statusBarColor: colors.background,
   headerTitleStyle: {color: colors.primaryText},
