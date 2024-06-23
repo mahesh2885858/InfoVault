@@ -14,8 +14,10 @@ import {TChatListHeaderProps} from '../Types/ChatList.types.ts';
 import {colors, sizes} from '../globals.ts';
 import ChatListHeaderActions from './ChatListHeaderActions';
 import PressableWithFeedback from './PressableWithFeedback';
+import {useNavigation} from '@react-navigation/native';
 
 const ChatListHeader = (props: TChatListHeaderProps) => {
+  const navigation = useNavigation();
   const [open, setOpen] = useState(false);
   const openMenu = () => setOpen(true);
   const closeMenu = () => setOpen(false);
@@ -86,8 +88,11 @@ const ChatListHeader = (props: TChatListHeaderProps) => {
                 <Menu.Item
                   titleStyle={styles.titleText}
                   style={styles.menuItem}
-                  title="Payments"
-                  onPress={() => {}}
+                  title="Cards"
+                  onPress={() => {
+                    closeMenu();
+                    navigation.navigate('Cards');
+                  }}
                 />
                 <Menu.Item
                   titleStyle={styles.titleText}

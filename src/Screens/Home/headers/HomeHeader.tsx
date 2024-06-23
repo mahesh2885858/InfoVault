@@ -1,6 +1,6 @@
 import React from 'react';
-import {useStore} from '../../Store/store';
-import ChatListHeader from '../../components/ChatListHeader';
+import {useStore} from '../../../Store/store';
+import ChatListHeader from '../../../components/ChatListHeader';
 
 const HomeHeader = () => {
   // const [open, setOpen] = useState(false);

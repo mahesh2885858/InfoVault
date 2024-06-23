@@ -1,9 +1,9 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
-import PressableWithFeedback from '../../components/PressableWithFeedback';
-import {colors} from '../../globals';
+import PressableWithFeedback from '../../../components/PressableWithFeedback';
+import {colors} from '../../../globals';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useStore} from '../../Store/store';
+import {useStore} from '../../../Store/store';
 
 const HomeHeaderTitle = () => {
   const archiveMode = useStore(state => state.archiveMode);

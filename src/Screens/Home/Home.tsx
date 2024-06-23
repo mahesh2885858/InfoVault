@@ -1,12 +1,15 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
-import {TChatListHeaderProps, TChatListItem} from '../Types/ChatList.types.ts';
-import {colors} from '../globals.ts';
+import {
+  TChatListHeaderProps,
+  TChatListItem,
+} from '../../Types/ChatList.types.ts';
+import {colors} from '../../globals.ts';
 // import ArchiveScreen from './ArchiveScreen';
 // import ChatArchiveUndoView from './ChatArchiveUndoView';
-import list from '../Lib/ChatList.ts';
-import RenderChatList from '../components/RenderChatList';
-import {useStore} from '../Store/store.ts';
+import list from '../../Lib/ChatList.ts';
+import RenderChatList from '../../components/RenderChatList.tsx';
+import {useStore} from '../../Store/store.ts';
 
 const Home = () => {
   const store = useStore(state => state.chatList);

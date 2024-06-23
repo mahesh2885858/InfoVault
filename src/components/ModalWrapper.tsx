@@ -6,18 +6,17 @@ type TProps = {
   visible: boolean;
   setVisibility: React.Dispatch<React.SetStateAction<boolean>>;
   children: React.ReactNode;
+  width?: null | '90%';
 };
 
 const ModalWrapper = (props: TProps) => {
   return (
     <Modal visible={props.visible} animationType="fade" transparent>
       <StatusBar backgroundColor={colors.background} />
-      <Pressable
-        onPress={() => {
-          props.setVisibility(false);
-        }}
-        style={styles.container}>
-        <View style={styles.content}>{props.children}</View>
+      <Pressable style={styles.container}>
+        <View style={[styles.content, {width: props.width ?? '85%'}]}>
+          {props.children}
+        </View>
       </Pressable>
     </Modal>
   );
