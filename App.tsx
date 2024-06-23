@@ -5,32 +5,35 @@
  * @format
  */
 
-import {Text} from 'react-native';
-
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {PaperProvider} from 'react-native-paper';
 import {NavigationContainer} from '@react-navigation/native';
-import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-function Home(): React.JSX.Element {
-  return (
-    <PaperProvider>
-      <GestureHandlerRootView style={{flex: 1}}>
-        <Text>Home</Text>
-      </GestureHandlerRootView>
-    </PaperProvider>
-  );
-}
-const Stack = createNativeStackNavigator();
+import React from 'react';
+import Home from './src/Screens/Home/Home';
+import {HomeHeaderOptions} from './src/Screens/Home/headers/HomeHeaderOptions';
+import {PaperProvider} from 'react-native-paper';
+import Cards from './src/Screens/Cards/Cards';
+import {RootStackParamList} from './src/Types/Navigation';
+import {CardHeaderOptions} from './src/Screens/Cards/CardHeaderOptions';
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App(): React.JSX.Element {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
-      </Stack.Navigator>
-      {/* <App /> */}
-    </NavigationContainer>
+    <PaperProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            options={HomeHeaderOptions}
+          />
+          <Stack.Screen
+            name="Cards"
+            component={Cards}
+            options={CardHeaderOptions}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
 export default App;
