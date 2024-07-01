@@ -6,7 +6,7 @@ import {persist, createJSONStorage} from 'zustand/middleware';
 type TCardStore = {
   cards: TCard[];
   selectedChats: TCard[];
-  addCard: (card: TCard) => void;
+  addCard: (card: Omit<TCard, 'isSelected'>) => void;
   removeCard: () => void;
   toggleCardSelection: (id: string) => void;
   deSelectAll: () => void;
@@ -26,15 +26,14 @@ export const useCardStore = create(
             };
           });
         },
-        addCard: (card: TCard) => {
+        addCard: (card: Omit<TCard, 'isSelected'>) => {
           set(state => {
-            return {cards: [...state.cards, card]};
+            return {cards: [...state.cards, {...card, isSelected: false}]};
           });
         },
         removeCard: () => {
           set(state => {
             const d = state.cards.filter(c => !c.isSelected);
-            console.log({d});
             return {cards: d};
           });
         },

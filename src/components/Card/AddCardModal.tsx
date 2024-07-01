@@ -50,7 +50,6 @@ const AddCardModal = (props: Props) => {
     let r = true;
     Object.keys(inputs).forEach(key => {
       // @ts-expect-error: need to find later
-      console.log({key});
       if (inputs[key].trim().length < 2) {
         r = false;
       }
