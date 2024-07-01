@@ -13,26 +13,34 @@ import {CardHeaderOptions} from './src/Screens/Cards/CardHeaderOptions';
 import Cards from './src/Screens/Cards/Cards';
 import Home from './src/Screens/Home/Home';
 import {RootStackParamList} from './src/Types/Navigation';
+import {StatusBar} from 'react-native';
+import {myTheme} from './theme';
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App(): React.JSX.Element {
   return (
-    <PaperProvider>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Home"
-            component={Home}
-            options={CardHeaderOptions}
-          />
-          <Stack.Screen
-            name="Cards"
-            component={Cards}
-            options={CardHeaderOptions}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+    <>
+      <StatusBar backgroundColor={myTheme.main} />
+      <PaperProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Home"
+              component={Home}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="Cards"
+              component={Cards}
+              options={CardHeaderOptions}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    </>
   );
 }
 export default App;

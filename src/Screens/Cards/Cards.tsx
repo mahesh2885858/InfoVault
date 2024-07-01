@@ -6,12 +6,15 @@ import {CardProps} from '../../Types/Navigation';
 import AddCardModal from '../../components/Card/AddCardModal';
 import {colors} from '../../globals';
 import RenderCard from './RenderCard';
+import Container from '../../components/atoms/Container';
+import {myTheme} from '../../../theme';
 const Cards = (props: CardProps) => {
   const [visible, setVisibility] = useState(false);
   const {cards} = useCardStore();
   return (
-    <View style={styles.container}>
-      <StatusBar backgroundColor={colors.background} />
+    <Container style={styles.container}>
+      <StatusBar backgroundColor={myTheme.main} />
+
       <FlatList
         data={cards}
         contentContainerStyle={styles.cardConatiner}
@@ -24,23 +27,23 @@ const Cards = (props: CardProps) => {
         <FAB
           mode="elevated"
           icon="plus"
+          color={myTheme.accent}
           onPress={() => {
             console.log('Pressed');
             setVisibility(true);
           }}
           rippleColor={colors.primaryLightTransparent}
           style={{
-            backgroundColor: colors.primaryGreen,
+            backgroundColor: myTheme.secondary,
           }}
         />
       </View>
       <AddCardModal setVisible={setVisibility} visible={visible} />
-    </View>
+    </Container>
   );
 };
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.background,
     flex: 1,
   },
   cardConatiner: {

@@ -1,25 +1,29 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, TextInput, View} from 'react-native';
+import {myTheme} from '../../../theme';
+import {useCardStore} from '../../Store/cardStore';
+import {TCard} from '../../Types/Card.types';
 import ModalWrapper from '../ModalWrapper';
 import PressableWithFeedback from '../PressableWithFeedback';
-import {TextInput} from 'react-native';
-import {useCardStore} from '../../Store/cardStore';
-import {colors} from '../../globals';
-import {TCard} from '../../Types/Card.types';
+import Box from '../atoms/Box';
+import Container from '../atoms/Container';
+import DarkText from '../atoms/DarkText';
 type Props = {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
-const initState: TCard = {
+type TCardInput = Omit<TCard, 'isSelected'>;
+const initState: TCardInput = {
   cardName: '',
   cardNumber: '',
   CVV: '',
   expiry: '',
   NameOnCard: '',
 };
+const PlaceholderTextColor = 'grey';
 const AddCardModal = (props: Props) => {
   const {addCard} = useCardStore();
-  const [cardInputs, setCardInputs] = useState<TCard>(initState);
+  const [cardInputs, setCardInputs] = useState<TCardInput>(initState);
   const onChange = (text: string, field: keyof typeof cardInputs) => {
     let t = text;
     if (field === 'cardNumber') {
@@ -42,7 +46,20 @@ const AddCardModal = (props: Props) => {
     setCardInputs(prev => ({...prev, [field]: t}));
   };
 
+  const validateInputs = (inputs: TCardInput) => {
+    let r = true;
+    Object.keys(inputs).forEach(key => {
+      // @ts-expect-error: need to find later
+      console.log({key});
+      if (inputs[key].trim().length < 2) {
+        r = false;
+      }
+    });
+    return r;
+  };
+
   const AddACard = () => {
+    if (!validateInputs(cardInputs)) return;
     addCard(cardInputs);
     setCardInputs(initState);
     props.setVisible(false);
@@ -52,55 +69,69 @@ const AddCardModal = (props: Props) => {
       width={'90%'}
       setVisibility={props.setVisible}
       visible={props.visible}>
-      <View style={styles.content}>
-        <View style={styles.nameAndExpiryBox}>
-          <TextInput
-            value={cardInputs.cardName}
-            onChangeText={t => onChange(t, 'cardName')}
-            style={[styles.nameBox, styles.textInput]}
-          />
-          <TextInput
-            value={cardInputs.expiry}
-            onChangeText={t => onChange(t, 'expiry')}
-            maxLength={5}
-            keyboardType="number-pad"
-            style={[styles.expiryBox, styles.textInput]}
-          />
+      <Container style={styles.content}>
+        <View style={styles.box1}>
+          <View style={styles.nameAndExpiryBox}>
+            <TextInput
+              value={cardInputs.cardName}
+              onChangeText={t => onChange(t, 'cardName')}
+              style={[styles.nameBox, styles.textInput]}
+              placeholderTextColor={PlaceholderTextColor}
+              placeholder="Card name"
+            />
+            <TextInput
+              value={cardInputs.expiry}
+              onChangeText={t => onChange(t, 'expiry')}
+              maxLength={5}
+              keyboardType="number-pad"
+              style={[styles.expiryBox, styles.textInput]}
+              placeholderTextColor={PlaceholderTextColor}
+              placeholder="Exp"
+            />
+          </View>
+          <View style={styles.numbAndCvvBox}>
+            <TextInput
+              value={cardInputs.cardNumber.toString()}
+              onChangeText={t => onChange(t, 'cardNumber')}
+              keyboardType="number-pad"
+              maxLength={19}
+              style={[styles.textInput, styles.number]}
+              placeholderTextColor={PlaceholderTextColor}
+              placeholder="Number"
+            />
+            <TextInput
+              value={cardInputs.CVV.toString()}
+              maxLength={3}
+              keyboardType="number-pad"
+              onChangeText={t => onChange(t, 'CVV')}
+              style={[styles.textInput, styles.cvv]}
+              placeholderTextColor={PlaceholderTextColor}
+              placeholder="CVV"
+            />
+          </View>
+          <View>
+            <TextInput
+              value={cardInputs.NameOnCard}
+              onChangeText={t => onChange(t, 'NameOnCard')}
+              style={[styles.textInput]}
+              placeholderTextColor={PlaceholderTextColor}
+              placeholder="Name on card"
+            />
+          </View>
         </View>
-        <View style={styles.numbAndCvvBox}>
-          <TextInput
-            value={cardInputs.cardNumber.toString()}
-            onChangeText={t => onChange(t, 'cardNumber')}
-            keyboardType="number-pad"
-            maxLength={19}
-            style={[styles.textInput, styles.number]}
-          />
-          <TextInput
-            value={cardInputs.CVV.toString()}
-            maxLength={3}
-            keyboardType="number-pad"
-            onChangeText={t => onChange(t, 'CVV')}
-            style={[styles.textInput, styles.cvv]}
-          />
-        </View>
-        <View>
-          <TextInput
-            value={cardInputs.NameOnCard}
-            onChangeText={t => onChange(t, 'NameOnCard')}
-            style={[styles.textInput]}
-          />
-        </View>
-      </View>
-      <View style={styles.buttonsBox}>
-        <PressableWithFeedback
-          style={styles.button}
-          onPress={() => props.setVisible(false)}>
-          <Text style={styles.buttonText}>Close</Text>
-        </PressableWithFeedback>
-        <PressableWithFeedback onPress={() => AddACard()} style={styles.button}>
-          <Text style={styles.buttonText}>Save</Text>
-        </PressableWithFeedback>
-      </View>
+        <Container style={styles.buttonsBox}>
+          <PressableWithFeedback onPress={() => props.setVisible(false)}>
+            <Box style={styles.button}>
+              <DarkText style={styles.buttonText}>Close</DarkText>
+            </Box>
+          </PressableWithFeedback>
+          <PressableWithFeedback onPress={() => AddACard()}>
+            <Box style={styles.button}>
+              <DarkText style={styles.buttonText}>Save</DarkText>
+            </Box>
+          </PressableWithFeedback>
+        </Container>
+      </Container>
     </ModalWrapper>
   );
 };
@@ -110,13 +141,20 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // gap: 10,
   },
+
   content: {
+    width: '85%',
+    padding: 20,
+    paddingBottom: 30,
+    borderRadius: 5,
+    gap: 20,
+  },
+  box1: {
     gap: 10,
   },
   nameBox: {
-    width: '65%',
+    width: '70%',
     borderWidth: 1,
     // borderColor: colors.background,
   },
@@ -129,29 +167,30 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   number: {
-    width: '65%',
+    width: '70%',
   },
   cvv: {
     width: '25%',
   },
   textInput: {
-    fontSize: 20,
+    fontSize: 15,
     padding: 5,
-    borderRadius: 10,
-    backgroundColor: colors.background,
+    borderRadius: 5,
+    backgroundColor: myTheme.secondary,
+    color: myTheme.accent,
   },
   buttonsBox: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
+    backgroundColor: myTheme.main,
   },
   button: {
-    // padding: 10,
-    backgroundColor: 'red',
+    borderRadius: 5,
   },
+
   buttonText: {
-    fontSize: 20,
-    backgroundColor: colors.background,
+    fontSize: 15,
     paddingHorizontal: 10,
     borderRadius: 5,
     paddingVertical: 5,

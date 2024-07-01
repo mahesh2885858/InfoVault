@@ -4,4 +4,5 @@ export type TCard = {
   CVV: string;
   expiry: string;
   cardName: string;
+  isSelected: boolean;
 };
