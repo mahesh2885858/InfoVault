@@ -1,4 +1,4 @@
-package com.whatsappclone
+package com.infoVault.app
 
 import android.app.Application
 import com.facebook.react.PackageList
