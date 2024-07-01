@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "infoValut.app"
-               BlueprintName = "infoValut"
-               ReferencedContainer = "container:infoValut.xcodeproj">
+               BuildableName = "InfoVault.app"
+               BlueprintName = "InfoVault"
+               ReferencedContainer = "container:InfoVault.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "infoValutTests.xctest"
-               BlueprintName = "infoValutTests"
-               ReferencedContainer = "container:infoValut.xcodeproj">
+               BuildableName = "InfoVaultTests.xctest"
+               BlueprintName = "InfoVaultTests"
+               ReferencedContainer = "container:InfoVault.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "infoValut.app"
-            BlueprintName = "infoValut"
-            ReferencedContainer = "container:infoValut.xcodeproj">
+            BuildableName = "InfoVault.app"
+            BlueprintName = "InfoVault"
+            ReferencedContainer = "container:InfoVault.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "infoValut.app"
-            BlueprintName = "infoValut"
-            ReferencedContainer = "container:infoValut.xcodeproj">
+            BuildableName = "InfoVault.app"
+            BlueprintName = "InfoVault"
+            ReferencedContainer = "container:InfoVault.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
