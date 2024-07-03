@@ -4,7 +4,7 @@ import {myTheme} from '../../../theme';
 
 const DarkText = (props: TextProps) => {
   return (
-    <Text {...props} style={[props.style, {color: myTheme.accent}]}>
+    <Text {...props} style={[{color: myTheme.accent}, props.style]}>
       {props.children}
     </Text>
   );

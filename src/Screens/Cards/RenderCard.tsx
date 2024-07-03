@@ -11,20 +11,30 @@ import {colors} from '../../globals';
 
 const RenderCard = (card: TCard) => {
   const toggleCardSelection = useCardStore(state => state.toggleCardSelection);
+  const selectedCards = useCardStore(state => state.selectedCards);
   return (
     <Container style={styles.card}>
       <PressableWithFeedback
         onLongPress={() => {
-          toggleCardSelection(card.cardNumber);
+          if (selectedCards.length === 0) {
+            toggleCardSelection(card.cardNumber);
+          }
         }}
-        style={{width: '100%', alignItems: 'center'}}>
+        onPress={() => {
+          if (selectedCards.length >= 1) {
+            toggleCardSelection(card.cardNumber);
+          }
+        }}
+        style={styles.cardContainer}>
         <Box
           style={[
             styles.cardContent,
             {backgroundColor: card.isSelected ? '#98a2ff' : myTheme.secondary},
           ]}>
           <View style={styles.nameAndExpiry}>
-            <DarkText style={styles.cardText}>{card.cardName}</DarkText>
+            <DarkText style={[styles.cardText, styles.cardNameText]}>
+              {card.cardName}
+            </DarkText>
             <DarkText style={styles.cardText}>{card.expiry}</DarkText>
           </View>
           <View style={styles.nameAndExpiry}>
@@ -44,22 +54,26 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
+  cardContainer: {width: '100%', alignItems: 'center'},
   cardContent: {
     width: '90%',
     backgroundColor: colors.secondary,
     borderRadius: 10,
-    padding: 20,
-    gap: 20,
+    padding: 15,
+    gap: 15,
   },
   nameAndExpiry: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  cardText: {
-    fontSize: 20,
+  cardNameText: {
     fontWeight: '700',
-    color: colors.primaryText,
+    fontFamily: 'PlaywriteITModernaRegular',
+  },
+  cardText: {
+    fontSize: 17,
+    fontWeight: '500',
     textTransform: 'uppercase',
   },
 });

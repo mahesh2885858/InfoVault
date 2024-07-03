@@ -1,0 +1,21 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/PlaywriteITModernaExtraLight.ttf",
+      "sha1": "8974a95cdb0932a4ce66f2327503624738885056"
+    },
+    {
+      "path": "src/assets/fonts/PlaywriteITModernaLight.ttf",
+      "sha1": "944b8fc813a5c2edcc3d542877901afd41b5cb57"
+    },
+    {
+      "path": "src/assets/fonts/PlaywriteITModernaRegular.ttf",
+      "sha1": "a68c78900c86fb740b6b8c47276f959e1fa4d1f5"
+    },
+    {
+      "path": "src/assets/fonts/PlaywriteITModernaThin.ttf",
+      "sha1": "80efa50a48bf4f93e9b55c152cf12d0420e54529"
+    }
+  ]
+}

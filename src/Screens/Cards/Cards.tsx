@@ -1,16 +1,36 @@
-import React, {useState} from 'react';
-import {FlatList, StatusBar, StyleSheet, View} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
+import React, {useCallback, useState} from 'react';
+import {BackHandler, FlatList, StatusBar, StyleSheet, View} from 'react-native';
 import {FAB} from 'react-native-paper';
+import {myTheme} from '../../../theme';
 import {useCardStore} from '../../Store/cardStore';
 import {CardProps} from '../../Types/Navigation';
 import AddCardModal from '../../components/Card/AddCardModal';
+import Container from '../../components/atoms/Container';
 import {colors} from '../../globals';
 import RenderCard from './RenderCard';
-import Container from '../../components/atoms/Container';
-import {myTheme} from '../../../theme';
 const Cards = (props: CardProps) => {
   const [visible, setVisibility] = useState(false);
+  const selectedCards = useCardStore(state => state.selectedCards);
+  const deSelectAll = useCardStore(state => state.deSelectAll);
   const {cards} = useCardStore();
+
+  useFocusEffect(
+    useCallback(() => {
+      const handleBackPress = () => {
+        if (selectedCards.length > 0) {
+          deSelectAll();
+          return true;
+        }
+        return false;
+      };
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        handleBackPress,
+      );
+      return () => subscription.remove();
+    }, [selectedCards, deSelectAll]),
+  );
   return (
     <Container style={styles.container}>
       <StatusBar backgroundColor={myTheme.main} />
