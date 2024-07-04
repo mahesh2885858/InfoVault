@@ -7,13 +7,25 @@ import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Box from '../../components/atoms/Box';
 import Container from '../../components/atoms/Container';
 import LightText from '../../components/atoms/LightText';
+import * as LocalAuthentication from 'expo-local-authentication';
 
 const RenderCard = (card: TCard) => {
   const toggleCardSelection = useCardStore(state => state.toggleCardSelection);
   const selectedCards = useCardStore(state => state.selectedCards);
   const [showCVV, setShowCVV] = useState(false);
-  const toggleCvv = () => {
-    setShowCVV(p => !p);
+  const toggleCvv = async () => {
+    try {
+      if (!showCVV) {
+        const t = await LocalAuthentication.authenticateAsync();
+        if (t.success) {
+          setShowCVV(true);
+        }
+      } else {
+        setShowCVV(false);
+      }
+    } catch (e) {
+      console.log({e});
+    }
   };
   return (
     <Container style={styles.card}>
@@ -58,7 +70,7 @@ const RenderCard = (card: TCard) => {
             <PressableWithFeedback
               onPress={() => toggleCvv()}
               style={styles.cvvButton}>
-              <LightText>View CVV</LightText>
+              <LightText>{showCVV ? 'Hide CVV' : 'View CVV'}</LightText>
             </PressableWithFeedback>
           </View>
           <View>
