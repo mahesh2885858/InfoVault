@@ -9,7 +9,7 @@ import AddCardModal from '../../components/Card/AddCardModal';
 import Container from '../../components/atoms/Container';
 import {colors} from '../../globals';
 import RenderCard from './RenderCard';
-const Cards = (props: CardProps) => {
+const Cards = (_props: CardProps) => {
   const [visible, setVisibility] = useState(false);
   const selectedCards = useCardStore(state => state.selectedCards);
   const deSelectAll = useCardStore(state => state.deSelectAll);
@@ -49,7 +49,6 @@ const Cards = (props: CardProps) => {
           icon="plus"
           color={myTheme.accent}
           onPress={() => {
-            console.log('Pressed');
             setVisibility(true);
           }}
           rippleColor={colors.primaryLightTransparent}

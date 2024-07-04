@@ -15,6 +15,8 @@ import Home from './src/Screens/Home/Home';
 import {RootStackParamList} from './src/Types/Navigation';
 import {StatusBar} from 'react-native';
 import {myTheme} from './theme';
+import Passwords from './src/Screens/Passwords';
+import {PasswordsHeaderOptions} from './src/Screens/Passwords/PasswordHeaderOptions';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -36,6 +38,11 @@ function App(): React.JSX.Element {
               name="Cards"
               component={Cards}
               options={CardHeaderOptions}
+            />
+            <Stack.Screen
+              name="Passwords"
+              component={Passwords}
+              options={PasswordsHeaderOptions}
             />
           </Stack.Navigator>
         </NavigationContainer>
