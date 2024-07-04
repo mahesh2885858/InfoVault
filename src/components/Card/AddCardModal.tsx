@@ -7,7 +7,7 @@ import ModalWrapper from '../ModalWrapper';
 import PressableWithFeedback from '../PressableWithFeedback';
 import Box from '../atoms/Box';
 import Container from '../atoms/Container';
-import DarkText from '../atoms/DarkText';
+import LightText from '../atoms/LightText';
 
 type Props = {
   visible: boolean;
@@ -45,7 +45,7 @@ const AddCardModal = (props: Props) => {
       }
     }
     if (text.length === 19) {
-      cvvRef.current!.focus();
+      expiryRef.current!.focus();
     }
     setCardInputs(prev => ({...prev, cardNumber: t}));
   };
@@ -56,10 +56,8 @@ const AddCardModal = (props: Props) => {
       if (text.length === 2 && cardInputs.expiry.split('').pop() !== '/') {
         t = t + '/';
       }
-      console.log('text', text);
       if (text.length === 5) {
-        console.log('text', text);
-        cardNumberRef.current!.focus();
+        cvvRef.current!.focus();
       }
     }
 
@@ -84,7 +82,7 @@ const AddCardModal = (props: Props) => {
   };
 
   const moveToNext = () => {
-    expiryRef.current!.focus();
+    cardNumberRef.current!.focus();
   };
 
   const AddACard = () => {
@@ -98,92 +96,92 @@ const AddCardModal = (props: Props) => {
       width={'90%'}
       setVisibility={props.setVisible}
       visible={props.visible}>
-      <Container style={styles.content}>
-        <View style={styles.box1}>
-          <View style={styles.nameAndExpiryBox}>
+      <Container style={styles.cardContainer}>
+        <Box style={[styles.cardContent]}>
+          <View style={styles.cardNameAndNumber}>
             <TextInput
               value={cardInputs.cardName}
               autoFocus
               ref={cardNameRef}
               onChangeText={t => onChange(t, 'cardName')}
-              style={[styles.nameBox, styles.textInput]}
+              style={[styles.textInput, styles.title]}
               placeholderTextColor={PlaceholderTextColor}
               placeholder="Card name"
               returnKeyType="next"
               onSubmitEditing={moveToNext}
             />
             <TextInput
-              ref={expiryRef}
-              value={cardInputs.expiry}
-              onChangeText={text => onChange(text, 'expiry')}
-              maxLength={5}
-              keyboardType="number-pad"
-              style={[styles.expiryBox, styles.textInput]}
-              placeholderTextColor={PlaceholderTextColor}
-              placeholder="Exp"
-            />
-          </View>
-          <View style={styles.numbAndCvvBox}>
-            <TextInput
               ref={cardNumberRef}
               value={cardInputs.cardNumber.toString()}
               onChangeText={handleCardNumber}
               keyboardType="number-pad"
               maxLength={19}
-              style={[styles.textInput, styles.number]}
+              style={[styles.textInput, styles.number, styles.cardText]}
               placeholderTextColor={PlaceholderTextColor}
               placeholder="Number"
             />
-            <TextInput
-              value={cardInputs.CVV.toString()}
-              maxLength={3}
-              ref={cvvRef}
-              keyboardType="number-pad"
-              onChangeText={t => onChange(t, 'CVV')}
-              style={[styles.textInput, styles.cvv]}
-              placeholderTextColor={PlaceholderTextColor}
-              placeholder="CVV"
-            />
+          </View>
+          <View style={styles.cardExpiryCvvButtonBox}>
+            <View style={styles.expiryAndCvvBox}>
+              <LightText style={styles.title}>Valid Thru</LightText>
+              <TextInput
+                ref={expiryRef}
+                value={cardInputs.expiry}
+                onChangeText={text => onChange(text, 'expiry')}
+                maxLength={5}
+                keyboardType="number-pad"
+                style={[styles.textInput, styles.cardText]}
+                placeholderTextColor={PlaceholderTextColor}
+                placeholder="Exp"
+              />
+            </View>
+            <View style={styles.expiryAndCvvBox}>
+              <LightText style={styles.title}>CVV</LightText>
+              <TextInput
+                value={cardInputs.CVV.toString()}
+                maxLength={3}
+                ref={cvvRef}
+                keyboardType="number-pad"
+                onChangeText={t => onChange(t, 'CVV')}
+                style={[styles.textInput, styles.cardText]}
+                placeholderTextColor={PlaceholderTextColor}
+                placeholder="CVV"
+              />
+            </View>
           </View>
           <View>
             <TextInput
               value={cardInputs.NameOnCard}
               onChangeText={t => onChange(t, 'NameOnCard')}
-              style={[styles.textInput]}
+              style={[styles.textInput, styles.cardText]}
               ref={nameOnCardRef}
               placeholderTextColor={PlaceholderTextColor}
               placeholder="Name on card"
             />
           </View>
-        </View>
-        <Container style={styles.buttonsBox}>
+        </Box>
+        <View style={styles.buttonsBox}>
           <PressableWithFeedback
             onPress={() => {
-              setCardInputs(initState);
               props.setVisible(false);
-            }}>
-            <Box style={styles.button}>
-              <DarkText style={styles.buttonText}>Close</DarkText>
-            </Box>
+            }}
+            style={styles.button}>
+            <LightText>Cancel</LightText>
           </PressableWithFeedback>
-          <PressableWithFeedback onPress={() => AddACard()}>
-            <Box style={styles.button}>
-              <DarkText style={styles.buttonText}>Save</DarkText>
-            </Box>
+          <PressableWithFeedback
+            onPress={() => {
+              AddACard();
+            }}
+            style={styles.button}>
+            <LightText>Save</LightText>
           </PressableWithFeedback>
-        </Container>
+        </View>
       </Container>
     </ModalWrapper>
   );
 };
 
 const styles = StyleSheet.create({
-  nameAndExpiryBox: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-
   content: {
     width: '85%',
     padding: 20,
@@ -191,50 +189,76 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     gap: 20,
   },
-  box1: {
-    gap: 10,
-  },
-  nameBox: {
-    width: '70%',
-    borderWidth: 1,
-    // borderColor: colors.background,
-  },
-  expiryBox: {
-    width: '25%',
-  },
-  numbAndCvvBox: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   number: {
     width: '70%',
   },
-  cvv: {
-    width: '25%',
-  },
+
   textInput: {
     fontSize: 15,
-    padding: 5,
+    padding: 2,
     borderRadius: 5,
-    backgroundColor: myTheme.secondary,
-    color: myTheme.accent,
+    borderWidth: 0,
   },
   buttonsBox: {
-    display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: myTheme.main,
-  },
-  button: {
-    borderRadius: 5,
+    justifyContent: 'center',
+    gap: 10,
   },
 
-  buttonText: {
-    fontSize: 15,
-    paddingHorizontal: 10,
+  cardContainer: {
+    width: '100%',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    gap: 20,
+  },
+  cardContent: {
+    width: '87%',
+    borderRadius: 10,
+    padding: 15,
+    gap: 20,
+    flexDirection: 'column',
+    backgroundColor: myTheme.cardBg,
+  },
+  cardNameAndNumber: {
+    paddingTop: 10,
+    gap: 2,
+  },
+  cardExpiryCvvButtonBox: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '65%',
+  },
+  expiryAndCvvBox: {
+    flexDirection: 'column',
+    gap: 2,
+  },
+  button: {
+    paddingHorizontal: 15,
+    paddingVertical: 7,
     borderRadius: 5,
-    paddingVertical: 5,
+    backgroundColor: '#bf03ab',
+    width: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    color: myTheme.cardTitleText,
+    fontSize: 16,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+  },
+  cardNumberText: {
+    fontSize: 17,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+  },
+
+  cardText: {
+    fontSize: 17,
+    fontWeight: '500',
+    textTransform: 'uppercase',
   },
 });
 

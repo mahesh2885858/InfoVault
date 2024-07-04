@@ -16,12 +16,12 @@ const PressableWithFeedback = (
     <Pressable
       {...props}
       style={({pressed}) => [
-        props.style as StyleProp<ViewStyle>,
         {
           backgroundColor: pressed ? feedbackColor : 'transparent',
 
           opacity: pressed ? 0.5 : 1,
         },
+        props.style as StyleProp<ViewStyle>,
       ]}>
       {children}
     </Pressable>

@@ -1,7 +1,5 @@
 import React from 'react';
-import {Modal, Pressable, StatusBar, StyleSheet, View} from 'react-native';
-import {colors} from '../globals.ts';
-import {myTheme} from '../../theme.ts';
+import {Modal, StatusBar, StyleSheet, View} from 'react-native';
 
 type TProps = {
   visible: boolean;
@@ -13,7 +11,7 @@ type TProps = {
 const ModalWrapper = (props: TProps) => {
   return (
     <Modal visible={props.visible} animationType="fade" transparent>
-      <StatusBar backgroundColor={myTheme.main} />
+      <StatusBar backgroundColor={'#00000099'} />
       <View style={styles.container}>{props.children}</View>
     </Modal>
   );
@@ -21,7 +19,7 @@ const ModalWrapper = (props: TProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#00000050',
+    backgroundColor: '#00000099',
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,

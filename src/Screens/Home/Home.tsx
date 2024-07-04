@@ -18,7 +18,7 @@ const Home = () => {
           </PressableWithFeedback>
         </Box>
         <Box style={styles.item}>
-          <PressableWithFeedback>
+          <PressableWithFeedback onPress={() => navigate.navigate('Passwords')}>
             <DarkText style={styles.text}>Passwords</DarkText>
           </PressableWithFeedback>
         </Box>

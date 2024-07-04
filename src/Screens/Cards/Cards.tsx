@@ -1,15 +1,14 @@
 import {useFocusEffect} from '@react-navigation/native';
 import React, {useCallback, useState} from 'react';
-import {BackHandler, FlatList, StatusBar, StyleSheet, View} from 'react-native';
-import {FAB} from 'react-native-paper';
+import {BackHandler, FlatList, StatusBar, StyleSheet} from 'react-native';
 import {myTheme} from '../../../theme';
 import {useCardStore} from '../../Store/cardStore';
 import {CardProps} from '../../Types/Navigation';
 import AddCardModal from '../../components/Card/AddCardModal';
+import Fab from '../../components/Fab';
 import Container from '../../components/atoms/Container';
-import {colors} from '../../globals';
 import RenderCard from './RenderCard';
-const Cards = (props: CardProps) => {
+const Cards = (_props: CardProps) => {
   const [visible, setVisibility] = useState(false);
   const selectedCards = useCardStore(state => state.selectedCards);
   const deSelectAll = useCardStore(state => state.deSelectAll);
@@ -43,21 +42,12 @@ const Cards = (props: CardProps) => {
         }}
       />
 
-      <View style={styles.fab}>
-        <FAB
-          mode="elevated"
-          icon="plus"
-          color={myTheme.accent}
-          onPress={() => {
-            console.log('Pressed');
-            setVisibility(true);
-          }}
-          rippleColor={colors.primaryLightTransparent}
-          style={{
-            backgroundColor: myTheme.secondary,
-          }}
-        />
-      </View>
+      <Fab
+        callBack={() => {
+          setVisibility(true);
+        }}
+      />
+
       <AddCardModal setVisible={setVisibility} visible={visible} />
     </Container>
   );
