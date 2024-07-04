@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {GestureResponderEvent, StyleSheet, View} from 'react-native';
 import {myTheme} from '../../../theme';
 import {useCardStore} from '../../Store/cardStore';
 import {TCard} from '../../Types/Card.types';
@@ -13,6 +13,7 @@ const RenderCard = (card: TCard) => {
   const toggleCardSelection = useCardStore(state => state.toggleCardSelection);
   const selectedCards = useCardStore(state => state.selectedCards);
   const [showCVV, setShowCVV] = useState(false);
+
   const toggleCvv = async () => {
     try {
       if (!showCVV) {
@@ -27,19 +28,24 @@ const RenderCard = (card: TCard) => {
       console.log({e});
     }
   };
+
+  const handlePress = (_event: GestureResponderEvent) => {
+    if (selectedCards.length >= 1) {
+      toggleCardSelection(card.cardNumber);
+    }
+  };
+
+  const handleLongPress = (_event: GestureResponderEvent) => {
+    if (selectedCards.length === 0) {
+      toggleCardSelection(card.cardNumber);
+    }
+  };
+
   return (
     <Container style={styles.card}>
       <PressableWithFeedback
-        onLongPress={() => {
-          if (selectedCards.length === 0) {
-            toggleCardSelection(card.cardNumber);
-          }
-        }}
-        onPress={() => {
-          if (selectedCards.length >= 1) {
-            toggleCardSelection(card.cardNumber);
-          }
-        }}
+        onLongPress={handleLongPress}
+        onPress={handlePress}
         style={styles.cardContainer}>
         <Box
           style={[
