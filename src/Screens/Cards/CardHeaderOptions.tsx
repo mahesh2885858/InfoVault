@@ -9,4 +9,11 @@ export const CardHeaderOptions: NativeStackNavigationOptions = {
   headerRight: CardHeaderRight,
   headerLeft: CardHeaderTitleWithBackButton,
   headerTitle: '',
+  headerSearchBarOptions: {
+    placeholder: 'serch here',
+    onChangeText: text => {
+      console.log({text: text.nativeEvent.text});
+    },
+    placement: 'stacked',
+  },
 };

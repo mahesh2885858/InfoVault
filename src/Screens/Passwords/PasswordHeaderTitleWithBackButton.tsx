@@ -5,19 +5,19 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {myTheme} from '../../../theme';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import LightText from '../../components/atoms/LightText';
+import {usePasswordsStore} from '../../Store/passwordStore';
 const PasswordHeaderTitleWithBackButton = () => {
   const navigation = useNavigation();
-  //   const deSelectAll = useCardStore(state => state.deSelectAll);
-  //   const selectedCards = useCardStore(state => state.selectedCards);
+  const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
   return (
     <View style={styles.container}>
       <PressableWithFeedback
         onPress={() => {
-          //   if (selectedCards.length > 0) {
-          //   return
-          //   } else {
-          navigation.goBack();
-          //   }
+          if (selectedPasswords.length > 0) {
+            return;
+          } else {
+            navigation.goBack();
+          }
         }}>
         <MaterialIcon name="arrow-left-thin" size={24} />
       </PressableWithFeedback>

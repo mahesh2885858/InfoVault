@@ -1,14 +1,14 @@
 import React from 'react';
 import {Text} from 'react-native';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
+import {usePasswordsStore} from '../../Store/passwordStore';
 
 const PasswordHeaderRight = () => {
-  //   const selectedCards = useCardStore(state => state.selectedCards);
-  //   const removeCards = useCardStore(state => state.removeCard);
+  const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
 
-  //   if (selectedCards.length === 0) {
-  //     return null;
-  //   }
+  if (selectedPasswords.length === 0) {
+    return null;
+  }
 
   return (
     <PressableWithFeedback onPress={() => {}}>

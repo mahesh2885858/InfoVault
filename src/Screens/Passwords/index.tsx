@@ -1,21 +1,81 @@
-import React from 'react';
-import {StatusBar, StyleSheet} from 'react-native';
-import Container from '../../components/atoms/Container';
+import {useFocusEffect} from '@react-navigation/native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {BackHandler, FlatList, StatusBar, StyleSheet} from 'react-native';
 import {myTheme} from '../../../theme';
 import {PasswordProps} from '../../Types/Navigation';
+import AddCardModal from '../../components/Card/AddCardModal';
 import Fab from '../../components/Fab';
+import Container from '../../components/atoms/Container';
+import {usePasswordsStore} from '../../Store/passwordStore';
+import RenderPassword from './RenderPassword';
+import {TPassword} from '../../Types/Passwords.type';
+import AddPasswordModal from './AddPasswordModal';
 
 const Passwords = (_props: PasswordProps) => {
+  const [visible, setVisibility] = useState(false);
+  const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
+  const deSelectAll = usePasswordsStore(state => state.deSelectAll);
+  const passwords = usePasswordsStore(state => state.passwords);
+  console.log({passwords});
+  useFocusEffect(
+    useCallback(() => {
+      const handleBackPress = () => {
+        if (selectedPasswords.length > 0) {
+          deSelectAll();
+          return true;
+        }
+        return false;
+      };
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        handleBackPress,
+      );
+      return () => subscription.remove();
+    }, [selectedPasswords, deSelectAll]),
+  );
+  console.log('coming to here');
   return (
     <Container style={styles.container}>
       <StatusBar backgroundColor={myTheme.main} />
-      <Fab callBack={() => {}} />
+
+      <FlatList
+        data={passwords}
+        contentContainerStyle={styles.cardConatiner}
+        renderItem={item => {
+          console.log('rendeirng from home');
+          return <RenderPassword {...item.item} />;
+        }}
+      />
+
+      <Fab
+        callBack={() => {
+          setVisibility(true);
+        }}
+      />
+
+      <AddPasswordModal setVisible={setVisibility} visible={visible} />
     </Container>
   );
 };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  cardConatiner: {
+    gap: 13,
+    paddingBottom: 100,
+    paddingTop: 20,
+  },
+
+  fab: {
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    paddingBottom: 20,
   },
 });
 
