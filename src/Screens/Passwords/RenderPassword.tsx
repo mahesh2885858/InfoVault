@@ -1,8 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {GestureResponderEvent, StyleSheet, View} from 'react-native';
 import {myTheme} from '../../../theme';
-import {useCardStore} from '../../Store/cardStore';
-import {TCard} from '../../Types/Card.types';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Box from '../../components/atoms/Box';
 import Container from '../../components/atoms/Container';
@@ -16,9 +14,16 @@ import Animated, {
   withTiming,
   withSpring,
 } from 'react-native-reanimated';
-
+import {usePasswordsStore} from '../../Store/passwordStore';
+import * as Clipboard from 'expo-clipboard';
+import {useToast} from 'react-native-toast-notifications';
 const RenderPassword = (password: TPassword) => {
   const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordSelection = usePasswordsStore(
+    state => state.togglePasswordSelection,
+  );
+  const toast = useToast();
+  const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
   const opacity = useSharedValue(0);
   const translateX = useSharedValue(0);
 
@@ -53,17 +58,22 @@ const RenderPassword = (password: TPassword) => {
   };
 
   const handlePress = (_event: GestureResponderEvent) => {
-    // if (selectedPasswords.length >= 1) {
-    //   toggleCardSelection(password.cardNumber);
-    // }
+    if (selectedPasswords.length >= 1) {
+      togglePasswordSelection(password.id);
+    }
   };
 
   const handleLongPress = (_event: GestureResponderEvent) => {
-    // if (selectedPasswords.length === 0) {
-    //   toggleCardSelection(password.cardNumber);
-    // }
+    if (selectedPasswords.length === 0) {
+      togglePasswordSelection(password.id);
+    }
   };
-  console.log(":it's rendering");
+
+  const copyContent = async (whatToCopy: 'username' | 'password') => {
+    await Clipboard.setStringAsync(password[whatToCopy]);
+    toast.show(`${whatToCopy} is copied.`, {duration: 1500});
+  };
+
   return (
     <Container style={styles.card}>
       <PressableWithFeedback
@@ -79,28 +89,33 @@ const RenderPassword = (password: TPassword) => {
                 : myTheme.cardBg,
             },
           ]}>
-          <View style={styles.cardNameAndNumber}>
+          <View style={styles.webSiteBox}>
             <LightText style={styles.cardNumberText}>
               {password.website}
             </LightText>
           </View>
-          <View style={styles.cardUsername}>
+          <View style={styles.usernameBox}>
             <View style={styles.username}>
               <LightText style={styles.title}>User name</LightText>
               <LightText style={styles.cardText}>{password.username}</LightText>
             </View>
 
             <PressableWithFeedback
-              onPress={() => togglePasswordVisibility()}
+              onPress={() => copyContent('username')}
               style={styles.Button}>
-              <MaterialIcon name="content-copy" size={15} />
+              <MaterialIcon
+                color={myTheme.secondary}
+                name="content-copy"
+                size={15}
+              />
             </PressableWithFeedback>
           </View>
           <View style={styles.passwordBox}>
             <View>
               <LightText style={styles.title}>Password</LightText>
-
-              <LightText style={styles.cardText}>{'*********'}</LightText>
+              <LightText style={styles.cardText}>
+                {showPassword ? password.password : '*********'}
+              </LightText>
             </View>
             <View style={{flexDirection: 'row', gap: 10}}>
               <Animated.View style={slidingStyle}>
@@ -108,19 +123,30 @@ const RenderPassword = (password: TPassword) => {
                   onPress={() => togglePasswordVisibility()}
                   style={[styles.Button]}>
                   {showPassword ? (
-                    <MaterialIcon name="content-copy" size={15} />
+                    <MaterialIcon
+                      color={myTheme.secondary}
+                      name="eye-off-outline"
+                      size={15}
+                    />
                   ) : (
-                    <MaterialIcon name="eye-outline" size={15} />
+                    <MaterialIcon
+                      color={myTheme.secondary}
+                      name="eye-outline"
+                      size={15}
+                    />
                   )}
-                  {/* <MaterialIcon name="eye-off-outline" size={15} /> */}
                 </PressableWithFeedback>
               </Animated.View>
               {showPassword && (
                 <Animated.View style={animatedStyle}>
                   <PressableWithFeedback
-                    onPress={() => togglePasswordVisibility()}
+                    onPress={() => copyContent('password')}
                     style={styles.Button}>
-                    <MaterialIcon name="eye-off-outline" size={15} />
+                    <MaterialIcon
+                      color={myTheme.secondary}
+                      name="content-copy"
+                      size={15}
+                    />
                   </PressableWithFeedback>
                 </Animated.View>
               )}
@@ -131,6 +157,7 @@ const RenderPassword = (password: TPassword) => {
     </Container>
   );
 };
+
 const styles = StyleSheet.create({
   card: {
     width: '100%',
@@ -147,11 +174,11 @@ const styles = StyleSheet.create({
     gap: 15,
     flexDirection: 'column',
   },
-  cardNameAndNumber: {
+  webSiteBox: {
     paddingTop: 10,
     gap: 2,
   },
-  cardUsername: {
+  usernameBox: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -190,4 +217,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
 export default RenderPassword;

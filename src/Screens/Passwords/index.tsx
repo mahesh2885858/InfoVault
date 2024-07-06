@@ -1,14 +1,12 @@
 import {useFocusEffect} from '@react-navigation/native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {BackHandler, FlatList, StatusBar, StyleSheet} from 'react-native';
 import {myTheme} from '../../../theme';
 import {PasswordProps} from '../../Types/Navigation';
-import AddCardModal from '../../components/Card/AddCardModal';
 import Fab from '../../components/Fab';
 import Container from '../../components/atoms/Container';
 import {usePasswordsStore} from '../../Store/passwordStore';
 import RenderPassword from './RenderPassword';
-import {TPassword} from '../../Types/Passwords.type';
 import AddPasswordModal from './AddPasswordModal';
 
 const Passwords = (_props: PasswordProps) => {
@@ -16,7 +14,6 @@ const Passwords = (_props: PasswordProps) => {
   const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
   const deSelectAll = usePasswordsStore(state => state.deSelectAll);
   const passwords = usePasswordsStore(state => state.passwords);
-  console.log({passwords});
   useFocusEffect(
     useCallback(() => {
       const handleBackPress = () => {
@@ -33,7 +30,6 @@ const Passwords = (_props: PasswordProps) => {
       return () => subscription.remove();
     }, [selectedPasswords, deSelectAll]),
   );
-  console.log('coming to here');
   return (
     <Container style={styles.container}>
       <StatusBar backgroundColor={myTheme.main} />
@@ -42,7 +38,6 @@ const Passwords = (_props: PasswordProps) => {
         data={passwords}
         contentContainerStyle={styles.cardConatiner}
         renderItem={item => {
-          console.log('rendeirng from home');
           return <RenderPassword {...item.item} />;
         }}
       />

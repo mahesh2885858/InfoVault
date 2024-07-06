@@ -11,6 +11,9 @@ export const CardHeaderOptions: NativeStackNavigationOptions = {
   headerTitle: '',
   headerSearchBarOptions: {
     placeholder: 'serch here',
+    textColor: myTheme.textMain,
+    headerIconColor: myTheme.textMain,
+    hintTextColor: myTheme.textMain,
     onChangeText: text => {
       console.log({text: text.nativeEvent.text});
     },

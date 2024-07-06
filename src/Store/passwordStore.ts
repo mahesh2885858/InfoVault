@@ -7,8 +7,8 @@ type TPasswordsStore = {
   passwords: TPassword[];
   selectedPasswords: TPassword[];
   addPassword: (password: TPassword) => void;
-  // removePassword: () => void;
-  // togglePasswordSelection: (id: string) => void;
+  deletePasswords: () => void;
+  togglePasswordSelection: (id: string) => void;
   deSelectAll: () => void;
 };
 
@@ -18,6 +18,19 @@ export const usePasswordsStore = create(
       return {
         passwords: [],
         selectedPasswords: [],
+        togglePasswordSelection(id) {
+          set(state => {
+            const updatedPasswords = state.passwords.map(p => {
+              if (p.id === id) {
+                return {...p, isSelected: !p.isSelected};
+              } else return p;
+            });
+            return {
+              passwords: updatedPasswords,
+              selectedPasswords: updatedPasswords.filter(p => p.isSelected),
+            };
+          });
+        },
         deSelectAll: () => {
           set(state => {
             return {
@@ -31,6 +44,14 @@ export const usePasswordsStore = create(
           set(state => {
             return {
               passwords: [...state.passwords, {...password}],
+            };
+          });
+        },
+        deletePasswords: () => {
+          set(state => {
+            return {
+              passwords: state.passwords.filter(p => !p.isSelected),
+              selectedPasswords: [],
             };
           });
         },

@@ -8,11 +8,15 @@ import Box from '../../components/atoms/Box';
 import Container from '../../components/atoms/Container';
 import LightText from '../../components/atoms/LightText';
 import * as LocalAuthentication from 'expo-local-authentication';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as Clipboard from 'expo-clipboard';
+import {useToast} from 'react-native-toast-notifications';
 
 const RenderCard = (card: TCard) => {
   const toggleCardSelection = useCardStore(state => state.toggleCardSelection);
   const selectedCards = useCardStore(state => state.selectedCards);
   const [showCVV, setShowCVV] = useState(false);
+  const toast = useToast();
 
   const toggleCvv = async () => {
     try {
@@ -41,6 +45,10 @@ const RenderCard = (card: TCard) => {
     }
   };
 
+  const copyContent = async (whatToCopy: 'NameOnCard' | 'cardNumber') => {
+    await Clipboard.setStringAsync(card[whatToCopy].replaceAll('-', ''));
+    toast.show(`${whatToCopy} is copied.`, {duration: 1500});
+  };
   return (
     <Container style={styles.card}>
       <PressableWithFeedback
@@ -56,11 +64,22 @@ const RenderCard = (card: TCard) => {
                 : myTheme.cardBg,
             },
           ]}>
-          <View style={styles.cardNameAndNumber}>
-            <LightText style={styles.title}>{card.cardName}</LightText>
-            <LightText style={styles.cardNumberText}>
-              {card.cardNumber}
-            </LightText>
+          <View style={styles.cardNameAndNuberBox}>
+            <View style={styles.cardNameAndNumber}>
+              <LightText style={styles.title}>{card.cardName}</LightText>
+              <LightText style={styles.cardNumberText}>
+                {card.cardNumber}
+              </LightText>
+            </View>
+            <PressableWithFeedback
+              onPress={() => copyContent('cardNumber')}
+              style={styles.Button}>
+              <MaterialIcon
+                color={myTheme.secondary}
+                name="content-copy"
+                size={15}
+              />
+            </PressableWithFeedback>
           </View>
           <View style={styles.cardExpiryCvvButtonBox}>
             <View style={styles.expiryAndCvvBox}>
@@ -103,9 +122,20 @@ const styles = StyleSheet.create({
     gap: 20,
     flexDirection: 'column',
   },
+  cardNameAndNuberBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   cardNameAndNumber: {
     paddingTop: 10,
     gap: 2,
+  },
+  Button: {
+    paddingHorizontal: 15,
+    paddingVertical: 7,
+    borderRadius: 5,
+    backgroundColor: '#bf03ab',
   },
   cardExpiryCvvButtonBox: {
     display: 'flex',

@@ -7,9 +7,9 @@ import {usePasswordsStore} from '../../Store/passwordStore';
 import ModalWrapper from '../../components/ModalWrapper';
 import Container from '../../components/atoms/Container';
 import Box from '../../components/atoms/Box';
-import LightText from '../../components/atoms/LightText';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import ButtonsForForms from '../../components/Molecules/ButtonsForForms';
 
 type Props = {
   visible: boolean;
@@ -64,6 +64,11 @@ const AddPasswordModal = (props: Props) => {
     setPasswordInputs(initState);
     props.setVisible(false);
   };
+
+  const moveToNext = (nextRef: React.RefObject<TextInput>) => {
+    nextRef.current?.focus();
+  };
+
   return (
     <ModalWrapper
       width={'90%'}
@@ -81,27 +86,24 @@ const AddPasswordModal = (props: Props) => {
               placeholderTextColor={PlaceholderTextColor}
               placeholder="Web site"
               returnKeyType="next"
-              // onSubmitEditing={moveToNext}
+              onSubmitEditing={() => moveToNext(userNameRef)}
             />
           </View>
           <View style={styles.username}>
-            {/* <LightText style={styles.title}>User name</LightText> */}
             <TextInput
               value={passwordInputs.username}
               ref={userNameRef}
               onChangeText={t => onChange(t, 'username')}
-              style={[styles.textInput, styles.title]}
+              style={[styles.textInput, styles.cardText]}
               placeholderTextColor={PlaceholderTextColor}
               placeholder="Username"
               returnKeyType="next"
-              // onSubmitEditing={moveToNext}
+              onSubmitEditing={() => moveToNext(passwordRef)}
             />
           </View>
 
           <View style={styles.passwordBox}>
             <View style={{width: '100%'}}>
-              {/* <LightText style={styles.title}>Password</LightText> */}
-
               <TextInput
                 value={passwordInputs.password}
                 ref={passwordRef}
@@ -111,41 +113,24 @@ const AddPasswordModal = (props: Props) => {
                 placeholder="Password"
                 returnKeyType="next"
                 secureTextEntry={!showPassword}
-                // onSubmitEditing={moveToNext}
               />
               <PressableWithFeedback
                 onPress={() => togglePasswordVisibility()}
-                style={{
-                  position: 'absolute',
-                  bottom: 7,
-                  right: 10,
-                }}>
+                style={styles.eyeIcon}>
                 {showPassword ? (
                   <MaterialIcon name="eye-off-outline" size={20} />
                 ) : (
                   <MaterialIcon name="eye-outline" size={20} />
                 )}
-                {/* <MaterialIcon name="eye-off-outline" size={15} /> */}
               </PressableWithFeedback>
             </View>
           </View>
         </Box>
-        <View style={styles.buttonsBox}>
-          <PressableWithFeedback
-            onPress={() => {
-              props.setVisible(false);
-            }}
-            style={styles.button}>
-            <LightText>Cancel</LightText>
-          </PressableWithFeedback>
-          <PressableWithFeedback
-            onPress={() => {
-              AddAPassword();
-            }}
-            style={styles.button}>
-            <LightText>Save</LightText>
-          </PressableWithFeedback>
-        </View>
+
+        <ButtonsForForms
+          onCancel={() => props.setVisible(false)}
+          onSave={AddAPassword}
+        />
       </Container>
     </ModalWrapper>
   );
@@ -218,7 +203,6 @@ const styles = StyleSheet.create({
     color: myTheme.cardTitleText,
     fontSize: 16,
     fontWeight: '600',
-    // textTransform: 'uppercase',
   },
   cardNumberText: {
     fontSize: 17,
@@ -229,7 +213,7 @@ const styles = StyleSheet.create({
   cardText: {
     fontSize: 17,
     fontWeight: '500',
-    // textTransform: 'uppercase',
+    color: 'white',
   },
   card: {
     width: '100%',
@@ -258,8 +242,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    // borderWidth: 2,
-    // borderColor: 'black',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    bottom: 7,
+    right: 10,
   },
 });
 

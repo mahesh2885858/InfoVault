@@ -5,6 +5,8 @@ import Container from '../../components/atoms/Container';
 import DarkText from '../../components/atoms/DarkText';
 import {useNavigation} from '@react-navigation/native';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
+import {myTheme} from '../../../theme';
+import LightText from '../../components/atoms/LightText';
 
 const Home = () => {
   const navigate = useNavigation();
@@ -14,12 +16,12 @@ const Home = () => {
       <Container style={styles.container}>
         <Box style={styles.item}>
           <PressableWithFeedback onPress={() => navigate.navigate('Cards')}>
-            <DarkText style={styles.text}>Cards</DarkText>
+            <LightText style={styles.text}>Cards</LightText>
           </PressableWithFeedback>
         </Box>
         <Box style={styles.item}>
           <PressableWithFeedback onPress={() => navigate.navigate('Passwords')}>
-            <DarkText style={styles.text}>Passwords</DarkText>
+            <LightText style={styles.text}>Passwords</LightText>
           </PressableWithFeedback>
         </Box>
       </Container>
@@ -37,6 +39,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '90%',
     borderRadius: 5,
+    backgroundColor: myTheme.cardBg,
   },
   text: {
     fontSize: 20,
