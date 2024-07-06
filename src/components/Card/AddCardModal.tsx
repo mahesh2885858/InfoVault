@@ -4,10 +4,10 @@ import {myTheme} from '../../../theme';
 import {useCardStore} from '../../Store/cardStore';
 import {TCard} from '../../Types/Card.types';
 import ModalWrapper from '../ModalWrapper';
-import PressableWithFeedback from '../PressableWithFeedback';
 import Box from '../atoms/Box';
 import Container from '../atoms/Container';
 import LightText from '../atoms/LightText';
+import ButtonsForForms from '../Molecules/ButtonsForForms';
 
 type Props = {
   visible: boolean;
@@ -91,6 +91,7 @@ const AddCardModal = (props: Props) => {
     setCardInputs(initState);
     props.setVisible(false);
   };
+
   return (
     <ModalWrapper
       width={'90%'}
@@ -160,22 +161,10 @@ const AddCardModal = (props: Props) => {
             />
           </View>
         </Box>
-        <View style={styles.buttonsBox}>
-          <PressableWithFeedback
-            onPress={() => {
-              props.setVisible(false);
-            }}
-            style={styles.button}>
-            <LightText>Cancel</LightText>
-          </PressableWithFeedback>
-          <PressableWithFeedback
-            onPress={() => {
-              AddACard();
-            }}
-            style={styles.button}>
-            <LightText>Save</LightText>
-          </PressableWithFeedback>
-        </View>
+        <ButtonsForForms
+          onCancel={() => props.setVisible(false)}
+          onSave={() => AddACard()}
+        />
       </Container>
     </ModalWrapper>
   );
@@ -259,6 +248,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '500',
     textTransform: 'uppercase',
+    color: myTheme.secondary,
   },
 });
 

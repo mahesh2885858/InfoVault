@@ -20,7 +20,11 @@ const CardHeaderTitleWithBackButton = () => {
             navigation.goBack();
           }
         }}>
-        <MaterialIcon name="arrow-left-thin" size={24} />
+        <MaterialIcon
+          name="arrow-left-thin"
+          size={24}
+          color={myTheme.textMain}
+        />
       </PressableWithFeedback>
       <LightText style={styles.text}>Cards</LightText>
     </View>

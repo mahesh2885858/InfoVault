@@ -1,18 +1,22 @@
 import React from 'react';
-import {Text} from 'react-native';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
+import {usePasswordsStore} from '../../Store/passwordStore';
+import LightText from '../../components/atoms/LightText';
 
 const PasswordHeaderRight = () => {
-  //   const selectedCards = useCardStore(state => state.selectedCards);
-  //   const removeCards = useCardStore(state => state.removeCard);
+  const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
+  const deletePasswords = usePasswordsStore(state => state.deletePasswords);
 
-  //   if (selectedCards.length === 0) {
-  //     return null;
-  //   }
+  if (selectedPasswords.length === 0) {
+    return null;
+  }
 
   return (
-    <PressableWithFeedback onPress={() => {}}>
-      <Text>Delete</Text>
+    <PressableWithFeedback
+      onPress={() => {
+        deletePasswords();
+      }}>
+      <LightText>Delete</LightText>
     </PressableWithFeedback>
   );
 };

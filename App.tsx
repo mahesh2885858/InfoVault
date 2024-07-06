@@ -17,6 +17,7 @@ import {StatusBar} from 'react-native';
 import {myTheme} from './theme';
 import Passwords from './src/Screens/Passwords';
 import {PasswordsHeaderOptions} from './src/Screens/Passwords/PasswordHeaderOptions';
+import {ToastProvider} from 'react-native-toast-notifications';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -25,27 +26,29 @@ function App(): React.JSX.Element {
     <>
       <StatusBar backgroundColor={myTheme.main} />
       <PaperProvider>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen
-              name="Home"
-              component={Home}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="Cards"
-              component={Cards}
-              options={CardHeaderOptions}
-            />
-            <Stack.Screen
-              name="Passwords"
-              component={Passwords}
-              options={PasswordsHeaderOptions}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <ToastProvider>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen
+                name="Home"
+                component={Home}
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="Cards"
+                component={Cards}
+                options={CardHeaderOptions}
+              />
+              <Stack.Screen
+                name="Passwords"
+                component={Passwords}
+                options={PasswordsHeaderOptions}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </ToastProvider>
       </PaperProvider>
     </>
   );
