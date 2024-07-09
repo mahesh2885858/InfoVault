@@ -6,18 +6,20 @@ import PressableWithFeedback from '../../components/PressableWithFeedback';
 import LightText from '../../components/atoms/LightText';
 import {useNavigation} from '@react-navigation/native';
 import {useCardStore} from '../../Store/cardStore';
-const CardHeaderTitleWithBackButton = () => {
+import {DrawerHeaderProps} from '@react-navigation/drawer';
+const CardHeaderTitleWithBackButton = (props: DrawerHeaderProps) => {
   const navigation = useNavigation();
   const deSelectAll = useCardStore(state => state.deSelectAll);
   const selectedCards = useCardStore(state => state.selectedCards);
   return (
     <View style={styles.container}>
       <PressableWithFeedback
+        hidden={selectedCards.length === 0}
         onPress={() => {
           if (selectedCards.length > 0) {
             deSelectAll();
           } else {
-            navigation.goBack();
+            navigation.openDrawer();
           }
         }}>
         <MaterialIcon
@@ -25,6 +27,17 @@ const CardHeaderTitleWithBackButton = () => {
           size={24}
           color={myTheme.textMain}
         />
+      </PressableWithFeedback>
+      <PressableWithFeedback
+        hidden={selectedCards.length > 0}
+        onPress={() => {
+          if (selectedCards.length === 0) {
+            navigation.openDrawer();
+          } else {
+            // navigation.goBack();
+          }
+        }}>
+        <MaterialIcon name="menu" size={24} color={myTheme.textMain} />
       </PressableWithFeedback>
       <LightText style={styles.text}>Cards</LightText>
     </View>

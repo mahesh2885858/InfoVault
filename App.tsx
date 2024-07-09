@@ -18,8 +18,10 @@ import {myTheme} from './theme';
 import Passwords from './src/Screens/Passwords';
 import {PasswordsHeaderOptions} from './src/Screens/Passwords/PasswordHeaderOptions';
 import {ToastProvider} from 'react-native-toast-notifications';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+// const Stack = createNativeStackNavigator<RootStackParamList>();
+const Drawer = createDrawerNavigator<RootStackParamList>();
 
 function App(): React.JSX.Element {
   return (
@@ -28,25 +30,14 @@ function App(): React.JSX.Element {
       <PaperProvider>
         <ToastProvider>
           <NavigationContainer>
-            <Stack.Navigator>
-              <Stack.Screen
-                name="Home"
-                component={Home}
-                options={{
-                  headerShown: false,
-                }}
-              />
-              <Stack.Screen
+            <Drawer.Navigator initialRouteName="Cards">
+              <Drawer.Screen
                 name="Cards"
                 component={Cards}
                 options={CardHeaderOptions}
               />
-              <Stack.Screen
-                name="Passwords"
-                component={Passwords}
-                options={PasswordsHeaderOptions}
-              />
-            </Stack.Navigator>
+              <Drawer.Screen name="Passwords" component={Passwords} />
+            </Drawer.Navigator>
           </NavigationContainer>
         </ToastProvider>
       </PaperProvider>
