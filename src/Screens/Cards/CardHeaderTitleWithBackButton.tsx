@@ -4,10 +4,10 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {myTheme} from '../../../theme';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import LightText from '../../components/atoms/LightText';
-import {useNavigation} from '@react-navigation/native';
+import {DrawerActions, useNavigation} from '@react-navigation/native';
 import {useCardStore} from '../../Store/cardStore';
-import {DrawerHeaderProps} from '@react-navigation/drawer';
-const CardHeaderTitleWithBackButton = (props: DrawerHeaderProps) => {
+
+const CardHeaderTitleWithBackButton = () => {
   const navigation = useNavigation();
   const deSelectAll = useCardStore(state => state.deSelectAll);
   const selectedCards = useCardStore(state => state.selectedCards);
@@ -18,8 +18,6 @@ const CardHeaderTitleWithBackButton = (props: DrawerHeaderProps) => {
         onPress={() => {
           if (selectedCards.length > 0) {
             deSelectAll();
-          } else {
-            navigation.openDrawer();
           }
         }}>
         <MaterialIcon
@@ -32,7 +30,7 @@ const CardHeaderTitleWithBackButton = (props: DrawerHeaderProps) => {
         hidden={selectedCards.length > 0}
         onPress={() => {
           if (selectedCards.length === 0) {
-            navigation.openDrawer();
+            navigation.dispatch(DrawerActions.openDrawer());
           } else {
             // navigation.goBack();
           }

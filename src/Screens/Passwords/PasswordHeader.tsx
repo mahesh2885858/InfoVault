@@ -1,16 +1,15 @@
-import {View} from 'react-native';
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import CardHeaderTitleWithBackButton from './CardHeaderTitleWithBackButton';
-import CardHeaderRight from './CardHeaderRight';
+import PasswordHeaderTitleWithBackButton from './PasswordHeaderTitleWithBackButton';
+import PasswordHeaderRight from './PasswordHeaderRight';
 import {DrawerHeaderProps} from '@react-navigation/drawer';
+import {StyleSheet, View} from 'react-native';
 import {myTheme} from '../../../theme';
 
-const CardHeaders = (_props: DrawerHeaderProps) => {
+const PasswordHeader = (_props: DrawerHeaderProps) => {
   return (
     <View style={styles.container}>
-      <CardHeaderTitleWithBackButton />
-      <CardHeaderRight />
+      <PasswordHeaderTitleWithBackButton />
+      <PasswordHeaderRight />
     </View>
   );
 };
@@ -25,4 +24,4 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
 });
-export default CardHeaders;
+export default PasswordHeader;

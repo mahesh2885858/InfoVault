@@ -1,12 +1,11 @@
-import {NativeStackNavigationOptions} from '@react-navigation/native-stack/lib/typescript/src/types';
 import {myTheme} from '../../../theme';
-import PasswordHeaderRight from './PasswordHeaderRight';
-import PasswordHeaderTitleWithBackButton from './PasswordHeaderTitleWithBackButton';
+import {DrawerNavigationOptions} from '@react-navigation/drawer';
+import PasswordHeader from './PasswordHeader';
 
-export const PasswordsHeaderOptions: NativeStackNavigationOptions = {
+export const PasswordsHeaderOptions: DrawerNavigationOptions = {
   headerStyle: {backgroundColor: myTheme.main},
   headerTintColor: myTheme.secondary,
-  headerRight: PasswordHeaderRight,
-  headerLeft: PasswordHeaderTitleWithBackButton,
+  header: PasswordHeader,
   headerTitle: '',
+  headerShadowVisible: false,
 };
