@@ -1,22 +1,12 @@
-import {NativeStackNavigationOptions} from '@react-navigation/native-stack/lib/typescript/src/types';
 import {myTheme} from '../../../theme';
-import CardHeaderRight from './CardHeaderRight';
-import CardHeaderTitleWithBackButton from './CardHeaderTitleWithBackButton';
 
-export const CardHeaderOptions: NativeStackNavigationOptions = {
+import {DrawerNavigationOptions} from '@react-navigation/drawer';
+import CardHeaders from './CardHeaders';
+
+export const CardHeaderOptions: DrawerNavigationOptions = {
   headerStyle: {backgroundColor: myTheme.main},
   headerTintColor: myTheme.secondary,
-  headerRight: CardHeaderRight,
-  headerLeft: CardHeaderTitleWithBackButton,
   headerTitle: '',
-  headerSearchBarOptions: {
-    placeholder: 'serch here',
-    textColor: myTheme.textMain,
-    headerIconColor: myTheme.textMain,
-    hintTextColor: myTheme.textMain,
-    onChangeText: text => {
-      console.log({text: text.nativeEvent.text});
-    },
-    placement: 'stacked',
-  },
+  headerShadowVisible: false,
+  header: CardHeaders,
 };

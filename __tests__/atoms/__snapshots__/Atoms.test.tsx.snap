@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Hide Pressasble correctly 1`] = `null`;
+
+exports[`renders Container correctly 1`] = `
+<View
+  style={
+    [
+      {
+        "backgroundColor": "#1b0017",
+      },
+      undefined,
+    ]
+  }
+/>
+`;
+
+exports[`renders Pressasble correctly 1`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  feedbackColor="red"
+  focusable={true}
+  hidden={false}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "backgroundColor": "transparent",
+        "opacity": 1,
+      },
+      {
+        "padding": 10,
+      },
+    ]
+  }
+/>
+`;
