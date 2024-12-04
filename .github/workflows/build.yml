@@ -1,6 +1,9 @@
 name: react-native-test
 
-on: [push]
+on:
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test:
@@ -16,3 +19,49 @@ jobs:
       - name: Run tests
         run: |
           npm run test -- -u
+
+  build-android:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Set up JDK 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # Cache Gradle dependencies
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # Install npm dependencies
+      - name: Install npm dependencies
+        run: |
+          npm install
+
+      # Decode and save keystore
+      - name: Decode and save keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/my-upload-key.keystore
+
+      # Build Android Release
+      - name: Build Android Release
+        run: |
+          cd android && ./gradlew assembleRelease
+
+      # Upload Artifact
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: app-release
+          path: android/app/build/outputs/apk/release/
