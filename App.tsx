@@ -5,22 +5,22 @@
  * @format
  */
 
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useEffect} from 'react';
+import {BackHandler, StatusBar} from 'react-native';
 import {PaperProvider} from 'react-native-paper';
+import RNBiometrics from 'react-native-simple-biometrics';
+import {ToastProvider} from 'react-native-toast-notifications';
+import CustomDrawer from './src/components/Navigation/CustomDrawer';
 import {CardHeaderOptions} from './src/Screens/Cards/CardHeaderOptions';
 import Cards from './src/Screens/Cards/Cards';
-import {DrawerParamsList, RootStackParamList} from './src/Types/Navigation';
-import {StatusBar, BackHandler} from 'react-native';
-import {myTheme} from './theme';
 import Passwords from './src/Screens/Passwords';
 import {PasswordsHeaderOptions} from './src/Screens/Passwords/PasswordHeaderOptions';
-import {ToastProvider} from 'react-native-toast-notifications';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import CustomDrawer from './src/components/Navigation/CustomDrawer';
-import * as LocalAuthentication from 'expo-local-authentication';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Settings from './src/Screens/Settings';
+import {DrawerParamsList, RootStackParamList} from './src/Types/Navigation';
+import {myTheme} from './theme';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator<DrawerParamsList>();
@@ -54,11 +54,17 @@ function DrawerNavigator() {
 function App(): React.JSX.Element {
   useEffect(() => {
     const authenticate = async () => {
-      const isAuthenticated = await LocalAuthentication.authenticateAsync();
-      if (!isAuthenticated.success) {
-        BackHandler.exitApp();
+      const can = await RNBiometrics.canAuthenticate();
+      if (can) {
+        try {
+          await RNBiometrics.requestBioAuth('prompt-title', 'prompt-message');
+          // Code to execute when authenticated
+          // ...
+        } catch (error) {
+          BackHandler.exitApp();
+          console.log({error});
+        }
       }
-      return;
     };
     authenticate();
   }, []);

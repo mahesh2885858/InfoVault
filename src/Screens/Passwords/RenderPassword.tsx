@@ -1,22 +1,22 @@
+import Clipboard from '@react-native-clipboard/clipboard';
 import React, {useState} from 'react';
 import {GestureResponderEvent, StyleSheet, View} from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
+import {useToast} from 'react-native-toast-notifications';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {myTheme} from '../../../theme';
-import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Box from '../../components/atoms/Box';
 import Container from '../../components/atoms/Container';
 import LightText from '../../components/atoms/LightText';
-import * as LocalAuthentication from 'expo-local-authentication';
-import {TPassword} from '../../Types/Passwords.type';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  withSpring,
-} from 'react-native-reanimated';
+import PressableWithFeedback from '../../components/PressableWithFeedback';
 import {usePasswordsStore} from '../../Store/passwordStore';
-import * as Clipboard from 'expo-clipboard';
-import {useToast} from 'react-native-toast-notifications';
+import {TPassword} from '../../Types/Passwords.type';
+import {authenticateLocal} from '../../Utils/authenticateLocal';
 const RenderPassword = (password: TPassword) => {
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordSelection = usePasswordsStore(
@@ -41,8 +41,8 @@ const RenderPassword = (password: TPassword) => {
   const togglePasswordVisibility = async () => {
     try {
       if (!showPassword) {
-        const t = await LocalAuthentication.authenticateAsync();
-        if (t.success) {
+        const result = await authenticateLocal();
+        if (result) {
           setShowPassword(true);
           opacity.value = 1;
           translateX.value = -20;
@@ -70,7 +70,7 @@ const RenderPassword = (password: TPassword) => {
   };
 
   const copyContent = async (whatToCopy: 'username' | 'password') => {
-    await Clipboard.setStringAsync(password[whatToCopy]);
+    Clipboard.setString(password[whatToCopy]);
     toast.show(`${whatToCopy} is copied.`, {duration: 1500});
   };
 
