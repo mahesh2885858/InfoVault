@@ -3,12 +3,11 @@ import React, {useCallback, useState} from 'react';
 import {BackHandler, FlatList, StatusBar, StyleSheet} from 'react-native';
 import {myTheme} from '../../../theme';
 import {useCardStore} from '../../Store/cardStore';
-import {CardProps} from '../../Types/Navigation';
 import AddCardModal from '../../components/Card/AddCardModal';
 import Fab from '../../components/Fab';
 import Container from '../../components/atoms/Container';
 import RenderCard from './RenderCard';
-const Cards = (_props: CardProps) => {
+const Cards = () => {
   const [visible, setVisibility] = useState(false);
   const selectedCards = useCardStore(state => state.selectedCards);
   const deSelectAll = useCardStore(state => state.deSelectAll);

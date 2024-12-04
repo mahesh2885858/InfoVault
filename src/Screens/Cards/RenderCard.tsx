@@ -1,16 +1,16 @@
+import Clipboard from '@react-native-clipboard/clipboard';
 import React, {useState} from 'react';
 import {GestureResponderEvent, StyleSheet, View} from 'react-native';
+import {useToast} from 'react-native-toast-notifications';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {myTheme} from '../../../theme';
 import {useCardStore} from '../../Store/cardStore';
 import {TCard} from '../../Types/Card.types';
+import {authenticateLocal} from '../../Utils/authenticateLocal';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Box from '../../components/atoms/Box';
 import Container from '../../components/atoms/Container';
 import LightText from '../../components/atoms/LightText';
-import * as LocalAuthentication from 'expo-local-authentication';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import * as Clipboard from 'expo-clipboard';
-import {useToast} from 'react-native-toast-notifications';
 
 const RenderCard = (card: TCard) => {
   const toggleCardSelection = useCardStore(state => state.toggleCardSelection);
@@ -21,8 +21,8 @@ const RenderCard = (card: TCard) => {
   const toggleCvv = async () => {
     try {
       if (!showCVV) {
-        const t = await LocalAuthentication.authenticateAsync();
-        if (t.success) {
+        const result = await authenticateLocal();
+        if (result) {
           setShowCVV(true);
         }
       } else {
@@ -46,7 +46,7 @@ const RenderCard = (card: TCard) => {
   };
 
   const copyContent = async (whatToCopy: 'NameOnCard' | 'cardNumber') => {
-    await Clipboard.setStringAsync(card[whatToCopy].replaceAll('-', ''));
+    Clipboard.setString(card[whatToCopy].replaceAll('-', ''));
     toast.show(`${whatToCopy} is copied.`, {duration: 1500});
   };
   return (

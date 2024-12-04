@@ -10,8 +10,10 @@ import LightText from '../atoms/LightText';
 import {StyleSheet} from 'react-native';
 import PressableWithFeedback from '../PressableWithFeedback';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useNavigation} from '@react-navigation/native';
 
 const CustomDrawer = (props: DrawerContentComponentProps) => {
+  const navigation = useNavigation();
   return (
     <DrawerContentScrollView
       style={{
@@ -21,7 +23,11 @@ const CustomDrawer = (props: DrawerContentComponentProps) => {
       <View style={styles.container}>
         <LightText style={styles.largeText}>Hi,</LightText>
         <LightText style={styles.subTitleText}>User</LightText>
-        <PressableWithFeedback style={styles.icon}>
+        <PressableWithFeedback
+          onPress={() => {
+            navigation.navigate('Settings');
+          }}
+          style={styles.icon}>
           <MaterialIcon name="cog" size={24} color={myTheme.textMain} />
         </PressableWithFeedback>
       </View>
