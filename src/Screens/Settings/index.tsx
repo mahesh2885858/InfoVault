@@ -1,49 +1,47 @@
-import React from 'react';
-import {StyleSheet} from 'react-native';
-import Container from '../../components/atoms/Container';
-import LightText from '../../components/atoms/LightText';
-import PressableWithFeedback from '../../components/PressableWithFeedback';
-import RNFS from 'react-native-fs';
-import * as ScopedStorage from 'react-native-scoped-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {useState} from 'react';
+import {StyleSheet} from 'react-native';
+import * as ScopedStorage from 'react-native-scoped-storage';
+import Button from '../../components/atoms/Button';
+import Container from '../../components/atoms/Container';
+import {useCardStore} from '../../Store/cardStore';
+import LoadingIndicator from '../../components/Molecules/LoadingIndicator';
 
 const Settings = () => {
+  const cData = useCardStore(state => state.cards);
+  const [isExporting, setIsExporting] = useState(false);
+
   const exportData = async () => {
     try {
+      setIsExporting(true);
       let dir = await AsyncStorage.getItem('exportPath');
       if (!dir) {
         dir = (await ScopedStorage.openDocumentTree(true)).uri;
-        AsyncStorage.setItem('exportPath', dir);
-      } else {
-        dir = JSON.parse(dir);
+        await AsyncStorage.setItem('exportPath', dir);
       }
-      if (!dir) return;
-
-      const persistedUris = await ScopedStorage.getPersistedUriPermissions();
-
-      if (persistedUris.indexOf(dir) !== -1) {
-        // If uri is found, we can proceed to write/read data.
-        const data = await ScopedStorage.writeFile(
+      if (dir) {
+        await ScopedStorage.writeFile(
           dir,
-          JSON.stringify({data: 'data'}),
+          JSON.stringify({data: cData}),
           'data.json',
           'application/json',
           'utf8',
         );
-      } else {
-        // We can request for permission again and store the new directory if access has been revoked by user here.
-        dir = (await ScopedStorage.openDocumentTree(true)).uri;
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
+    } finally {
+      setIsExporting(false);
     }
   };
 
   return (
     <Container style={styles.container}>
-      <PressableWithFeedback onPress={exportData} style={{padding: 10}}>
-        <LightText style={{fontSize: 20}}>Export</LightText>
-      </PressableWithFeedback>
+      {isExporting ? (
+        <LoadingIndicator />
+      ) : (
+        <Button label="Export existing data" onButtonPress={exportData} />
+      )}
     </Container>
   );
 };
@@ -53,5 +51,12 @@ export default Settings;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button: {},
+
+  text: {
+    fontSize: 20,
   },
 });

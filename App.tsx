@@ -11,7 +11,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useEffect} from 'react';
 import {BackHandler, StatusBar} from 'react-native';
 import {PaperProvider} from 'react-native-paper';
-import RNBiometrics from 'react-native-simple-biometrics';
 import {ToastProvider} from 'react-native-toast-notifications';
 import CustomDrawer from './src/components/Navigation/CustomDrawer';
 import {CardHeaderOptions} from './src/Screens/Cards/CardHeaderOptions';
@@ -20,7 +19,9 @@ import Passwords from './src/Screens/Passwords';
 import {PasswordsHeaderOptions} from './src/Screens/Passwords/PasswordHeaderOptions';
 import Settings from './src/Screens/Settings';
 import {DrawerParamsList, RootStackParamList} from './src/Types/Navigation';
+import {authenticateLocal} from './src/Utils/authenticateLocal';
 import {myTheme} from './theme';
+import SettingsHeader from './src/Screens/Settings/Header';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator<DrawerParamsList>();
@@ -54,16 +55,9 @@ function DrawerNavigator() {
 function App(): React.JSX.Element {
   useEffect(() => {
     const authenticate = async () => {
-      const can = await RNBiometrics.canAuthenticate();
-      if (can) {
-        try {
-          await RNBiometrics.requestBioAuth('prompt-title', 'prompt-message');
-          // Code to execute when authenticated
-          // ...
-        } catch (error) {
-          BackHandler.exitApp();
-          console.log({error});
-        }
+      const result = await authenticateLocal();
+      if (!result) {
+        BackHandler.exitApp();
       }
     };
     authenticate();
@@ -80,7 +74,13 @@ function App(): React.JSX.Element {
                 component={DrawerNavigator}
                 options={{headerShown: false}}
               />
-              <Stack.Screen name="Settings" component={Settings} />
+              <Stack.Screen
+                name="Settings"
+                component={Settings}
+                options={{
+                  header: SettingsHeader,
+                }}
+              />
             </Stack.Navigator>
           </NavigationContainer>
         </ToastProvider>
