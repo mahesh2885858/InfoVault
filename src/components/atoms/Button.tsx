@@ -14,7 +14,7 @@ const Button = (props: TProps) => {
     <PressableWithFeedback
       style={styles.button}
       onPress={() => props.onButtonPress()}>
-      <LightText>{props.label}</LightText>
+      <LightText style={styles.text}>{props.label}</LightText>
     </PressableWithFeedback>
   );
 };
@@ -25,9 +25,12 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     borderRadius: 5,
     backgroundColor: myTheme.buttonBg,
-    width: 100,
+    width: 'auto',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  text: {
+    fontSize: 16,
   },
 });
 
