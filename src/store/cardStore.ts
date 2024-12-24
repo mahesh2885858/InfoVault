@@ -1,5 +1,5 @@
 import {create} from 'zustand';
-import {TCard} from '../Types/Card.types';
+import {TCard} from '../types/card';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {persist, createJSONStorage} from 'zustand/middleware';
 
@@ -10,6 +10,7 @@ type TCardStore = {
   removeCard: () => void;
   toggleCardSelection: (id: string) => void;
   deSelectAll: () => void;
+  setCards: (cards: TCard[]) => void;
 };
 
 export const useCardStore = create(
@@ -54,6 +55,9 @@ export const useCardStore = create(
               selectedCards: updatedCards.filter(c => c.isSelected),
             };
           });
+        },
+        setCards(cards) {
+          set({cards});
         },
       };
     },

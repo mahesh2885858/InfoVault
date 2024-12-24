@@ -2,14 +2,13 @@ import {useFocusEffect} from '@react-navigation/native';
 import React, {useCallback, useState} from 'react';
 import {BackHandler, FlatList, StatusBar, StyleSheet} from 'react-native';
 import {myTheme} from '../../../theme';
-import {PasswordProps} from '../../Types/Navigation';
 import Fab from '../../components/Fab';
 import Container from '../../components/atoms/Container';
-import {usePasswordsStore} from '../../Store/passwordStore';
+import {usePasswordsStore} from '../../store/passwordStore';
 import RenderPassword from './RenderPassword';
 import AddPasswordModal from './AddPasswordModal';
 
-const Passwords = (_props: PasswordProps) => {
+const Passwords = () => {
   const [visible, setVisibility] = useState(false);
   const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
   const deSelectAll = usePasswordsStore(state => state.deSelectAll);

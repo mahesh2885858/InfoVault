@@ -25,6 +25,7 @@ const CustomDrawer = (props: DrawerContentComponentProps) => {
         <LightText style={styles.subTitleText}>User</LightText>
         <PressableWithFeedback
           onPress={() => {
+            props.navigation.closeDrawer();
             navigation.navigate('Settings');
           }}
           style={styles.icon}>

@@ -1,8 +1,8 @@
 import React, {useRef, useState} from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import {myTheme} from '../../../theme';
-import {useCardStore} from '../../Store/cardStore';
-import {TCard} from '../../Types/Card.types';
+import {useCardStore} from '../../store/cardStore';
+import {TCard} from '../../types/card';
 import ModalWrapper from '../ModalWrapper';
 import Box from '../atoms/Box';
 import Container from '../atoms/Container';
