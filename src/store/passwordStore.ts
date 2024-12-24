@@ -1,7 +1,7 @@
 import {create} from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {persist, createJSONStorage} from 'zustand/middleware';
-import {TPassword} from '../Types/Passwords.type';
+import {TPassword} from '../types/passwords';
 
 type TPasswordsStore = {
   passwords: TPassword[];
@@ -10,6 +10,7 @@ type TPasswordsStore = {
   deletePasswords: () => void;
   togglePasswordSelection: (id: string) => void;
   deSelectAll: () => void;
+  setPasswords: (passwords: TPassword[]) => void;
 };
 
 export const usePasswordsStore = create(
@@ -54,6 +55,9 @@ export const usePasswordsStore = create(
               selectedPasswords: [],
             };
           });
+        },
+        setPasswords(passwords) {
+          set({passwords});
         },
       };
     },

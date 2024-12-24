@@ -2,8 +2,8 @@ import React, {useRef, useState} from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import {myTheme} from '../../../theme';
 
-import {TPassword} from '../../Types/Passwords.type';
-import {usePasswordsStore} from '../../Store/passwordStore';
+import {TPassword} from '../../types/passwords';
+import {usePasswordsStore} from '../../store/passwordStore';
 import ModalWrapper from '../../components/ModalWrapper';
 import Container from '../../components/atoms/Container';
 import Box from '../../components/atoms/Box';

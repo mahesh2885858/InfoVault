@@ -14,9 +14,9 @@ import Box from '../../components/atoms/Box';
 import Container from '../../components/atoms/Container';
 import LightText from '../../components/atoms/LightText';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
-import {usePasswordsStore} from '../../Store/passwordStore';
-import {TPassword} from '../../Types/Passwords.type';
-import {authenticateLocal} from '../../Utils/authenticateLocal';
+import {usePasswordsStore} from '../../store/passwordStore';
+import {TPassword} from '../../types/passwords';
+import {authenticateLocal} from '../../utils/authenticateLocal';
 const RenderPassword = (password: TPassword) => {
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordSelection = usePasswordsStore(

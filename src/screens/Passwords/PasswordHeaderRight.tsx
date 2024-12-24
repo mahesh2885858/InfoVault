@@ -1,6 +1,6 @@
 import React from 'react';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
-import {usePasswordsStore} from '../../Store/passwordStore';
+import {usePasswordsStore} from '../../store/passwordStore';
 import LightText from '../../components/atoms/LightText';
 
 const PasswordHeaderRight = () => {

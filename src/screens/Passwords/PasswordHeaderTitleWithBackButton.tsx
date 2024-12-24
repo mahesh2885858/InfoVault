@@ -4,19 +4,19 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {myTheme} from '../../../theme';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import LightText from '../../components/atoms/LightText';
+import {usePasswordsStore} from '../../store/passwordStore';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
-import {useCardStore} from '../../Store/cardStore';
 
-const CardHeaderTitleWithBackButton = () => {
+const PasswordHeaderTitleWithBackButton = () => {
   const navigation = useNavigation();
-  const deSelectAll = useCardStore(state => state.deSelectAll);
-  const selectedCards = useCardStore(state => state.selectedCards);
+  const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
+  const deSelectAll = usePasswordsStore(state => state.deSelectAll);
   return (
     <View style={styles.container}>
       <PressableWithFeedback
-        hidden={selectedCards.length === 0}
+        hidden={selectedPasswords.length === 0}
         onPress={() => {
-          if (selectedCards.length > 0) {
+          if (selectedPasswords.length > 0) {
             deSelectAll();
           }
         }}>
@@ -27,17 +27,16 @@ const CardHeaderTitleWithBackButton = () => {
         />
       </PressableWithFeedback>
       <PressableWithFeedback
-        hidden={selectedCards.length > 0}
+        hidden={selectedPasswords.length > 0}
         onPress={() => {
-          if (selectedCards.length === 0) {
+          if (selectedPasswords.length === 0) {
             navigation.dispatch(DrawerActions.openDrawer());
-          } else {
-            // navigation.goBack();
           }
         }}>
         <MaterialIcon name="menu" size={24} color={myTheme.textMain} />
       </PressableWithFeedback>
-      <LightText style={styles.text}>Cards</LightText>
+
+      <LightText style={styles.text}>Passwords</LightText>
     </View>
   );
 };
@@ -53,4 +52,4 @@ const styles = StyleSheet.create({
     color: myTheme.secondary,
   },
 });
-export default CardHeaderTitleWithBackButton;
+export default PasswordHeaderTitleWithBackButton;

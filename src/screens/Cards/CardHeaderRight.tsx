@@ -1,5 +1,5 @@
 import React from 'react';
-import {useCardStore} from '../../Store/cardStore';
+import {useCardStore} from '../../store/cardStore';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import LightText from '../../components/atoms/LightText';
 
