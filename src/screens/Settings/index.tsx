@@ -9,6 +9,8 @@ import LoadingIndicator from '../../components/Molecules/LoadingIndicator';
 import {validateImportedData} from '../../utils/validateImportedData';
 import {usePasswordsStore} from '../../store/passwordStore';
 
+const FILE_NAME = 'data.json';
+
 const Settings = () => {
   const {cData, setCards} = useCardStore(state => ({
     cData: state.cards,
@@ -22,24 +24,63 @@ const Settings = () => {
 
   const exportData = async () => {
     try {
+      // await AsyncStorage.removeItem('exportPath');
+      // return;
       setIsExporting(true);
+
+      const dataToExport = JSON.stringify({cards: cData, passwords: pData});
+      console.log({dataToExport});
+
+      // check the existing path in asyncStorage
+
       let dir = await AsyncStorage.getItem('exportPath');
+
       if (!dir) {
+        console.log('dir not found opening picker');
+        // open picker for choosing destination
         dir = (await ScopedStorage.openDocumentTree(true)).uri;
+
         await AsyncStorage.setItem('exportPath', dir);
+
+        console.log({selectedPath: dir});
+      } else {
+        // check whether the existing path is valid path or not.
+        console.log('checking the file existence', dir);
+        // const exists = await RNFS.readDir(dir);
+        //
+        const persistedUris = await ScopedStorage.getPersistedUriPermissions();
+
+        // Check if the directory uri exists in the list of uris where we have access to read/write.
+        const isPersisted = persistedUris.indexOf(dir) !== -1;
+
+        const exists = await ScopedStorage.listFiles(dir);
+        console.log({exists});
+
+        if (!exists || !isPersisted) {
+          // if the path is invalid ask for the path again
+          dir = (await ScopedStorage.openDocumentTree(true)).uri;
+
+          if (dir) {
+            // since the existing path is invalid replace the valid path in asyncStorage
+            await AsyncStorage.setItem('exportPath', dir);
+          }
+        }
       }
-      const dataToExport = {cards: cData, passwords: pData};
+
       if (dir) {
+        console.log({selectedDir: dir});
         await ScopedStorage.writeFile(
           dir,
-          JSON.stringify(dataToExport),
-          'data.json',
+          dataToExport,
+          FILE_NAME,
           'application/json',
           'utf8',
+          false,
         );
       }
     } catch (e) {
       console.error(e);
+      AsyncStorage.removeItem('exportPath');
     } finally {
       setIsExporting(false);
     }
