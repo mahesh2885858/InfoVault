@@ -13,10 +13,6 @@ import Reanimated, {
 
 function RightAction(prog: SharedValue<number>, drag: SharedValue<number>) {
   const styleAnimation = useAnimatedStyle(() => {
-    console.log({
-      drag: drag.value,
-      prog: prog.value,
-    });
     return {
       transform: [{translateX: drag.value + 50}],
     };
@@ -34,7 +30,7 @@ function RightAction(prog: SharedValue<number>, drag: SharedValue<number>) {
           flex: 1,
           justifyContent: 'center',
         }}>
-        <Text>Text</Text>
+        <Text>Soon!!</Text>
       </View>
     </Reanimated.View>
   );
