@@ -1,6 +1,7 @@
 export type DrawerParamsList = {
   Cards: undefined;
   Passwords: undefined;
+  Chat: undefined;
 };
 
 export type RootStackParamList = {

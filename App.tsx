@@ -22,6 +22,7 @@ import {DrawerParamsList, RootStackParamList} from './src/types/navigation';
 import {authenticateLocal} from './src/utils/authenticateLocal';
 import {myTheme} from './theme';
 import SettingsHeader from './src/screens/Settings/Header';
+import Chat from './src/screens/Chat';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator<DrawerParamsList>();
@@ -47,6 +48,17 @@ function DrawerNavigator() {
         name="Passwords"
         component={Passwords}
         options={PasswordsHeaderOptions}
+      />
+      <Drawer.Screen
+        name="Chat"
+        component={Chat}
+        options={{
+          title: 'Chat',
+          headerStyle: {
+            backgroundColor: myTheme.main,
+          },
+          headerTintColor: myTheme.textMain,
+        }}
       />
     </Drawer.Navigator>
   );

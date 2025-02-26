@@ -1,5 +1,4 @@
 export const myTheme = {
-  // main: '#010740',
   main: '#1b0017',
   secondary: '#F9FAFB',
   accent: '#001119',
