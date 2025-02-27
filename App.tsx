@@ -23,6 +23,8 @@ import {authenticateLocal} from './src/utils/authenticateLocal';
 import {myTheme} from './theme';
 import SettingsHeader from './src/screens/Settings/Header';
 import Chat from './src/screens/Chat';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import Profiles from './src/screens/Profiles';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator<DrawerParamsList>();
@@ -50,10 +52,10 @@ function DrawerNavigator() {
         options={PasswordsHeaderOptions}
       />
       <Drawer.Screen
-        name="Chat"
-        component={Chat}
+        name="Profiles"
+        component={Profiles}
         options={{
-          title: 'Chat',
+          title: 'Profiles',
           headerStyle: {
             backgroundColor: myTheme.main,
           },
@@ -75,7 +77,7 @@ function App(): React.JSX.Element {
     authenticate();
   }, []);
   return (
-    <>
+    <SafeAreaProvider>
       <StatusBar backgroundColor={myTheme.main} />
       <PaperProvider>
         <ToastProvider>
@@ -97,7 +99,7 @@ function App(): React.JSX.Element {
           </NavigationContainer>
         </ToastProvider>
       </PaperProvider>
-    </>
+    </SafeAreaProvider>
   );
 }
 export default App;
