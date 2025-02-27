@@ -3,14 +3,18 @@ import {Modal, StatusBar, StyleSheet, View} from 'react-native';
 
 type TProps = {
   visible: boolean;
-  setVisibility: React.Dispatch<React.SetStateAction<boolean>>;
+  onClose: () => void;
   children: React.ReactNode;
   width?: null | '90%';
 };
 
 const ModalWrapper = (props: TProps) => {
   return (
-    <Modal visible={props.visible} animationType="fade" transparent>
+    <Modal
+      visible={props.visible}
+      animationType="fade"
+      transparent
+      onRequestClose={props.onClose}>
       <StatusBar backgroundColor={'#00000099'} />
       <View style={styles.container}>{props.children}</View>
     </Modal>

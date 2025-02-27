@@ -95,7 +95,7 @@ const AddCardModal = (props: Props) => {
   return (
     <ModalWrapper
       width={'90%'}
-      setVisibility={props.setVisible}
+      onClose={() => props.setVisible(false)}
       visible={props.visible}>
       <Container style={styles.cardContainer}>
         <Box style={[styles.cardContent]}>
