@@ -7,6 +7,7 @@ import AddCardModal from '../../components/Card/AddCardModal';
 import Fab from '../../components/Fab';
 import Container from '../../components/atoms/Container';
 import RenderCard from './RenderCard';
+import BootSplash from 'react-native-bootsplash';
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
   const selectedCards = useCardStore(state => state.selectedCards);
@@ -30,7 +31,11 @@ const Cards = () => {
     }, [selectedCards, deSelectAll]),
   );
   return (
-    <Container style={styles.container}>
+    <Container
+      onLayout={() => {
+        BootSplash.hide();
+      }}
+      style={styles.container}>
       <StatusBar backgroundColor={myTheme.main} />
 
       <FlatList
