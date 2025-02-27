@@ -6,12 +6,29 @@ import {StyleSheet} from 'react-native';
 import {myTheme} from '../../../theme';
 import Fab from '../../components/Fab';
 import AddProfileModal from './AddProfileModal';
+import {useProfileStore} from '../../store/profileStore';
+import {FlatList} from 'react-native';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Profiles = () => {
   const [renderAddModal, setRenderAddModal] = useState(false);
+  const {profiles} = useProfileStore(state => ({profiles: state.profiles}));
+
   return (
     <SafeAreaView style={styles.container}>
-      <LightText>Profiles</LightText>
+      <FlatList
+        data={profiles}
+        contentContainerStyle={styles.listContainer}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => {
+          return (
+            <View style={styles.item}>
+              <LightText style={{flex: 1}}>{item.name}</LightText>
+              <MaterialIcon name="pencil" />
+            </View>
+          );
+        }}
+      />
       <Fab
         callBack={() => {
           setRenderAddModal(true);
@@ -41,5 +58,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     paddingBottom: 20,
+  },
+  listContainer: {
+    padding: 20,
+  },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
