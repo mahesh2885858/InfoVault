@@ -8,11 +8,15 @@ import Fab from '../../components/Fab';
 import Container from '../../components/atoms/Container';
 import RenderCard from './RenderCard';
 import BootSplash from 'react-native-bootsplash';
+import PressableWithFeedback from '../../components/PressableWithFeedback';
+import LightText from '../../components/atoms/LightText';
+import {useProfileContext} from '../../context/ProfileContext';
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
   const selectedCards = useCardStore(state => state.selectedCards);
   const deSelectAll = useCardStore(state => state.deSelectAll);
   const {cards} = useCardStore();
+  const {openProfileSelection} = useProfileContext()!;
 
   useFocusEffect(
     useCallback(() => {
@@ -39,6 +43,11 @@ const Cards = () => {
       <StatusBar backgroundColor={myTheme.main} />
 
       <FlatList
+        ListHeaderComponent={
+          <PressableWithFeedback onPress={openProfileSelection}>
+            <LightText>Switch</LightText>
+          </PressableWithFeedback>
+        }
         data={cards}
         contentContainerStyle={styles.cardConatiner}
         renderItem={item => {
