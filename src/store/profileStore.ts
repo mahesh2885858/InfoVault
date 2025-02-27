@@ -15,7 +15,12 @@ export const useProfileStore = create(
   persist<TProfileStore>(
     set => {
       return {
-        profiles: [],
+        profiles: [
+          {
+            id: '123abd',
+            name: 'All',
+          },
+        ],
         selectedProfileId: '',
 
         addProfile: profile => {
