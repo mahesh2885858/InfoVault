@@ -1,6 +1,4 @@
 import React, {useState} from 'react';
-import {View} from 'react-native';
-import LightText from '../../components/atoms/LightText';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {StyleSheet} from 'react-native';
 import {myTheme} from '../../../theme';
@@ -8,11 +6,28 @@ import Fab from '../../components/Fab';
 import AddProfileModal from './AddProfileModal';
 import {useProfileStore} from '../../store/profileStore';
 import {FlatList} from 'react-native';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import RenderProfile from './RenderProfile';
 
 const Profiles = () => {
   const [renderAddModal, setRenderAddModal] = useState(false);
-  const {profiles} = useProfileStore(state => ({profiles: state.profiles}));
+  const [mode, setMode] = useState<'new' | 'edit'>('new');
+
+  const {profiles, selectProfile} = useProfileStore(state => ({
+    profiles: state.profiles,
+    selectProfile: state.selectProfile,
+  }));
+
+  const onEditPress = (id: string) => {
+    selectProfile(id);
+    setMode('edit');
+    setRenderAddModal(true);
+  };
+
+  const onModalClose = () => {
+    selectProfile('');
+    setRenderAddModal(false);
+    setMode('new');
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -20,14 +35,9 @@ const Profiles = () => {
         data={profiles}
         contentContainerStyle={styles.listContainer}
         keyExtractor={item => item.id}
-        renderItem={({item}) => {
-          return (
-            <View style={styles.item}>
-              <LightText style={{flex: 1}}>{item.name}</LightText>
-              <MaterialIcon name="pencil" />
-            </View>
-          );
-        }}
+        renderItem={({item}) => (
+          <RenderProfile item={item} onEditPress={onEditPress} />
+        )}
       />
       <Fab
         callBack={() => {
@@ -36,7 +46,8 @@ const Profiles = () => {
       />
       {renderAddModal && (
         <AddProfileModal
-          onClose={() => setRenderAddModal(false)}
+          mode={mode === 'edit' ? 'edit' : 'new'}
+          onClose={onModalClose}
           visible={renderAddModal}
         />
       )}

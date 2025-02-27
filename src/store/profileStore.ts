@@ -9,11 +9,14 @@ type TProfileStore = {
   addProfile: (profile: TProfile) => void;
   removeProfile: (id?: string) => void;
   setProfiles: (cards: TProfile[]) => void;
+  getSelectedProfile: () => TProfile | undefined;
+  updateProfile: (profile: TProfile) => void;
+  selectProfile: (id: string) => void;
 };
 
 export const useProfileStore = create(
   persist<TProfileStore>(
-    set => {
+    (set, get) => {
       return {
         profiles: [
           {
@@ -38,6 +41,29 @@ export const useProfileStore = create(
 
         setProfiles(profiles) {
           set({profiles});
+        },
+        getSelectedProfile() {
+          const state = get();
+          return state.profiles.find(p => p.id === state.selectedProfileId);
+        },
+        updateProfile(profile) {
+          const updatedProfiles = get().profiles.map(p => {
+            if (p.id === profile.id) {
+              return {
+                ...p,
+                name: profile.name,
+              };
+            } else return p;
+          });
+          set({
+            profiles: updatedProfiles,
+            selectedProfileId: '',
+          });
+        },
+        selectProfile(id) {
+          set({
+            selectedProfileId: id,
+          });
         },
       };
     },
