@@ -18,6 +18,8 @@
 		05ADE775778841A78C33F03F /* PlaywriteITModernaLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0636574248C341B0A29E5AAF /* PlaywriteITModernaLight.ttf */; };
 		754C31F0887A4B18B52760AA /* PlaywriteITModernaRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7FED783BB009409488082CA7 /* PlaywriteITModernaRegular.ttf */; };
 		146A84DDA29940A8B8E6E2F8 /* PlaywriteITModernaThin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5E8120FC481B40CABBA1567E /* PlaywriteITModernaThin.ttf */; };
+		E04BEADB601044DCA87B5E85 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6A45885748884CD5BCF869A4 /* BootSplash.storyboard */; };
+		5F429F280F204D30A9B5D66E /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A90EBE92833B4EC3B5EF118A /* Colors.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,8 @@
 		0636574248C341B0A29E5AAF /* PlaywriteITModernaLight.ttf */ = {isa = PBXFileReference; name = PlaywriteITModernaLight.ttf; path = ../src/assets/fonts/PlaywriteITModernaLight.ttf; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		7FED783BB009409488082CA7 /* PlaywriteITModernaRegular.ttf */ = {isa = PBXFileReference; name = PlaywriteITModernaRegular.ttf; path = ../src/assets/fonts/PlaywriteITModernaRegular.ttf; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		5E8120FC481B40CABBA1567E /* PlaywriteITModernaThin.ttf */ = {isa = PBXFileReference; name = PlaywriteITModernaThin.ttf; path = ../src/assets/fonts/PlaywriteITModernaThin.ttf; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		6A45885748884CD5BCF869A4 /* BootSplash.storyboard */ = {isa = PBXFileReference; name = "BootSplash.storyboard"; path = "InfoVault/BootSplash.storyboard"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A90EBE92833B4EC3B5EF118A /* Colors.xcassets */ = {isa = PBXFileReference; name = "Colors.xcassets"; path = "InfoVault/Colors.xcassets"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = folder.assetcatalog; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +106,8 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
+				6A45885748884CD5BCF869A4 /* BootSplash.storyboard */,
+				A90EBE92833B4EC3B5EF118A /* Colors.xcassets */,
 			);
 			name = InfoVault;
 			sourceTree = "<group>";
@@ -270,6 +276,8 @@
 				05ADE775778841A78C33F03F /* PlaywriteITModernaLight.ttf in Resources */,
 				754C31F0887A4B18B52760AA /* PlaywriteITModernaRegular.ttf in Resources */,
 				146A84DDA29940A8B8E6E2F8 /* PlaywriteITModernaThin.ttf in Resources */,
+				E04BEADB601044DCA87B5E85 /* BootSplash.storyboard in Resources */,
+				5F429F280F204D30A9B5D66E /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
