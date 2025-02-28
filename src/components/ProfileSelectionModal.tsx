@@ -19,18 +19,27 @@ const ProfileSelectionModal = (props: TProps) => {
     selectProfile: state.selectProfile,
   }));
 
+  console.log({selectedId});
+
   return (
     <ModalWrapper onClose={props.onClose} visible={props.visible}>
       <View style={styles.rootView}>
         <View style={styles.container}>
           {profiles.map(item => (
             <PressableWithFeedback
-              onPress={() => selectProfile(item.id)}
+              key={item.id}
+              onPress={() => {
+                selectProfile(item.id);
+                props.onClose();
+              }}
               style={styles.radioItem}>
               <RadioButton
                 value={item.name}
                 status={selectedId === item.id ? 'checked' : 'unchecked'}
-                onPress={() => selectProfile(item.id)}
+                onPress={() => {
+                  selectProfile(item.id);
+                  props.onClose();
+                }}
               />
               <LightText style={styles.text}>{item.name}</LightText>
             </PressableWithFeedback>
@@ -57,7 +66,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     backgroundColor: myTheme.cardBg,
     padding: 10,
-    borderRadius: 20,
+    borderRadius: 5,
   },
   radioItem: {
     flexDirection: 'row',

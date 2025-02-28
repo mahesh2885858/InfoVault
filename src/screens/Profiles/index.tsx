@@ -12,9 +12,10 @@ const Profiles = () => {
   const [renderAddModal, setRenderAddModal] = useState(false);
   const [mode, setMode] = useState<'new' | 'edit'>('new');
 
-  const {profiles, selectProfile} = useProfileStore(state => ({
+  const {profiles, selectProfile, reset} = useProfileStore(state => ({
     profiles: state.profiles,
     selectProfile: state.selectProfile,
+    reset: state.resetProfileSelection,
   }));
 
   const onEditPress = (id: string) => {
@@ -24,7 +25,7 @@ const Profiles = () => {
   };
 
   const onModalClose = () => {
-    selectProfile('');
+    reset();
     setRenderAddModal(false);
     setMode('new');
   };

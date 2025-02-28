@@ -15,7 +15,11 @@ const RenderProfile = (props: TProps) => {
   return (
     <View style={styles.item}>
       <LightText style={styles.text}>{item.name}</LightText>
-      <MaterialIcon name="pencil" onPress={() => props.onEditPress(item.id)} />
+      <MaterialIcon
+        name="pencil"
+        onPress={() => props.onEditPress(item.id)}
+        size={20}
+      />
     </View>
   );
 };
@@ -30,5 +34,6 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
+    fontSize: 20,
   },
 });

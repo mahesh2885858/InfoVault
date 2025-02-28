@@ -15,7 +15,7 @@ const Cards = () => {
   const [visible, setVisibility] = useState(false);
   const selectedCards = useCardStore(state => state.selectedCards);
   const deSelectAll = useCardStore(state => state.deSelectAll);
-  const {cards} = useCardStore();
+  const cards = useCardStore(state => state.cards);
   const {openProfileSelection} = useProfileContext()!;
 
   useFocusEffect(
@@ -34,6 +34,7 @@ const Cards = () => {
       return () => subscription.remove();
     }, [selectedCards, deSelectAll]),
   );
+
   return (
     <Container
       onLayout={() => {
@@ -43,11 +44,6 @@ const Cards = () => {
       <StatusBar backgroundColor={myTheme.main} />
 
       <FlatList
-        ListHeaderComponent={
-          <PressableWithFeedback onPress={openProfileSelection}>
-            <LightText>Switch</LightText>
-          </PressableWithFeedback>
-        }
         data={cards}
         contentContainerStyle={styles.cardConatiner}
         renderItem={item => {

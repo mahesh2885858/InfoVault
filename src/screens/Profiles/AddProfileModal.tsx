@@ -55,7 +55,10 @@ const AddProfileModal = (props: TProps) => {
           style={styles.input}
           placeholder="Add profile"
         />
-        <Button label="Add" onButtonPress={onSave} />
+        <Button
+          label={mode === 'new' ? 'Add' : 'Update'}
+          onButtonPress={onSave}
+        />
       </View>
     </ModalWrapper>
   );

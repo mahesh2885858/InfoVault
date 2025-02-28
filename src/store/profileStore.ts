@@ -12,6 +12,7 @@ type TProfileStore = {
   getSelectedProfile: () => TProfile | undefined;
   updateProfile: (profile: TProfile) => void;
   selectProfile: (id: string) => void;
+  resetProfileSelection: () => void;
 };
 
 export const useProfileStore = create(
@@ -24,7 +25,7 @@ export const useProfileStore = create(
             name: 'All',
           },
         ],
-        selectedProfileId: '',
+        selectedProfileId: '123abd',
 
         addProfile: profile => {
           set(state => {
@@ -63,6 +64,11 @@ export const useProfileStore = create(
         selectProfile(id) {
           set({
             selectedProfileId: id,
+          });
+        },
+        resetProfileSelection() {
+          set({
+            selectedProfileId: '123abd',
           });
         },
       };
