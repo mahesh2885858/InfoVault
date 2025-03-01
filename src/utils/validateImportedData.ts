@@ -1,12 +1,13 @@
-import {TCard, TPassword} from '../types';
+import {TCard, TPassword, TProfile} from '../types';
 type TProps = {
   cards: TCard[];
   passwords: TPassword[];
+  profiles: TProfile[];
 };
 export const validateImportedData = (data: TProps): boolean => {
   let r = true;
-  if (!data || (!data.cards && !data.passwords)) {
-    console.log("invalid data, missing 'cards' or 'passwords'");
+  if (!data || (!data.cards && !data.passwords && !data.profiles)) {
+    console.log("invalid data, missing 'cards' or 'passwords' or 'profiles' ");
     return false;
   }
 
@@ -35,5 +36,17 @@ export const validateImportedData = (data: TProps): boolean => {
       }
     });
   }
+
+  // check the profiles data
+  if (data.profiles && data.profiles.length > 0) {
+    data.profiles.forEach(profile => {
+      console.log({profile});
+      if (!profile.name || !profile.id) {
+        console.log('invalid profile data');
+        r = false;
+      }
+    });
+  }
+
   return r;
 };
