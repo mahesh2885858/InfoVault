@@ -8,6 +8,7 @@ import {useCardStore} from '../../store/cardStore';
 import LoadingIndicator from '../../components/Molecules/LoadingIndicator';
 import {validateImportedData} from '../../utils/validateImportedData';
 import {usePasswordsStore} from '../../store/passwordStore';
+import {useProfileStore} from '../../store/profileStore';
 
 const FILE_NAME = 'data.json';
 const DIR_PATH = 'exportPath';
@@ -22,6 +23,11 @@ const Settings = () => {
     setPasswords: state.setPasswords,
   }));
 
+  const {profiles, setProfiels} = useProfileStore(state => ({
+    profiles: state.profiles,
+    setProfiels: state.setProfiles,
+  }));
+
   const [isExporting, setIsExporting] = useState(false);
 
   const pickTheDirectory = async () => {
@@ -31,7 +37,11 @@ const Settings = () => {
   const exportData = async () => {
     try {
       setIsExporting(true);
-      const dataToExport = JSON.stringify({cards: cData, passwords: pData});
+      const dataToExport = JSON.stringify({
+        cards: cData,
+        passwords: pData,
+        profiles,
+      });
       // check the existing path in asyncStorage
       let dir = await AsyncStorage.getItem(DIR_PATH);
       if (!dir) {
