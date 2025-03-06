@@ -22,6 +22,7 @@ const initState: TCardInput = {
   CVV: '',
   expiry: '',
   NameOnCard: '',
+  profileId: '123abd',
 };
 
 const PlaceholderTextColor = 'grey';

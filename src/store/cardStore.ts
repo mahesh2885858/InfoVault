@@ -2,6 +2,7 @@ import {create} from 'zustand';
 import {TCard} from '../types/card';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {persist, createJSONStorage} from 'zustand/middleware';
+import {TSpan} from 'react-native-svg';
 
 type TCardStore = {
   cards: TCard[];
@@ -66,6 +67,22 @@ export const useCardStore = create(
     {
       name: 'cardStore',
       storage: createJSONStorage(() => AsyncStorage),
+      version: 1,
+      migrate: (persistedState: any, version) => {
+        switch (version) {
+          case 1:
+            // Migrating from version 0 to 1
+            return {
+              ...persistedState,
+              cards: persistedState.cards.map((card: TCard) => ({
+                ...card,
+                profileId: '123abd', //adding a new field
+              })),
+            };
+          default:
+            return persistedState;
+        }
+      },
     },
   ),
 );

@@ -6,7 +6,6 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useProfileContext} from '../../context/ProfileContext';
 import {useProfileStore} from '../../store/profileStore';
 import {StyleSheet} from 'react-native';
-import {Text} from 'react-native';
 import {myTheme} from '../../../theme';
 
 const CardHeaderRight = () => {
@@ -22,7 +21,7 @@ const CardHeaderRight = () => {
       <PressableWithFeedback
         onPress={openProfileSelection}
         style={styles.switch}>
-        <LightText>{selectedProfile?.name ?? 'Mahesh'}</LightText>
+        <LightText>{selectedProfile?.name ?? ''}</LightText>
         <MaterialIcon
           onPress={openProfileSelection}
           name="chevron-down"

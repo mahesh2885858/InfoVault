@@ -64,6 +64,22 @@ export const usePasswordsStore = create(
     {
       name: 'passwordsStore',
       storage: createJSONStorage(() => AsyncStorage),
+      version: 1,
+      migrate: (persistedState: any, version) => {
+        switch (version) {
+          case 1:
+            // Migrating from version 0 to 1
+            return {
+              ...persistedState,
+              cards: persistedState.passwords.map((password: TPassword) => ({
+                ...password,
+                profileId: '123abd', //adding a new field
+              })),
+            };
+          default:
+            return persistedState;
+        }
+      },
     },
   ),
 );

@@ -22,6 +22,7 @@ const initState: TPasswordInput = {
   password: '',
   username: '',
   website: '',
+  profileId: '123abd',
 };
 
 const PlaceholderTextColor = 'grey';

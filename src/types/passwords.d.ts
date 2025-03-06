@@ -4,4 +4,5 @@ export type TPassword = {
   id: string;
   website: string;
   isSelected: boolean;
+  profileId: string;
 };
