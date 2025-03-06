@@ -102,6 +102,10 @@ const Settings = () => {
           if (response.passwords && response.passwords.length > 0) {
             setPasswords(response.passwords);
           }
+
+          if (response.profiles && response.profiles.length > 0) {
+            setProfiels(response.profiles);
+          }
         }
       }
     } catch (e) {
