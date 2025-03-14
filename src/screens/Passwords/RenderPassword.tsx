@@ -17,6 +17,8 @@ import PressableWithFeedback from '../../components/PressableWithFeedback';
 import {usePasswordsStore} from '../../store/passwordStore';
 import {TPassword} from '../../types/passwords';
 import {authenticateLocal} from '../../utils/authenticateLocal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const RenderPassword = (password: TPassword) => {
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordSelection = usePasswordsStore(
@@ -39,6 +41,10 @@ const RenderPassword = (password: TPassword) => {
   });
 
   const togglePasswordVisibility = async () => {
+    AsyncStorage.getItem('passwordsStore').then(data => {
+      console.log({data: JSON.stringify(data)});
+    });
+
     try {
       if (!showPassword) {
         const result = await authenticateLocal();
