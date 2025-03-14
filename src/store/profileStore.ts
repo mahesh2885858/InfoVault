@@ -2,6 +2,7 @@ import {create} from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {persist, createJSONStorage} from 'zustand/middleware';
 import {TProfile} from '../types';
+import {DEFAULT_PROFILE_ID} from '../constants';
 
 type TProfileStore = {
   profiles: TProfile[];
@@ -21,11 +22,11 @@ export const useProfileStore = create(
       return {
         profiles: [
           {
-            id: '123abd',
+            id: DEFAULT_PROFILE_ID,
             name: 'All',
           },
         ],
-        selectedProfileId: '123abd',
+        selectedProfileId: DEFAULT_PROFILE_ID,
 
         addProfile: profile => {
           set(state => {
@@ -68,7 +69,7 @@ export const useProfileStore = create(
         },
         resetProfileSelection() {
           set({
-            selectedProfileId: '123abd',
+            selectedProfileId: DEFAULT_PROFILE_ID,
           });
         },
       };

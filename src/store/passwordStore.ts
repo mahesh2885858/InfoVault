@@ -2,6 +2,7 @@ import {create} from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {persist, createJSONStorage} from 'zustand/middleware';
 import {TPassword} from '../types/passwords';
+import {DEFAULT_PROFILE_ID} from '../constants';
 
 type TPasswordsStore = {
   passwords: TPassword[];
@@ -76,7 +77,7 @@ export const usePasswordsStore = create(
               passwords: persistedState.passwords.map(
                 (password: TPassword) => ({
                   ...password,
-                  profileId: '123abd', //adding a new field
+                  profileId: DEFAULT_PROFILE_ID, //adding a new field
                 }),
               ),
             };

@@ -9,6 +9,7 @@ import Container from '../../components/atoms/Container';
 import RenderCard from './RenderCard';
 import BootSplash from 'react-native-bootsplash';
 import {useProfileStore} from '../../store/profileStore';
+import {DEFAULT_PROFILE_ID} from '../../constants';
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
   const selectedCards = useCardStore(state => state.selectedCards);
@@ -16,7 +17,9 @@ const Cards = () => {
   const cards = useCardStore(state => state.cards);
   const selectedProfile = useProfileStore(state => state.selectedProfileId);
   const cardsToRender = cards.filter(
-    card => card.profileId === selectedProfile,
+    card =>
+      selectedProfile === DEFAULT_PROFILE_ID ||
+      card.profileId === selectedProfile,
   );
   useFocusEffect(
     useCallback(() => {

@@ -8,6 +8,7 @@ import {usePasswordsStore} from '../../store/passwordStore';
 import RenderPassword from './RenderPassword';
 import AddPasswordModal from './AddPasswordModal';
 import {useProfileStore} from '../../store/profileStore';
+import {DEFAULT_PROFILE_ID} from '../../constants';
 
 const Passwords = () => {
   const [visible, setVisibility] = useState(false);
@@ -16,7 +17,9 @@ const Passwords = () => {
   const passwords = usePasswordsStore(state => state.passwords);
   const selectedProfile = useProfileStore(state => state.selectedProfileId);
   const passwordsToRender = passwords.filter(
-    password => password.profileId === selectedProfile,
+    password =>
+      selectedProfile === DEFAULT_PROFILE_ID ||
+      password.profileId === selectedProfile,
   );
 
   useFocusEffect(

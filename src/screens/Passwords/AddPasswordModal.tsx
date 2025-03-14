@@ -10,6 +10,7 @@ import Box from '../../components/atoms/Box';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ButtonsForForms from '../../components/Molecules/ButtonsForForms';
+import {useProfileStore} from '../../store/profileStore';
 
 type Props = {
   visible: boolean;
@@ -35,6 +36,7 @@ const AddPasswordModal = (props: Props) => {
   const passwordRef = useRef<TextInput>(null);
   const websiteRef = useRef<TextInput>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const selectedProfileId = useProfileStore(state => state.selectedProfileId);
 
   const togglePasswordVisibility = async () => {
     setShowPassword(p => !p);
@@ -61,6 +63,7 @@ const AddPasswordModal = (props: Props) => {
       ...passwordInputs,
       id: Date.now().toString(),
       isSelected: false,
+      profileId: selectedProfileId,
     });
     setPasswordInputs(initState);
     props.setVisible(false);

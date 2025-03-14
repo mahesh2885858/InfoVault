@@ -2,7 +2,7 @@ import {create} from 'zustand';
 import {TCard} from '../types/card';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {persist, createJSONStorage} from 'zustand/middleware';
-import {TSpan} from 'react-native-svg';
+import {DEFAULT_PROFILE_ID} from '../constants';
 
 type TCardStore = {
   cards: TCard[];
@@ -76,7 +76,7 @@ export const useCardStore = create(
               ...persistedState,
               cards: persistedState.cards.map((card: TCard) => ({
                 ...card,
-                profileId: '123abd', //adding a new field
+                profileId: DEFAULT_PROFILE_ID, //adding a new field
               })),
             };
           default:
