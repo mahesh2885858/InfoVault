@@ -5,4 +5,5 @@ export type TCard = {
   expiry: string;
   cardName: string;
   isSelected: boolean;
+  profileId: string;
 };

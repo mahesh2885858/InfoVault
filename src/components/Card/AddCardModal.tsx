@@ -8,6 +8,7 @@ import Box from '../atoms/Box';
 import Container from '../atoms/Container';
 import LightText from '../atoms/LightText';
 import ButtonsForForms from '../Molecules/ButtonsForForms';
+import {useProfileStore} from '../../store/profileStore';
 
 type Props = {
   visible: boolean;
@@ -22,6 +23,7 @@ const initState: TCardInput = {
   CVV: '',
   expiry: '',
   NameOnCard: '',
+  profileId: '123abd',
 };
 
 const PlaceholderTextColor = 'grey';
@@ -34,6 +36,7 @@ const AddCardModal = (props: Props) => {
   const cardNumberRef = useRef<TextInput>(null);
   const cvvRef = useRef<TextInput>(null);
   const nameOnCardRef = useRef<TextInput>(null);
+  const selectedProfileId = useProfileStore(state => state.selectedProfileId);
 
   const handleCardNumber = (text: string) => {
     let t = text;
@@ -87,6 +90,7 @@ const AddCardModal = (props: Props) => {
 
   const AddACard = () => {
     if (!validateInputs(cardInputs)) return;
+    cardInputs.profileId = selectedProfileId;
     addCard(cardInputs);
     setCardInputs(initState);
     props.setVisible(false);
@@ -95,7 +99,7 @@ const AddCardModal = (props: Props) => {
   return (
     <ModalWrapper
       width={'90%'}
-      setVisibility={props.setVisible}
+      onClose={() => props.setVisible(false)}
       visible={props.visible}>
       <Container style={styles.cardContainer}>
         <Box style={[styles.cardContent]}>

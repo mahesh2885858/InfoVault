@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     borderRadius: 5,
     backgroundColor: myTheme.buttonBg,
-    width: 'auto',
+    // width: 'auto',
     justifyContent: 'center',
     alignItems: 'center',
   },

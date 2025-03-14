@@ -8,12 +8,19 @@ import Fab from '../../components/Fab';
 import Container from '../../components/atoms/Container';
 import RenderCard from './RenderCard';
 import BootSplash from 'react-native-bootsplash';
+import {useProfileStore} from '../../store/profileStore';
+import {DEFAULT_PROFILE_ID} from '../../constants';
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
   const selectedCards = useCardStore(state => state.selectedCards);
   const deSelectAll = useCardStore(state => state.deSelectAll);
-  const {cards} = useCardStore();
-
+  const cards = useCardStore(state => state.cards);
+  const selectedProfile = useProfileStore(state => state.selectedProfileId);
+  const cardsToRender = cards.filter(
+    card =>
+      selectedProfile === DEFAULT_PROFILE_ID ||
+      card.profileId === selectedProfile,
+  );
   useFocusEffect(
     useCallback(() => {
       const handleBackPress = () => {
@@ -39,7 +46,7 @@ const Cards = () => {
       <StatusBar backgroundColor={myTheme.main} />
 
       <FlatList
-        data={cards}
+        data={cardsToRender}
         contentContainerStyle={styles.cardConatiner}
         renderItem={item => {
           return <RenderCard {...item.item} />;

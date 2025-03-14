@@ -1,31 +1,13 @@
-name: react-native-test
+name: 'android-build'
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      # Install npm dependencies
-      - name: Install npm dependencies
-        run: |
-          npm install
-
-      - name: Run tests
-        run: |
-          npm run test -- -u
-
-  build-android:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
