@@ -8,8 +8,8 @@
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React, {useEffect} from 'react';
-import {BackHandler, StatusBar} from 'react-native';
+import React from 'react';
+import {StatusBar} from 'react-native';
 import {PaperProvider} from 'react-native-paper';
 import {ToastProvider} from 'react-native-toast-notifications';
 import CustomDrawer from './src/components/Navigation/CustomDrawer';
@@ -19,12 +19,13 @@ import Passwords from './src/screens/Passwords';
 import {PasswordsHeaderOptions} from './src/screens/Passwords/PasswordHeaderOptions';
 import Settings from './src/screens/Settings';
 import {DrawerParamsList, RootStackParamList} from './src/types/navigation';
-import {authenticateLocal} from './src/utils/authenticateLocal';
+// import {authenticateLocal} from './src/utils/authenticateLocal';
 import {myTheme} from './theme';
 import SettingsHeader from './src/screens/Settings/Header';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Profiles from './src/screens/Profiles';
 import {ProfileContextProvider} from './src/context/ProfileContext';
+import {AuthContextProvider} from './src/context/AuthContext';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator<DrawerParamsList>();
@@ -67,39 +68,43 @@ function DrawerNavigator() {
 }
 
 function App(): React.JSX.Element {
-  useEffect(() => {
-    const authenticate = async () => {
-      const result = await authenticateLocal();
-      if (!result) {
-        BackHandler.exitApp();
-      }
-    };
-    authenticate();
-  }, []);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // useEffect(() => {
+  //   const authenticate = async () => {
+  //     const result = await authenticateLocal();
+  //     if (!result) {
+  //       BackHandler.exitApp();
+  //     }
+  //     setIsAuthenticated(true);
+  //   };
+  //   authenticate();
+  // }, []);
   return (
     <SafeAreaProvider>
       <StatusBar backgroundColor={myTheme.main} />
       <PaperProvider>
-        <ProfileContextProvider>
-          <ToastProvider>
-            <NavigationContainer>
-              <Stack.Navigator initialRouteName="Drawer">
-                <Stack.Screen
-                  name="Drawer"
-                  component={DrawerNavigator}
-                  options={{headerShown: false}}
-                />
-                <Stack.Screen
-                  name="Settings"
-                  component={Settings}
-                  options={{
-                    header: SettingsHeader,
-                  }}
-                />
-              </Stack.Navigator>
-            </NavigationContainer>
-          </ToastProvider>
-        </ProfileContextProvider>
+        <AuthContextProvider>
+          <ProfileContextProvider>
+            <ToastProvider>
+              <NavigationContainer>
+                <Stack.Navigator initialRouteName="Drawer">
+                  <Stack.Screen
+                    name="Drawer"
+                    component={DrawerNavigator}
+                    options={{headerShown: false}}
+                  />
+                  <Stack.Screen
+                    name="Settings"
+                    component={Settings}
+                    options={{
+                      header: SettingsHeader,
+                    }}
+                  />
+                </Stack.Navigator>
+              </NavigationContainer>
+            </ToastProvider>
+          </ProfileContextProvider>
+        </AuthContextProvider>
       </PaperProvider>
     </SafeAreaProvider>
   );
