@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import {myTheme} from '../../../theme';
 import {useCardStore} from '../../store/cardStore';
@@ -9,6 +9,10 @@ import Container from '../atoms/Container';
 import LightText from '../atoms/LightText';
 import ButtonsForForms from '../Molecules/ButtonsForForms';
 import {useProfileStore} from '../../store/profileStore';
+import {useProfileContext} from '../../context/ProfileContext';
+import PressableWithFeedback from '../PressableWithFeedback';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {DEFAULT_PROFILE_ID} from '../../constants';
 
 type Props = {
   visible: boolean;
@@ -23,7 +27,7 @@ const initState: TCardInput = {
   CVV: '',
   expiry: '',
   NameOnCard: '',
-  profileId: '123abd',
+  profileId: DEFAULT_PROFILE_ID,
 };
 
 const PlaceholderTextColor = 'grey';
@@ -36,7 +40,12 @@ const AddCardModal = (props: Props) => {
   const cardNumberRef = useRef<TextInput>(null);
   const cvvRef = useRef<TextInput>(null);
   const nameOnCardRef = useRef<TextInput>(null);
-  const selectedProfileId = useProfileStore(state => state.selectedProfileId);
+  const {selectedProfile} = useProfileStore(state => ({
+    selectedProfile: state.getSelectedProfile(),
+    profiles: state.profiles,
+  }));
+
+  const {openProfileSelection, closeProfileSelection} = useProfileContext()!;
 
   const handleCardNumber = (text: string) => {
     let t = text;
@@ -53,25 +62,27 @@ const AddCardModal = (props: Props) => {
     setCardInputs(prev => ({...prev, cardNumber: t}));
   };
 
-  const onChange = (text: string, field: keyof typeof cardInputs) => {
-    let t = text;
-    if (field === 'expiry') {
-      if (text.length === 2 && cardInputs.expiry.split('').pop() !== '/') {
-        t = t + '/';
+  const onChange = useCallback(
+    (text: string, field: keyof typeof cardInputs) => {
+      let t = text;
+      if (field === 'expiry') {
+        if (text.length === 2 && cardInputs.expiry.split('').pop() !== '/') {
+          t = t + '/';
+        }
+        if (text.length === 5) {
+          cvvRef.current!.focus();
+        }
       }
-      if (text.length === 5) {
-        cvvRef.current!.focus();
-      }
-    }
 
-    if (field === 'CVV') {
-      if (text.length === 3) {
-        nameOnCardRef.current!.focus();
+      if (field === 'CVV') {
+        if (text.length === 3) {
+          nameOnCardRef.current!.focus();
+        }
       }
-    }
-
-    setCardInputs(prev => ({...prev, [field]: t}));
-  };
+      setCardInputs(prev => ({...prev, [field]: t}));
+    },
+    [cardInputs],
+  );
 
   const validateInputs = (inputs: TCardInput) => {
     let r = true;
@@ -90,18 +101,34 @@ const AddCardModal = (props: Props) => {
 
   const AddACard = () => {
     if (!validateInputs(cardInputs)) return;
-    cardInputs.profileId = selectedProfileId;
+    cardInputs.profileId = selectedProfile?.id ?? '';
     addCard(cardInputs);
     setCardInputs(initState);
     props.setVisible(false);
   };
 
+  const close = useCallback(() => {
+    setCardInputs(initState);
+    props.setVisible(false);
+  }, [props]);
+
   return (
-    <ModalWrapper
-      width={'90%'}
-      onClose={() => props.setVisible(false)}
-      visible={props.visible}>
+    <ModalWrapper width={'90%'} onClose={close} visible={props.visible}>
       <Container style={styles.cardContainer}>
+        <View style={styles.profileSwitch}>
+          <LightText>Card will be saved in : </LightText>
+          <PressableWithFeedback
+            onPress={openProfileSelection}
+            style={styles.switch}>
+            <LightText>{selectedProfile?.name ?? ''}</LightText>
+            <MaterialIcon
+              onPress={openProfileSelection}
+              name="chevron-down"
+              color="white"
+              size={25}
+            />
+          </PressableWithFeedback>
+        </View>
         <Box style={[styles.cardContent]}>
           <View style={styles.cardNameAndNumber}>
             <TextInput
@@ -165,10 +192,7 @@ const AddCardModal = (props: Props) => {
             />
           </View>
         </Box>
-        <ButtonsForForms
-          onCancel={() => props.setVisible(false)}
-          onSave={() => AddACard()}
-        />
+        <ButtonsForForms onCancel={close} onSave={() => AddACard()} />
       </Container>
     </ModalWrapper>
   );
@@ -185,7 +209,11 @@ const styles = StyleSheet.create({
   number: {
     width: '70%',
   },
-
+  profileSwitch: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 20,
+  },
   textInput: {
     fontSize: 15,
     padding: 2,
@@ -253,6 +281,14 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textTransform: 'uppercase',
     color: myTheme.secondary,
+  },
+  switch: {
+    flexDirection: 'row',
+    paddingHorizontal: 5,
+    backgroundColor: myTheme.buttonBg,
+    alignItems: 'center',
+    gap: 10,
+    borderRadius: 5,
   },
 });
 
