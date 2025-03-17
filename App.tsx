@@ -68,17 +68,6 @@ function DrawerNavigator() {
 }
 
 function App(): React.JSX.Element {
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // useEffect(() => {
-  //   const authenticate = async () => {
-  //     const result = await authenticateLocal();
-  //     if (!result) {
-  //       BackHandler.exitApp();
-  //     }
-  //     setIsAuthenticated(true);
-  //   };
-  //   authenticate();
-  // }, []);
   return (
     <SafeAreaProvider>
       <StatusBar backgroundColor={myTheme.main} />

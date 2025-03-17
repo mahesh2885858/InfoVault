@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import ModalWrapper from './ModalWrapper';
 import {useProfileStore} from '../store/profileStore';
 import {RadioButton} from 'react-native-paper';
@@ -11,15 +11,41 @@ import Button from './atoms/Button';
 type TProps = {
   visible: boolean;
   onClose: () => void;
+  renderingForNewItemAdd?: boolean;
 };
 const ProfileSelectionModal = (props: TProps) => {
-  const {profiles, selectedId, selectProfile} = useProfileStore(state => ({
+  const {
+    profiles,
+    selectedId,
+    selectProfile,
+    selectedProfileForAddingANewRecord,
+    selectProfileForAddingANewRecord,
+  } = useProfileStore(state => ({
     profiles: state.profiles,
     selectedId: state.selectedProfileId,
     selectProfile: state.selectProfile,
+    selectedProfileForAddingANewRecord:
+      state.selectedProfileForAddingANewRecord,
+    selectProfileForAddingANewRecord: state.selectProfileForAddingANewRecord,
   }));
 
-  console.log({selectedId});
+  const idToCompare = props.renderingForNewItemAdd
+    ? selectedProfileForAddingANewRecord
+    : selectedId;
+
+  const selectItem = useCallback(
+    (id: string) => {
+      if (props.renderingForNewItemAdd) {
+        selectProfileForAddingANewRecord(id);
+        props.onClose();
+
+        return;
+      }
+      selectProfile(id);
+      props.onClose();
+    },
+    [props, selectProfile, selectProfileForAddingANewRecord],
+  );
 
   return (
     <ModalWrapper onClose={props.onClose} visible={props.visible}>
@@ -28,18 +54,12 @@ const ProfileSelectionModal = (props: TProps) => {
           {profiles.map(item => (
             <PressableWithFeedback
               key={item.id}
-              onPress={() => {
-                selectProfile(item.id);
-                props.onClose();
-              }}
+              onPress={() => selectItem(item.id)}
               style={styles.radioItem}>
               <RadioButton
                 value={item.name}
-                status={selectedId === item.id ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  selectProfile(item.id);
-                  props.onClose();
-                }}
+                status={idToCompare === item.id ? 'checked' : 'unchecked'}
+                onPress={() => selectItem(item.id)}
               />
               <LightText style={styles.text}>{item.name}</LightText>
             </PressableWithFeedback>

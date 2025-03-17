@@ -11,6 +11,9 @@ import PressableWithFeedback from '../../components/PressableWithFeedback';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ButtonsForForms from '../../components/Molecules/ButtonsForForms';
 import {useProfileStore} from '../../store/profileStore';
+import LightText from '../../components/atoms/LightText';
+import {DEFAULT_PROFILE_ID} from '../../constants';
+import {useProfileContext} from '../../context/ProfileContext';
 
 type Props = {
   visible: boolean;
@@ -36,7 +39,14 @@ const AddPasswordModal = (props: Props) => {
   const passwordRef = useRef<TextInput>(null);
   const websiteRef = useRef<TextInput>(null);
   const [showPassword, setShowPassword] = useState(false);
-  const selectedProfileId = useProfileStore(state => state.selectedProfileId);
+  const {selectedProfileForNew} = useProfileStore(state => ({
+    selectedProfile: state.getSelectedProfile(),
+    selectedProfileForNew: state.profiles.find(
+      p => p.id === state.selectedProfileForAddingANewRecord,
+    ),
+  }));
+
+  const {openProfileSelection} = useProfileContext()!;
 
   const togglePasswordVisibility = async () => {
     setShowPassword(p => !p);
@@ -63,7 +73,7 @@ const AddPasswordModal = (props: Props) => {
       ...passwordInputs,
       id: Date.now().toString(),
       isSelected: false,
-      profileId: selectedProfileId,
+      profileId: selectedProfileForNew?.id ?? DEFAULT_PROFILE_ID,
     });
     setPasswordInputs(initState);
     props.setVisible(false);
@@ -79,6 +89,20 @@ const AddPasswordModal = (props: Props) => {
       onClose={() => props.setVisible(false)}
       visible={props.visible}>
       <Container style={styles.cardContainer}>
+        <View style={styles.profileSwitch}>
+          <LightText>Card will be saved in : </LightText>
+          <PressableWithFeedback
+            onPress={() => openProfileSelection({renderForNew: true})}
+            style={styles.switch}>
+            <LightText>{selectedProfileForNew?.name ?? ''}</LightText>
+            <MaterialIcon
+              onPress={() => openProfileSelection({renderForNew: true})}
+              name="chevron-down"
+              color="white"
+              size={25}
+            />
+          </PressableWithFeedback>
+        </View>
         <Box style={[styles.cardContent]}>
           <View style={styles.cardNameAndNumber}>
             <TextInput
@@ -251,6 +275,19 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 7,
     right: 10,
+  },
+  switch: {
+    flexDirection: 'row',
+    paddingHorizontal: 5,
+    backgroundColor: myTheme.buttonBg,
+    alignItems: 'center',
+    gap: 10,
+    borderRadius: 5,
+  },
+  profileSwitch: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 20,
   },
 });
 
