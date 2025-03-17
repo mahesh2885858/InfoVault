@@ -26,6 +26,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Profiles from './src/screens/Profiles';
 import {ProfileContextProvider} from './src/context/ProfileContext';
 import {AuthContextProvider} from './src/context/AuthContext';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator<DrawerParamsList>();
@@ -71,30 +72,32 @@ function App(): React.JSX.Element {
   return (
     <SafeAreaProvider>
       <StatusBar backgroundColor={myTheme.main} />
-      <PaperProvider>
-        <AuthContextProvider>
-          <ProfileContextProvider>
-            <ToastProvider>
-              <NavigationContainer>
-                <Stack.Navigator initialRouteName="Drawer">
-                  <Stack.Screen
-                    name="Drawer"
-                    component={DrawerNavigator}
-                    options={{headerShown: false}}
-                  />
-                  <Stack.Screen
-                    name="Settings"
-                    component={Settings}
-                    options={{
-                      header: SettingsHeader,
-                    }}
-                  />
-                </Stack.Navigator>
-              </NavigationContainer>
-            </ToastProvider>
-          </ProfileContextProvider>
-        </AuthContextProvider>
-      </PaperProvider>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <PaperProvider>
+          <AuthContextProvider>
+            <ProfileContextProvider>
+              <ToastProvider>
+                <NavigationContainer>
+                  <Stack.Navigator initialRouteName="Drawer">
+                    <Stack.Screen
+                      name="Drawer"
+                      component={DrawerNavigator}
+                      options={{headerShown: false}}
+                    />
+                    <Stack.Screen
+                      name="Settings"
+                      component={Settings}
+                      options={{
+                        header: SettingsHeader,
+                      }}
+                    />
+                  </Stack.Navigator>
+                </NavigationContainer>
+              </ToastProvider>
+            </ProfileContextProvider>
+          </AuthContextProvider>
+        </PaperProvider>
+      </GestureHandlerRootView>
     </SafeAreaProvider>
   );
 }
