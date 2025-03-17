@@ -18,14 +18,21 @@ import {usePasswordsStore} from '../../store/passwordStore';
 import {TPassword} from '../../types/passwords';
 import {authenticateLocal} from '../../utils/authenticateLocal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SwipeContainer from '../../components/Molecules/SwipeContainer';
 
 const RenderPassword = (password: TPassword) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isSwiped, setIsSwiped] = useState(false);
   const togglePasswordSelection = usePasswordsStore(
     state => state.togglePasswordSelection,
   );
   const toast = useToast();
   const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
+
+  const {removeItem} = usePasswordsStore(state => ({
+    removeItem: state.removePassword,
+  }));
+
   const opacity = useSharedValue(0);
   const translateX = useSharedValue(0);
 
@@ -64,12 +71,15 @@ const RenderPassword = (password: TPassword) => {
   };
 
   const handlePress = (_event: GestureResponderEvent) => {
+    if (isSwiped) return;
     if (selectedPasswords.length >= 1) {
       togglePasswordSelection(password.id);
     }
   };
 
   const handleLongPress = (_event: GestureResponderEvent) => {
+    if (isSwiped) return;
+
     if (selectedPasswords.length === 0) {
       togglePasswordSelection(password.id);
     }
@@ -86,79 +96,85 @@ const RenderPassword = (password: TPassword) => {
         onLongPress={handleLongPress}
         onPress={handlePress}
         style={styles.cardContainer}>
-        <Box
-          style={[
-            styles.cardContent,
-            {
-              backgroundColor: password.isSelected
-                ? myTheme.cardSelectedBg
-                : myTheme.cardBg,
-            },
-          ]}>
-          <View style={styles.webSiteBox}>
-            <LightText style={styles.cardNumberText}>
-              {password.website}
-            </LightText>
-          </View>
-          <View style={styles.usernameBox}>
-            <View style={styles.username}>
-              <LightText style={styles.title}>User name</LightText>
-              <LightText style={styles.cardText}>{password.username}</LightText>
-            </View>
-
-            <PressableWithFeedback
-              onPress={() => copyContent('username')}
-              style={styles.Button}>
-              <MaterialIcon
-                color={myTheme.secondary}
-                name="content-copy"
-                size={15}
-              />
-            </PressableWithFeedback>
-          </View>
-          <View style={styles.passwordBox}>
-            <View>
-              <LightText style={styles.title}>Password</LightText>
-              <LightText style={styles.cardText}>
-                {showPassword ? password.password : '*********'}
+        <SwipeContainer
+          getSwipedValue={value => setIsSwiped(value)}
+          onRightActionPress={() => removeItem(password.id)}>
+          <Box
+            style={[
+              styles.cardContent,
+              {
+                backgroundColor: password.isSelected
+                  ? myTheme.cardSelectedBg
+                  : myTheme.cardBg,
+              },
+            ]}>
+            <View style={styles.webSiteBox}>
+              <LightText style={styles.cardNumberText}>
+                {password.website}
               </LightText>
             </View>
-            <View style={{flexDirection: 'row', gap: 10}}>
-              <Animated.View style={slidingStyle}>
-                <PressableWithFeedback
-                  onPress={() => togglePasswordVisibility()}
-                  style={[styles.Button]}>
-                  {showPassword ? (
-                    <MaterialIcon
-                      color={myTheme.secondary}
-                      name="eye-off-outline"
-                      size={15}
-                    />
-                  ) : (
-                    <MaterialIcon
-                      color={myTheme.secondary}
-                      name="eye-outline"
-                      size={15}
-                    />
-                  )}
-                </PressableWithFeedback>
-              </Animated.View>
-              {showPassword && (
-                <Animated.View style={animatedStyle}>
+            <View style={styles.usernameBox}>
+              <View style={styles.username}>
+                <LightText style={styles.title}>User name</LightText>
+                <LightText style={styles.cardText}>
+                  {password.username}
+                </LightText>
+              </View>
+
+              <PressableWithFeedback
+                onPress={() => copyContent('username')}
+                style={styles.Button}>
+                <MaterialIcon
+                  color={myTheme.secondary}
+                  name="content-copy"
+                  size={15}
+                />
+              </PressableWithFeedback>
+            </View>
+            <View style={styles.passwordBox}>
+              <View>
+                <LightText style={styles.title}>Password</LightText>
+                <LightText style={styles.cardText}>
+                  {showPassword ? password.password : '*********'}
+                </LightText>
+              </View>
+              <View style={{flexDirection: 'row', gap: 10}}>
+                <Animated.View style={slidingStyle}>
                   <PressableWithFeedback
-                    onPress={() => copyContent('password')}
-                    style={styles.Button}>
-                    <MaterialIcon
-                      color={myTheme.secondary}
-                      name="content-copy"
-                      size={15}
-                    />
+                    onPress={() => togglePasswordVisibility()}
+                    style={[styles.Button]}>
+                    {showPassword ? (
+                      <MaterialIcon
+                        color={myTheme.secondary}
+                        name="eye-off-outline"
+                        size={15}
+                      />
+                    ) : (
+                      <MaterialIcon
+                        color={myTheme.secondary}
+                        name="eye-outline"
+                        size={15}
+                      />
+                    )}
                   </PressableWithFeedback>
                 </Animated.View>
-              )}
+                {showPassword && (
+                  <Animated.View style={animatedStyle}>
+                    <PressableWithFeedback
+                      onPress={() => copyContent('password')}
+                      style={styles.Button}>
+                      <MaterialIcon
+                        color={myTheme.secondary}
+                        name="content-copy"
+                        size={15}
+                      />
+                    </PressableWithFeedback>
+                  </Animated.View>
+                )}
+              </View>
             </View>
-          </View>
-        </Box>
+          </Box>
+        </SwipeContainer>
       </PressableWithFeedback>
     </Container>
   );

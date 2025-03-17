@@ -12,11 +12,12 @@ type TPasswordsStore = {
   togglePasswordSelection: (id: string) => void;
   deSelectAll: () => void;
   setPasswords: (passwords: TPassword[]) => void;
+  removePassword: (id: string) => void;
 };
 
 export const usePasswordsStore = create(
   persist<TPasswordsStore>(
-    set => {
+    (set, get) => {
       return {
         passwords: [],
         selectedPasswords: [],
@@ -59,6 +60,10 @@ export const usePasswordsStore = create(
         },
         setPasswords(passwords) {
           set({passwords});
+        },
+        removePassword(id) {
+          const filteredPasswords = get().passwords.filter(p => p.id !== id);
+          set({passwords: filteredPasswords});
         },
       };
     },

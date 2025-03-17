@@ -1,11 +1,7 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import React, {useState} from 'react';
 import {GestureResponderEvent, StyleSheet, View} from 'react-native';
-import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
-import Reanimated, {
-  SharedValue,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
+
 import {useToast} from 'react-native-toast-notifications';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {myTheme} from '../../../theme';
@@ -16,34 +12,18 @@ import LightText from '../../components/atoms/LightText';
 import {useCardStore} from '../../store/cardStore';
 import {TCard} from '../../types/card';
 import {authenticateLocal} from '../../utils/authenticateLocal';
-
-function RightAction(prog: SharedValue<number>, drag: SharedValue<number>) {
-  const styleAnimation = useAnimatedStyle(() => {
-    return {
-      transform: [{translateX: drag.value + 50}],
-    };
-  });
-  const removeCard = useCardStore(state => state.removeCard);
-
-  return (
-    <Reanimated.View style={[styleAnimation, styles.rightPanel]}>
-      <View style={styles.deleteIcon}>
-        <MaterialIcon
-          onPress={() => removeCard()}
-          name="delete"
-          size={30}
-          color={'#FFAAAA'}
-        />
-      </View>
-    </Reanimated.View>
-  );
-}
+import SwipeContainer from '../../components/Molecules/SwipeContainer';
 
 const RenderCard = (card: TCard) => {
-  const toggleCardSelection = useCardStore(state => state.toggleCardSelection);
-  const selectedCards = useCardStore(state => state.selectedCards);
+  const {selectedCards, toggleCardSelection} = useCardStore(state => ({
+    toggleCardSelection: state.toggleCardSelection,
+    selectedCards: state.selectedCards,
+    deSelectAll: state.deSelectAll,
+  }));
+  const removeCard = useCardStore(state => state.removeCard);
 
   const [showCVV, setShowCVV] = useState(false);
+  const [isSwiped, setIsSwiped] = useState(false);
   const toast = useToast();
 
   const toggleCvv = async () => {
@@ -62,12 +42,15 @@ const RenderCard = (card: TCard) => {
   };
 
   const handlePress = (_event: GestureResponderEvent) => {
+    if (isSwiped) return;
     if (selectedCards.length >= 1) {
       toggleCardSelection(card.cardNumber);
     }
   };
 
   const handleLongPress = (_event?: GestureResponderEvent) => {
+    if (isSwiped) return;
+
     if (selectedCards.length === 0) {
       toggleCardSelection(card.cardNumber);
     }
@@ -82,16 +65,13 @@ const RenderCard = (card: TCard) => {
       <PressableWithFeedback
         onLongPress={handleLongPress}
         onPress={handlePress}
+        delayLongPress={1000}
         style={[styles.cardContainer]}>
-        <Swipeable
-          renderRightActions={RightAction}
-          onSwipeableOpen={() => {
-            handleLongPress();
+        <SwipeContainer
+          getSwipedValue={value => {
+            setIsSwiped(value);
           }}
-          friction={1}
-          overshootRight={false}
-          childrenContainerStyle={styles.swipeableChild}
-          containerStyle={[styles.cardContainer]}>
+          onRightActionPress={() => removeCard(card.cardNumber)}>
           <Box
             style={[
               styles.cardContent,
@@ -139,11 +119,12 @@ const RenderCard = (card: TCard) => {
               <LightText style={styles.cardText}>{card.NameOnCard}</LightText>
             </View>
           </Box>
-        </Swipeable>
+        </SwipeContainer>
       </PressableWithFeedback>
     </Container>
   );
 };
+
 const styles = StyleSheet.create({
   card: {
     width: '100%',
