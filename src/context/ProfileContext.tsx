@@ -3,7 +3,7 @@ import {createContext} from 'react';
 import ProfileSelectionModal from '../components/ProfileSelectionModal';
 
 export const ProfileContext = createContext<{
-  openProfileSelection: () => void;
+  openProfileSelection: (props?: {renderForNew?: boolean}) => void;
   closeProfileSelection: () => void;
 } | null>(null);
 
@@ -18,15 +18,20 @@ export const ProfileContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [renderModal, setRenderModal] = useState(false);
+  const [renderForNewItem, setRenderForNewItem] = useState(false);
 
   return (
     <ProfileContext.Provider
       value={{
         closeProfileSelection: () => setRenderModal(false),
-        openProfileSelection: () => setRenderModal(true),
+        openProfileSelection: (props?: {renderForNew?: boolean}) => {
+          setRenderForNewItem(!!props?.renderForNew);
+          setRenderModal(true);
+        },
       }}>
       {renderModal && (
         <ProfileSelectionModal
+          renderingForNewItemAdd={renderForNewItem}
           onClose={() => setRenderModal(false)}
           visible={renderModal}
         />

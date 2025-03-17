@@ -40,12 +40,14 @@ const AddCardModal = (props: Props) => {
   const cardNumberRef = useRef<TextInput>(null);
   const cvvRef = useRef<TextInput>(null);
   const nameOnCardRef = useRef<TextInput>(null);
-  const {selectedProfile} = useProfileStore(state => ({
+  const {selectedProfileForNew} = useProfileStore(state => ({
     selectedProfile: state.getSelectedProfile(),
-    profiles: state.profiles,
+    selectedProfileForNew: state.profiles.find(
+      p => p.id === state.selectedProfileForAddingANewRecord,
+    ),
   }));
 
-  const {openProfileSelection, closeProfileSelection} = useProfileContext()!;
+  const {openProfileSelection} = useProfileContext()!;
 
   const handleCardNumber = (text: string) => {
     let t = text;
@@ -101,7 +103,7 @@ const AddCardModal = (props: Props) => {
 
   const AddACard = () => {
     if (!validateInputs(cardInputs)) return;
-    cardInputs.profileId = selectedProfile?.id ?? '';
+    cardInputs.profileId = selectedProfileForNew?.id ?? '';
     addCard(cardInputs);
     setCardInputs(initState);
     props.setVisible(false);
@@ -118,11 +120,11 @@ const AddCardModal = (props: Props) => {
         <View style={styles.profileSwitch}>
           <LightText>Card will be saved in : </LightText>
           <PressableWithFeedback
-            onPress={openProfileSelection}
+            onPress={() => openProfileSelection({renderForNew: true})}
             style={styles.switch}>
-            <LightText>{selectedProfile?.name ?? ''}</LightText>
+            <LightText>{selectedProfileForNew?.name ?? ''}</LightText>
             <MaterialIcon
-              onPress={openProfileSelection}
+              onPress={() => openProfileSelection({renderForNew: true})}
               name="chevron-down"
               color="white"
               size={25}

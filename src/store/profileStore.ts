@@ -7,6 +7,7 @@ import {DEFAULT_PROFILE_ID} from '../constants';
 type TProfileStore = {
   profiles: TProfile[];
   selectedProfileId: string;
+  selectedProfileForAddingANewRecord: string; //This will be used in modal where we can add more items
   addProfile: (profile: TProfile) => void;
   removeProfile: (id?: string) => void;
   setProfiles: (cards: TProfile[]) => void;
@@ -14,6 +15,7 @@ type TProfileStore = {
   updateProfile: (profile: TProfile) => void;
   selectProfile: (id: string) => void;
   resetProfileSelection: () => void;
+  selectProfileForAddingANewRecord: (id: string) => void;
 };
 
 export const useProfileStore = create(
@@ -27,7 +29,7 @@ export const useProfileStore = create(
           },
         ],
         selectedProfileId: DEFAULT_PROFILE_ID,
-
+        selectedProfileForAddingANewRecord: DEFAULT_PROFILE_ID,
         addProfile: profile => {
           set(state => {
             return {profiles: [...state.profiles, profile]};
@@ -70,6 +72,11 @@ export const useProfileStore = create(
         resetProfileSelection() {
           set({
             selectedProfileId: DEFAULT_PROFILE_ID,
+          });
+        },
+        selectProfileForAddingANewRecord(id) {
+          set({
+            selectedProfileForAddingANewRecord: id,
           });
         },
       };
