@@ -86,10 +86,15 @@ const AddPasswordModal = (props: Props) => {
     nextRef.current?.focus();
   };
 
+  const closeModal = () => {
+    setPasswordInputs(initState);
+    props.setVisible(false);
+  };
+
   return (
     <ModalWrapper
       width={'90%'}
-      onClose={() => props.setVisible(false)}
+      onClose={() => closeModal()}
       visible={props.visible}>
       <Container style={styles.cardContainer}>
         <View style={styles.profileSwitch}>
@@ -158,10 +163,7 @@ const AddPasswordModal = (props: Props) => {
           </View>
         </Box>
 
-        <ButtonsForForms
-          onCancel={() => props.setVisible(false)}
-          onSave={AddAPassword}
-        />
+        <ButtonsForForms onCancel={closeModal} onSave={AddAPassword} />
       </Container>
     </ModalWrapper>
   );
