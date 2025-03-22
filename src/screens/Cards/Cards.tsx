@@ -11,7 +11,6 @@ import BootSplash from 'react-native-bootsplash';
 import {useProfileStore} from '../../store/profileStore';
 import {DEFAULT_PROFILE_ID} from '../../constants';
 import {useTranslation} from 'react-i18next';
-import LightText from '../../components/atoms/LightText';
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
   const selectedCards = useCardStore(state => state.selectedCards);
