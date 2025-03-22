@@ -1,5 +1,6 @@
 import React from 'react';
-import {Modal, StatusBar, StyleSheet, View} from 'react-native';
+import {Pressable} from 'react-native';
+import {Modal, StatusBar, StyleSheet} from 'react-native';
 
 type TProps = {
   visible: boolean;
@@ -16,7 +17,14 @@ const ModalWrapper = (props: TProps) => {
       transparent
       onRequestClose={props.onClose}>
       <StatusBar backgroundColor={'#00000099'} />
-      <View style={styles.container}>{props.children}</View>
+      <Pressable
+        onPress={e => {
+          e.stopPropagation();
+          props.onClose();
+        }}
+        style={styles.container}>
+        {props.children}
+      </Pressable>
     </Modal>
   );
 };
