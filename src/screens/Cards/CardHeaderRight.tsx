@@ -10,7 +10,7 @@ import {myTheme} from '../../../theme';
 
 const CardHeaderRight = () => {
   const selectedCards = useCardStore(state => state.selectedCards);
-  const removeCards = useCardStore(state => state.removeCard);
+  const removeCards = useCardStore(state => state.removeCards);
   const {openProfileSelection} = useProfileContext()!;
   const {selectedProfile} = useProfileStore(state => ({
     selectedProfile: state.getSelectedProfile(),
@@ -19,11 +19,11 @@ const CardHeaderRight = () => {
   if (selectedCards.length === 0) {
     return (
       <PressableWithFeedback
-        onPress={openProfileSelection}
+        onPress={() => openProfileSelection()}
         style={styles.switch}>
         <LightText>{selectedProfile?.name ?? ''}</LightText>
         <MaterialIcon
-          onPress={openProfileSelection}
+          onPress={() => openProfileSelection()}
           name="chevron-down"
           color="white"
           size={25}
@@ -33,7 +33,8 @@ const CardHeaderRight = () => {
   }
 
   return (
-    <PressableWithFeedback onPress={() => removeCards()}>
+    <PressableWithFeedback
+      onPress={() => removeCards(selectedCards.map(c => c.cardNumber))}>
       <LightText>Delete</LightText>
     </PressableWithFeedback>
   );

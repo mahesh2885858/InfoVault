@@ -2,6 +2,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import React, {useState} from 'react';
 import {GestureResponderEvent, StyleSheet, View} from 'react-native';
 import Animated, {
+  ZoomOut,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -11,7 +12,6 @@ import {useToast} from 'react-native-toast-notifications';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {myTheme} from '../../../theme';
 import Box from '../../components/atoms/Box';
-import Container from '../../components/atoms/Container';
 import LightText from '../../components/atoms/LightText';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import {usePasswordsStore} from '../../store/passwordStore';
@@ -91,7 +91,7 @@ const RenderPassword = (password: TPassword) => {
   };
 
   return (
-    <Container style={styles.card}>
+    <Animated.View style={styles.card} exiting={ZoomOut}>
       <PressableWithFeedback
         onLongPress={handleLongPress}
         onPress={handlePress}
@@ -176,7 +176,7 @@ const RenderPassword = (password: TPassword) => {
           </Box>
         </SwipeContainer>
       </PressableWithFeedback>
-    </Container>
+    </Animated.View>
   );
 };
 
