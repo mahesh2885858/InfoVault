@@ -27,6 +27,7 @@ import Profiles from './src/screens/Profiles';
 import {ProfileContextProvider} from './src/context/ProfileContext';
 import {AuthContextProvider} from './src/context/AuthContext';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import './src/translations/i18n';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator<DrawerParamsList>();

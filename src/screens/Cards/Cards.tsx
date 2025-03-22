@@ -10,12 +10,14 @@ import RenderCard from './RenderCard';
 import BootSplash from 'react-native-bootsplash';
 import {useProfileStore} from '../../store/profileStore';
 import {DEFAULT_PROFILE_ID} from '../../constants';
+import {useTranslation} from 'react-i18next';
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
   const selectedCards = useCardStore(state => state.selectedCards);
   const deSelectAll = useCardStore(state => state.deSelectAll);
   const cards = useCardStore(state => state.cards);
   const selectedProfile = useProfileStore(state => state.selectedProfileId);
+  const {t} = useTranslation();
   const cardsToRender = cards.filter(
     card =>
       selectedProfile === DEFAULT_PROFILE_ID ||
