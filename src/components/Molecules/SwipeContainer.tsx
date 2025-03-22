@@ -6,6 +6,7 @@ import Reanimated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import PressableWithFeedback from '../PressableWithFeedback';
 
 type TProps = {
   children: React.ReactNode;
@@ -26,14 +27,16 @@ function RightAction(
 
   return (
     <Reanimated.View style={[styleAnimation, styles.rightPanel]}>
-      <View style={styles.deleteIcon}>
+      <PressableWithFeedback
+        onPress={() => onRightActionPress()}
+        style={styles.deleteIcon}>
         <MaterialIcon
           onPress={() => onRightActionPress()}
           name="delete"
           size={30}
           color={'#FFAAAA'}
         />
-      </View>
+      </PressableWithFeedback>
     </Reanimated.View>
   );
 }

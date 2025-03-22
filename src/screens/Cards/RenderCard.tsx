@@ -7,12 +7,12 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {myTheme} from '../../../theme';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Box from '../../components/atoms/Box';
-import Container from '../../components/atoms/Container';
 import LightText from '../../components/atoms/LightText';
 import {useCardStore} from '../../store/cardStore';
 import {TCard} from '../../types/card';
 import {authenticateLocal} from '../../utils/authenticateLocal';
 import SwipeContainer from '../../components/Molecules/SwipeContainer';
+import Animated, {ZoomOut} from 'react-native-reanimated';
 
 const RenderCard = (card: TCard) => {
   const {selectedCards, toggleCardSelection} = useCardStore(state => ({
@@ -20,7 +20,7 @@ const RenderCard = (card: TCard) => {
     selectedCards: state.selectedCards,
     deSelectAll: state.deSelectAll,
   }));
-  const removeCard = useCardStore(state => state.removeCard);
+  const removeCards = useCardStore(state => state.removeCards);
 
   const [showCVV, setShowCVV] = useState(false);
   const [isSwiped, setIsSwiped] = useState(false);
@@ -61,7 +61,7 @@ const RenderCard = (card: TCard) => {
     toast.show(`${whatToCopy} is copied.`, {duration: 1500});
   };
   return (
-    <Container style={styles.card}>
+    <Animated.View style={styles.card} exiting={ZoomOut}>
       <PressableWithFeedback
         onLongPress={handleLongPress}
         onPress={handlePress}
@@ -71,7 +71,7 @@ const RenderCard = (card: TCard) => {
           getSwipedValue={value => {
             setIsSwiped(value);
           }}
-          onRightActionPress={() => removeCard(card.cardNumber)}>
+          onRightActionPress={() => removeCards([card.cardNumber])}>
           <Box
             style={[
               styles.cardContent,
@@ -121,7 +121,7 @@ const RenderCard = (card: TCard) => {
           </Box>
         </SwipeContainer>
       </PressableWithFeedback>
-    </Container>
+    </Animated.View>
   );
 };
 

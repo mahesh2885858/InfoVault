@@ -18,12 +18,17 @@ const ModalWrapper = (props: TProps) => {
       onRequestClose={props.onClose}>
       <StatusBar backgroundColor={'#00000099'} />
       <Pressable
+        style={styles.container}
         onPress={e => {
-          e.stopPropagation();
           props.onClose();
-        }}
-        style={styles.container}>
-        {props.children}
+        }}>
+        <Pressable
+          style={styles.child}
+          onPress={e => {
+            e.stopPropagation(); // This prevents the background press from triggering
+          }}>
+          {props.children}
+        </Pressable>
       </Pressable>
     </Modal>
   );
@@ -35,6 +40,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
+  },
+  child: {
+    width: '100%',
   },
 });
 

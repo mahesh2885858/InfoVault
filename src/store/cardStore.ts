@@ -8,7 +8,7 @@ type TCardStore = {
   cards: TCard[];
   selectedCards: TCard[];
   addCard: (card: Omit<TCard, 'isSelected'>) => void;
-  removeCard: (id?: string) => void;
+  removeCards: (ids: string[]) => void;
   toggleCardSelection: (id: string) => void;
   deSelectAll: () => void;
   setCards: (cards: TCard[]) => void;
@@ -36,11 +36,9 @@ export const useCardStore = create(
           });
         },
 
-        removeCard: id => {
+        removeCards: ids => {
           set(state => {
-            const d = state.cards.filter(c =>
-              id ? c.cardNumber !== id : !c.isSelected,
-            );
+            const d = state.cards.filter(c => !ids.includes(c.cardNumber));
             return {cards: d, selectedCards: []};
           });
         },
