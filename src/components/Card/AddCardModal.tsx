@@ -12,7 +12,7 @@ import {useProfileStore} from '../../store/profileStore';
 import {useProfileContext} from '../../context/ProfileContext';
 import PressableWithFeedback from '../PressableWithFeedback';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {DEFAULT_PROFILE_ID, MAX_LENGTH_NAME} from '../../constants';
+import {DEFAULT_PROFILE_ID, MAX_LENGTH_NAME, MONTHS} from '../../constants';
 
 type Props = {
   visible: boolean;
@@ -69,6 +69,8 @@ const AddCardModal = (props: Props) => {
       let t = text;
       if (field === 'expiry') {
         if (text.length === 2 && cardInputs.expiry.split('').pop() !== '/') {
+          if (!MONTHS.includes(text)) return;
+
           t = t + '/';
         }
         if (text.length === 5) {
