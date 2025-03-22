@@ -67,11 +67,18 @@ const AddCardModal = (props: Props) => {
   const onChange = useCallback(
     (text: string, field: keyof typeof cardInputs) => {
       let t = text;
+
       if (field === 'expiry') {
         if (text.length === 2 && cardInputs.expiry.split('').pop() !== '/') {
           if (!MONTHS.includes(text)) return;
 
           t = t + '/';
+        }
+
+        if (text.length > 3) {
+          // validation for year
+          const year = parseInt(text.split('/')[1]); //Get the digits after the year
+          if (isNaN(year)) return;
         }
         if (text.length === 5) {
           cvvRef.current!.focus();

@@ -14,3 +14,5 @@ export const MONTHS = [
   '11',
   '12',
 ];
+
+export const EXPIRY_REGEX = /^(0[1-9]|1[0-2])\/([0-9]{2})$/;
