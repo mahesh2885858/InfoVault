@@ -12,7 +12,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ButtonsForForms from '../../components/Molecules/ButtonsForForms';
 import {useProfileStore} from '../../store/profileStore';
 import LightText from '../../components/atoms/LightText';
-import {DEFAULT_PROFILE_ID} from '../../constants';
+import {DEFAULT_PROFILE_ID, MAX_LENGTH_NAME} from '../../constants';
 import {useProfileContext} from '../../context/ProfileContext';
 
 type Props = {
@@ -53,6 +53,9 @@ const AddPasswordModal = (props: Props) => {
   };
 
   const onChange = (text: string, field: keyof typeof passwordInputs) => {
+    if (field === 'username' || field === 'website') {
+      if (text.trim().length > MAX_LENGTH_NAME) return;
+    }
     setPasswordInputs(prev => ({...prev, [field]: text}));
   };
 

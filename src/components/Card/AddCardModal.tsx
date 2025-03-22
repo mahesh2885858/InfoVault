@@ -12,7 +12,7 @@ import {useProfileStore} from '../../store/profileStore';
 import {useProfileContext} from '../../context/ProfileContext';
 import PressableWithFeedback from '../PressableWithFeedback';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {DEFAULT_PROFILE_ID} from '../../constants';
+import {DEFAULT_PROFILE_ID, MAX_LENGTH_NAME, MONTHS} from '../../constants';
 
 type Props = {
   visible: boolean;
@@ -67,9 +67,18 @@ const AddCardModal = (props: Props) => {
   const onChange = useCallback(
     (text: string, field: keyof typeof cardInputs) => {
       let t = text;
+
       if (field === 'expiry') {
         if (text.length === 2 && cardInputs.expiry.split('').pop() !== '/') {
+          if (!MONTHS.includes(text)) return;
+
           t = t + '/';
+        }
+
+        if (text.length > 3) {
+          // validation for year
+          const year = parseInt(text.split('/')[1]); //Get the digits after the year
+          if (isNaN(year)) return;
         }
         if (text.length === 5) {
           cvvRef.current!.focus();
@@ -81,6 +90,11 @@ const AddCardModal = (props: Props) => {
           nameOnCardRef.current!.focus();
         }
       }
+
+      if (field === 'cardName' || field === 'NameOnCard') {
+        if (text.trim().length > MAX_LENGTH_NAME) return;
+      }
+
       setCardInputs(prev => ({...prev, [field]: t}));
     },
     [cardInputs],
@@ -220,7 +234,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     padding: 2,
     borderRadius: 5,
-    borderWidth: 0,
   },
   buttonsBox: {
     flexDirection: 'row',
