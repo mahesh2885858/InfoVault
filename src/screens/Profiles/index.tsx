@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {myTheme} from '../../../theme';
 import Fab from '../../components/Fab';
 import AddProfileModal from './AddProfileModal';
@@ -31,7 +30,7 @@ const Profiles = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <FlatList
         data={profiles}
         contentContainerStyle={styles.listContainer}
@@ -52,7 +51,7 @@ const Profiles = () => {
           visible={renderAddModal}
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 export default Profiles;

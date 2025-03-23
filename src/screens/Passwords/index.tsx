@@ -1,6 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native';
 import React, {useCallback, useState} from 'react';
-import {BackHandler, StatusBar, StyleSheet} from 'react-native';
+import {BackHandler, StatusBar, StyleSheet, View} from 'react-native';
 import {myTheme} from '../../../theme';
 import Fab from '../../components/Fab';
 import Container from '../../components/atoms/Container';
@@ -59,8 +59,9 @@ const Passwords = () => {
           setVisibility(true);
         }}
       />
-
-      <AddPasswordModal setVisible={setVisibility} visible={visible} />
+      <View>
+        <AddPasswordModal setVisible={setVisibility} visible={visible} />
+      </View>
     </Container>
   );
 };
