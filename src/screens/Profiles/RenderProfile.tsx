@@ -19,6 +19,7 @@ const RenderProfile = (props: TProps) => {
         name="pencil"
         onPress={() => props.onEditPress(item.id)}
         size={20}
+        color={'white'}
       />
     </View>
   );

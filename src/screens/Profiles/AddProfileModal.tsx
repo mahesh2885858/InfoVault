@@ -78,5 +78,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     backgroundColor: myTheme.main,
     borderRadius: 10,
+    color: 'white',
   },
 });

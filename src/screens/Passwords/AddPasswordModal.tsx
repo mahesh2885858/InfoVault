@@ -154,9 +154,13 @@ const AddPasswordModal = (props: Props) => {
                 onPress={() => togglePasswordVisibility()}
                 style={styles.eyeIcon}>
                 {showPassword ? (
-                  <MaterialIcon name="eye-off-outline" size={20} />
+                  <MaterialIcon
+                    name="eye-off-outline"
+                    size={20}
+                    color="white"
+                  />
                 ) : (
-                  <MaterialIcon name="eye-outline" size={20} />
+                  <MaterialIcon name="eye-outline" size={20} color="white" />
                 )}
               </PressableWithFeedback>
             </View>

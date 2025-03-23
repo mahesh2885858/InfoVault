@@ -11,6 +11,7 @@ import BootSplash from 'react-native-bootsplash';
 import {useProfileStore} from '../../store/profileStore';
 import {DEFAULT_PROFILE_ID} from '../../constants';
 import Animated, {LinearTransition} from 'react-native-reanimated';
+import {View} from 'react-native';
 
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
@@ -62,8 +63,9 @@ const Cards = () => {
           setVisibility(true);
         }}
       />
-
-      <AddCardModal setVisible={setVisibility} visible={visible} />
+      <View>
+        <AddCardModal setVisible={setVisibility} visible={visible} />
+      </View>
     </Container>
   );
 };
