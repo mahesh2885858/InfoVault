@@ -45,6 +45,14 @@ const initialCardInput: TCardInput = {
   },
 };
 
+const errorMessages: Record<keyof TCardInput, string> = {
+  CVV: 'It should be exactly three digits and can not be empty',
+  NameOnCard: 'It should be more than 3 characters and can not be empty',
+  cardName: 'It should be more than 3 characters and can not be empty',
+  cardNumber: 'It should be 16 digits and can not be empty',
+  expiry: '',
+};
+
 const PlaceholderTextColor = 'grey';
 
 const AddCardModal = (props: Props) => {
@@ -64,22 +72,31 @@ const AddCardModal = (props: Props) => {
 
   const {openProfileSelection} = useProfileContext()!;
 
-  const handleCardNumber = (text: string) => {
-    let t = text;
-    const prevTextLastLetter = cardInputs.cardNumber.toString().split('').pop();
+  const formatCardNumber = useCallback((text: string) => {
+    // Remove any existing dashes
+    const cleaned = text.replace(/-/g, '');
+    // Group digits in fours and join with dashes
+    const groups = cleaned.match(/.{1,4}/g);
+    return groups ? groups.join('-') : '';
+  }, []);
+  const formatExpiry = useCallback((text: string) => {
+    // Remove any existing slashes
+    const cleaned = text.replace(/\//g, '');
+    // Group digits in fours and join with dashes
+    const groups = cleaned.match(/.{1,2}/g);
+    return groups ? groups.join('/') : '';
+  }, []);
 
-    if (text.length === 4 || text.length === 9 || text.length === 14) {
-      if (prevTextLastLetter !== '-') {
-        t = t + '-';
-      }
-    }
-    if (text.length === 19) {
-      expiryRef.current!.focus();
-    }
+  const handleCardNumber = (text: string) => {
+    const formatted = formatCardNumber(text);
+    clearError('cardNumber');
     setCardInputs(prev => ({
       ...prev,
-      cardNumber: {...prev.cardNumber, value: t},
+      cardNumber: {...prev.cardNumber, value: formatted},
     }));
+    if (formatted.length === 19) {
+      expiryRef.current!.focus();
+    }
   };
 
   const clearError = useCallback((field: keyof TCardInput) => {
@@ -98,8 +115,9 @@ const AddCardModal = (props: Props) => {
       clearError(field);
 
       if (field === 'expiry') {
+        t = formatExpiry(text);
         if (text.length === 5) {
-          console.log({texttoTEst: text});
+          console.log({texttoTEst: text, t});
           const {error, status} = isValidExpiryForCard(text);
           console.log({
             error,
@@ -129,14 +147,25 @@ const AddCardModal = (props: Props) => {
 
       setCardInputs(prev => ({...prev, [field]: {...prev[field], value: t}}));
     },
-    [clearError],
+    [clearError, formatExpiry],
   );
 
   const validateInputs = (inputs: TCardInput) => {
     let r = true;
     Object.keys(inputs).forEach(key => {
-      if (inputs[key as keyof TCardInput].value.trim().length < 2) {
+      const field = key as keyof TCardInput;
+      if (inputs[field].value.trim().length < 2) {
         r = false;
+        setCardInputs(prev => ({
+          ...prev,
+          [field]: {
+            ...prev[field],
+            error:
+              field === 'expiry'
+                ? isValidExpiryForCard(inputs[field].value).error
+                : errorMessages[field],
+          },
+        }));
       }
     });
     return r;
@@ -172,7 +201,7 @@ const AddCardModal = (props: Props) => {
     return Object.keys(cardInputs).map(key => {
       if (!cardInputs[key as keyof TCardInput].error) return null;
       return (
-        <View key={key}>
+        <View style={{marginBottom: 5}} key={key}>
           <LightText>
             {uCFirst(key)} : {cardInputs[key as keyof TCardInput].error}
           </LightText>
@@ -226,6 +255,12 @@ const AddCardModal = (props: Props) => {
             />
             <MTextInput
               ref={cardNumberRef}
+              onKeyPress={e => {
+                console.log({E: e.nativeEvent});
+                if (e.nativeEvent.key === 'Backspace') {
+                  console.log('Back space is pressed');
+                }
+              }}
               value={cardInputs.cardNumber.value}
               onChangeText={handleCardNumber}
               keyboardType="number-pad"
@@ -245,7 +280,7 @@ const AddCardModal = (props: Props) => {
                 value={cardInputs.expiry.value}
                 onChangeText={text => onChange(text, 'expiry')}
                 maxLength={5}
-                keyboardType="numbers-and-punctuation"
+                keyboardType="phone-pad"
                 style={[styles.textInput, styles.cardText]}
                 placeholderTextColor={PlaceholderTextColor}
                 placeholder="MM/YY"
