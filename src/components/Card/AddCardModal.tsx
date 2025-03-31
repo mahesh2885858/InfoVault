@@ -15,33 +15,11 @@ import {MAX_LENGTH_NAME} from '../../constants';
 import {uCFirst, isValidExpiryForCard} from 'commonutil-core';
 
 import MTextInput from '../Molecules/MTextInput';
+import {TCardInput} from '../../types';
 
 type Props = {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-type TCardInput = {
-  cardName: {
-    value: string;
-    error: string;
-  };
-  cardNumber: {
-    value: string;
-    error: string;
-  };
-  CVV: {
-    value: string;
-    error: string;
-  };
-  expiry: {
-    value: string;
-    error: string;
-  };
-  NameOnCard: {
-    value: string;
-    error: string;
-  };
 };
 
 const initialCardInput: TCardInput = {
@@ -102,11 +80,6 @@ const AddCardModal = (props: Props) => {
       ...prev,
       cardNumber: {...prev.cardNumber, value: t},
     }));
-  };
-
-  const verifyExpiry = (expiry: string) => {
-    const isItValid = expiry.match('^(0[1-9]|1[0-2])/([0-9]{2})$');
-    return !!isItValid;
   };
 
   const clearError = useCallback((field: keyof TCardInput) => {
