@@ -8,6 +8,7 @@ import PressableWithFeedback from './PressableWithFeedback';
 import LightText from './atoms/LightText';
 import {myTheme} from '../../theme';
 import Button from './atoms/Button';
+import {DEFAULT_PROFILE_ID} from '../constants';
 type TProps = {
   visible: boolean;
   onClose: () => void;
@@ -46,24 +47,27 @@ const ProfileSelectionModal = (props: TProps) => {
     },
     [props, selectProfile, selectProfileForAddingANewRecord],
   );
-
   return (
     <ModalWrapper onClose={props.onClose} visible={props.visible}>
       <View style={styles.rootView}>
         <View style={styles.container}>
-          {profiles.map(item => (
-            <PressableWithFeedback
-              key={item.id}
-              onPress={() => selectItem(item.id)}
-              style={styles.radioItem}>
-              <RadioButton
-                value={item.name}
-                status={idToCompare === item.id ? 'checked' : 'unchecked'}
+          {profiles.map(item => {
+            if (props.renderingForNewItemAdd && item.id === DEFAULT_PROFILE_ID)
+              return null;
+            return (
+              <PressableWithFeedback
+                key={item.id}
                 onPress={() => selectItem(item.id)}
-              />
-              <LightText style={styles.text}>{item.name}</LightText>
-            </PressableWithFeedback>
-          ))}
+                style={styles.radioItem}>
+                <RadioButton
+                  value={item.name}
+                  status={idToCompare === item.id ? 'checked' : 'unchecked'}
+                  onPress={() => selectItem(item.id)}
+                />
+                <LightText style={styles.text}>{item.name}</LightText>
+              </PressableWithFeedback>
+            );
+          })}
         </View>
         <Button label="close" onButtonPress={props.onClose} />
       </View>

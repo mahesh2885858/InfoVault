@@ -1,4 +1,5 @@
 export const DEFAULT_PROFILE_ID = '123abd';
+export const HOME_PROFILE_ID = '123HOME';
 export const MAX_LENGTH_NAME = 30;
 export const MONTHS = [
   '01',

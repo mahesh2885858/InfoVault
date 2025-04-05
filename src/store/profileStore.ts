@@ -2,7 +2,7 @@ import {create} from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {persist, createJSONStorage} from 'zustand/middleware';
 import {TProfile} from '../types';
-import {DEFAULT_PROFILE_ID} from '../constants';
+import {DEFAULT_PROFILE_ID, HOME_PROFILE_ID} from '../constants';
 
 type TProfileStore = {
   profiles: TProfile[];
@@ -26,6 +26,10 @@ export const useProfileStore = create(
           {
             id: DEFAULT_PROFILE_ID,
             name: 'All',
+          },
+          {
+            id: HOME_PROFILE_ID,
+            name: 'Home',
           },
         ],
         selectedProfileId: DEFAULT_PROFILE_ID,

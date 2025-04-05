@@ -2,7 +2,7 @@ import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import {myTheme} from '../../../theme';
 
-import {TPassword, TPasswordInput} from '../../types';
+import {TPasswordInput} from '../../types';
 import {usePasswordsStore} from '../../store/passwordStore';
 import ModalWrapper from '../../components/ModalWrapper';
 import Container from '../../components/atoms/Container';
@@ -12,7 +12,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ButtonsForForms from '../../components/Molecules/ButtonsForForms';
 import {useProfileStore} from '../../store/profileStore';
 import LightText from '../../components/atoms/LightText';
-import {DEFAULT_PROFILE_ID, MAX_LENGTH_NAME} from '../../constants';
+import {HOME_PROFILE_ID, MAX_LENGTH_NAME} from '../../constants';
 import {useProfileContext} from '../../context/ProfileContext';
 import {TBaseInput} from '../../types';
 import MTextInput from '../../components/Molecules/MTextInput';
@@ -109,7 +109,7 @@ const AddPasswordModal = (props: Props) => {
       website: website.value,
       id,
       isSelected: false,
-      profileId: selectedProfileForNew?.id ?? DEFAULT_PROFILE_ID,
+      profileId: selectedProfileForNew?.id ?? HOME_PROFILE_ID,
     });
     setFocuseId(id);
     setPasswordInputs(initState);

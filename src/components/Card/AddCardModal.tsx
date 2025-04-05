@@ -11,7 +11,7 @@ import {useProfileStore} from '../../store/profileStore';
 import {useProfileContext} from '../../context/ProfileContext';
 import PressableWithFeedback from '../PressableWithFeedback';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {MAX_LENGTH_NAME} from '../../constants';
+import {HOME_PROFILE_ID, MAX_LENGTH_NAME} from '../../constants';
 import {uCFirst, isValidExpiryForCard} from 'commonutil-core';
 
 import MTextInput from '../Molecules/MTextInput';
@@ -156,6 +156,7 @@ const AddCardModal = (props: Props) => {
     let r = true;
     Object.keys(inputs).forEach(key => {
       const field = key as keyof TCardInput;
+
       if (inputs[field].value.trim().length < 2) {
         r = false;
         setCardInputs(prev => ({
@@ -169,6 +170,20 @@ const AddCardModal = (props: Props) => {
           },
         }));
       }
+      if (field === 'cardNumber') {
+        r = false;
+        if (inputs[field].value.trim().length < 19) {
+          setCardInputs(prev => ({
+            ...prev,
+            cardNumber: {
+              ...prev.cardNumber,
+              error: errorMessages.cardNumber,
+            },
+          }));
+        } else {
+          r = true;
+        }
+      }
     });
     return r;
   };
@@ -179,7 +194,7 @@ const AddCardModal = (props: Props) => {
 
   const AddACard = () => {
     if (!validateInputs(cardInputs)) return;
-    const profileId = selectedProfileForNew?.id ?? '';
+    const profileId = selectedProfileForNew?.id ?? HOME_PROFILE_ID;
     Keyboard.dismiss();
     addCard({
       CVV: cardInputs.CVV.value,
