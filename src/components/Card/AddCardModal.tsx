@@ -17,6 +17,8 @@ import {uCFirst, isValidExpiryForCard} from 'commonutil-core';
 import MTextInput from '../Molecules/MTextInput';
 import {TCardInput} from '../../types';
 
+import {Keyboard} from 'react-native';
+
 type Props = {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -56,7 +58,7 @@ const errorMessages: Record<keyof TCardInput, string> = {
 const PlaceholderTextColor = 'grey';
 
 const AddCardModal = (props: Props) => {
-  const {addCard} = useCardStore();
+  const {addCard, cards, setFocusedCard} = useCardStore();
   const [cardInputs, setCardInputs] = useState<TCardInput>(initialCardInput);
   const cardNameRef = useRef<TextInput>(null);
   const expiryRef = useRef<TextInput>(null);
@@ -178,7 +180,7 @@ const AddCardModal = (props: Props) => {
   const AddACard = () => {
     if (!validateInputs(cardInputs)) return;
     const profileId = selectedProfileForNew?.id ?? '';
-
+    Keyboard.dismiss();
     addCard({
       CVV: cardInputs.CVV.value,
       NameOnCard: cardInputs.NameOnCard.value,
@@ -187,6 +189,9 @@ const AddCardModal = (props: Props) => {
       expiry: cardInputs.expiry.value,
       profileId,
     });
+    const id = cardInputs.cardNumber.value;
+
+    setFocusedCard(id);
     setCardInputs(initialCardInput);
     props.setVisible(false);
   };

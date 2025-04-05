@@ -1,6 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native';
-import React, {useCallback, useState} from 'react';
-import {BackHandler, StatusBar, StyleSheet} from 'react-native';
+import React, {useCallback, useRef, useState} from 'react';
+import {BackHandler, FlatList, StatusBar, StyleSheet} from 'react-native';
 import {myTheme} from '../../../theme';
 import {useCardStore} from '../../store/cardStore';
 import AddCardModal from '../../components/Card/AddCardModal';
@@ -9,21 +9,29 @@ import Container from '../../components/atoms/Container';
 import RenderCard from './RenderCard';
 import BootSplash from 'react-native-bootsplash';
 import {useProfileStore} from '../../store/profileStore';
-import {DEFAULT_PROFILE_ID} from '../../constants';
+import {CARD_HEIGHT, DEFAULT_PROFILE_ID} from '../../constants';
 import Animated, {LinearTransition} from 'react-native-reanimated';
 import {View} from 'react-native';
 
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
-  const selectedCards = useCardStore(state => state.selectedCards);
-  const deSelectAll = useCardStore(state => state.deSelectAll);
-  const cards = useCardStore(state => state.cards);
+  const {selectedCards, cards, deSelectAll, focusedId} = useCardStore(
+    state => ({
+      selectedCards: state.selectedCards,
+      deSelectAll: state.deSelectAll,
+      cards: state.cards,
+      focusedId: state.focusedCard,
+    }),
+  );
+
+  const listRef = useRef<FlatList>(null);
   const selectedProfile = useProfileStore(state => state.selectedProfileId);
   const cardsToRender = cards.filter(
     card =>
       selectedProfile === DEFAULT_PROFILE_ID ||
       card.profileId === selectedProfile,
   );
+
   useFocusEffect(
     useCallback(() => {
       const handleBackPress = () => {
@@ -40,6 +48,23 @@ const Cards = () => {
       return () => subscription.remove();
     }, [selectedCards, deSelectAll]),
   );
+
+  useFocusEffect(
+    useCallback(() => {
+      if (focusedId.trim().length === 0) return;
+      const indexOfFocusedId = cards.findIndex(
+        card => card.cardNumber === focusedId,
+      );
+
+      if (indexOfFocusedId >= 0) {
+        listRef.current!.scrollToIndex({
+          index: indexOfFocusedId,
+          animated: true,
+        });
+      }
+    }, [focusedId, cards]),
+  );
+
   return (
     <Container
       onLayout={() => {
@@ -49,13 +74,20 @@ const Cards = () => {
       <StatusBar backgroundColor={myTheme.main} />
 
       <Animated.FlatList
+        extraData={focusedId}
         data={cardsToRender}
         contentContainerStyle={styles.cardConatiner}
         renderItem={item => {
           return <RenderCard {...item.item} />;
         }}
+        ref={listRef}
         itemLayoutAnimation={LinearTransition}
         keyExtractor={item => item.cardNumber}
+        getItemLayout={(_, index) => ({
+          length: CARD_HEIGHT,
+          index,
+          offset: CARD_HEIGHT * index,
+        })}
       />
 
       <Fab

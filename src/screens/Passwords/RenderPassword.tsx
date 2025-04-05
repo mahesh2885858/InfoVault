@@ -1,13 +1,6 @@
 import Clipboard from '@react-native-clipboard/clipboard';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {GestureResponderEvent, StyleSheet, View} from 'react-native';
-import Animated, {
-  ZoomOut,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
 import {useToast} from 'react-native-toast-notifications';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {myTheme} from '../../../theme';
@@ -19,12 +12,34 @@ import {TPassword} from '../../types/passwords';
 import {authenticateLocal} from '../../utils/authenticateLocal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SwipeContainer from '../../components/Molecules/SwipeContainer';
-
+import Animated, {
+  Easing,
+  FadeIn,
+  ZoomOut,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+  withSpring,
+} from 'react-native-reanimated';
+import {PASSWORD_HEIGHT} from '../../constants';
 const RenderPassword = (password: TPassword) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSwiped, setIsSwiped] = useState(false);
-  const togglePasswordSelection = usePasswordsStore(
-    state => state.togglePasswordSelection,
+
+  const opacityForNewItem = useSharedValue(1);
+
+  const breath = useAnimatedStyle(() => ({
+    opacity: opacityForNewItem.value,
+  }));
+
+  const {togglePasswordSelection, focusedId, setFocusedId} = usePasswordsStore(
+    state => ({
+      togglePasswordSelection: state.togglePasswordSelection,
+      focusedId: state.focusedPassword,
+      setFocusedId: state.setFocusedPassword,
+    }),
   );
   const toast = useToast();
   const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
@@ -90,8 +105,31 @@ const RenderPassword = (password: TPassword) => {
     toast.show(`${whatToCopy} is copied.`, {duration: 1500});
   };
 
+  useEffect(() => {
+    if (focusedId === password.id) {
+      opacityForNewItem.value = withRepeat(
+        withTiming(0.5, {
+          duration: 1000,
+          easing: Easing.ease,
+        }),
+        2,
+        true,
+        () => {
+          opacityForNewItem.value = 1;
+          runOnJS(setFocusedId)('');
+        },
+      );
+    }
+    return () => {
+      opacityForNewItem.value = 1;
+    };
+  }, [password.id, focusedId, opacityForNewItem, setFocusedId]);
+
   return (
-    <Animated.View style={styles.card} exiting={ZoomOut}>
+    <Animated.View
+      style={[styles.card, breath]}
+      entering={FadeIn}
+      exiting={ZoomOut}>
       <PressableWithFeedback
         onLongPress={handleLongPress}
         onPress={handlePress}
@@ -145,12 +183,14 @@ const RenderPassword = (password: TPassword) => {
                     style={[styles.Button]}>
                     {showPassword ? (
                       <MaterialIcon
+                        onPress={() => togglePasswordVisibility()}
                         color={myTheme.secondary}
                         name="eye-off-outline"
                         size={15}
                       />
                     ) : (
                       <MaterialIcon
+                        onPress={() => togglePasswordVisibility()}
                         color={myTheme.secondary}
                         name="eye-outline"
                         size={15}
@@ -164,6 +204,7 @@ const RenderPassword = (password: TPassword) => {
                       onPress={() => copyContent('password')}
                       style={styles.Button}>
                       <MaterialIcon
+                        onPress={() => copyContent('password')}
                         color={myTheme.secondary}
                         name="content-copy"
                         size={15}
@@ -184,6 +225,7 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     alignItems: 'center',
+    height: PASSWORD_HEIGHT,
   },
   cardContainer: {
     width: '100%',

@@ -13,6 +13,8 @@ type TPasswordsStore = {
   deSelectAll: () => void;
   setPasswords: (passwords: TPassword[]) => void;
   removePassword: (id: string) => void;
+  focusedPassword: string;
+  setFocusedPassword: (cardNumber: string) => void;
 };
 
 export const usePasswordsStore = create(
@@ -64,6 +66,10 @@ export const usePasswordsStore = create(
         removePassword(id) {
           const filteredPasswords = get().passwords.filter(p => p.id !== id);
           set({passwords: filteredPasswords});
+        },
+        focusedPassword: '',
+        setFocusedPassword(cardNumber) {
+          set({focusedPassword: cardNumber});
         },
       };
     },

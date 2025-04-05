@@ -37,7 +37,10 @@ const initState: TPasswordInput = {
 const PlaceholderTextColor = 'grey';
 
 const AddPasswordModal = (props: Props) => {
-  const addPassword = usePasswordsStore(state => state.addPassword);
+  const {addPassword, setFocuseId} = usePasswordsStore(state => ({
+    addPassword: state.addPassword,
+    setFocuseId: state.setFocusedPassword,
+  }));
   const [passwordInputs, setPasswordInputs] =
     useState<TPasswordInput>(initState);
   const userNameRef = useRef<TextInput>(null);
@@ -99,14 +102,16 @@ const AddPasswordModal = (props: Props) => {
   const AddAPassword = () => {
     if (!validateInputs(passwordInputs)) return;
     const {password, username, website} = passwordInputs;
+    const id = String(Date.now());
     addPassword({
       password: password.value,
       username: username.value,
       website: website.value,
-      id: Date.now().toString(),
+      id,
       isSelected: false,
       profileId: selectedProfileForNew?.id ?? DEFAULT_PROFILE_ID,
     });
+    setFocuseId(id);
     setPasswordInputs(initState);
     props.setVisible(false);
   };
