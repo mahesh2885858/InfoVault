@@ -51,9 +51,6 @@ const Chat = () => {
             ref={legacyRef}
             renderRightActions={RightAction}
             friction={1}
-            onSwipeableOpen={direction => {
-              console.log('direction', direction);
-            }}
             containerStyle={{
               width: '100%',
             }}>

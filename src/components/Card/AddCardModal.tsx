@@ -270,12 +270,6 @@ const AddCardModal = (props: Props) => {
             />
             <MTextInput
               ref={cardNumberRef}
-              onKeyPress={e => {
-                console.log({E: e.nativeEvent});
-                if (e.nativeEvent.key === 'Backspace') {
-                  console.log('Back space is pressed');
-                }
-              }}
               value={cardInputs.cardNumber.value}
               onChangeText={handleCardNumber}
               keyboardType="number-pad"

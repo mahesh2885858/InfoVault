@@ -63,10 +63,6 @@ const RenderPassword = (password: TPassword) => {
   });
 
   const togglePasswordVisibility = async () => {
-    AsyncStorage.getItem('passwordsStore').then(data => {
-      console.log({data: JSON.stringify(data)});
-    });
-
     try {
       if (!showPassword) {
         const result = await authenticateLocal();
