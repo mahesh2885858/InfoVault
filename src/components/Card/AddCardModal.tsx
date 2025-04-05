@@ -119,13 +119,8 @@ const AddCardModal = (props: Props) => {
       if (field === 'expiry') {
         t = formatExpiry(text);
         if (text.length === 5) {
-          console.log({texttoTEst: text, t});
           const {error, status} = isValidExpiryForCard(text);
-          console.log({
-            error,
-            status,
-            text,
-          });
+
           if (!status) {
             setCardInputs(prev => ({
               ...prev,
