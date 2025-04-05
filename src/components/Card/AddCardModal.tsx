@@ -1,8 +1,7 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import {myTheme} from '../../../theme';
 import {useCardStore} from '../../store/cardStore';
-import {TCard} from '../../types/card';
 import ModalWrapper from '../ModalWrapper';
 import Box from '../atoms/Box';
 import Container from '../atoms/Container';
@@ -12,29 +11,55 @@ import {useProfileStore} from '../../store/profileStore';
 import {useProfileContext} from '../../context/ProfileContext';
 import PressableWithFeedback from '../PressableWithFeedback';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {DEFAULT_PROFILE_ID, MAX_LENGTH_NAME, MONTHS} from '../../constants';
+import {HOME_PROFILE_ID, MAX_LENGTH_NAME} from '../../constants';
+import {uCFirst, isValidExpiryForCard} from 'commonutil-core';
+
+import MTextInput from '../Molecules/MTextInput';
+import {TCardInput} from '../../types';
+
+import {Keyboard} from 'react-native';
 
 type Props = {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-type TCardInput = Omit<TCard, 'isSelected'>;
+const initialCardInput: TCardInput = {
+  cardName: {
+    value: '',
+    error: '',
+  },
+  cardNumber: {
+    value: '',
+    error: '',
+  },
+  CVV: {
+    value: '',
+    error: '',
+  },
+  expiry: {
+    value: '',
+    error: '',
+  },
+  NameOnCard: {
+    value: '',
+    error: '',
+  },
+};
 
-const initState: TCardInput = {
-  cardName: '',
-  cardNumber: '',
-  CVV: '',
+const errorMessages: Record<keyof TCardInput, string> = {
+  CVV: 'It should be exactly three digits and can not be empty',
+  NameOnCard: 'It should be more than 3 characters and can not be empty',
+  cardName: 'It should be more than 3 characters and can not be empty',
+  cardNumber: 'It should be 16 digits and can not be empty',
   expiry: '',
-  NameOnCard: '',
-  profileId: DEFAULT_PROFILE_ID,
 };
 
 const PlaceholderTextColor = 'grey';
 
 const AddCardModal = (props: Props) => {
-  const {addCard} = useCardStore();
-  const [cardInputs, setCardInputs] = useState<TCardInput>(initState);
+  const {addCard, cards, setFocusedCard} = useCardStore();
+  const [cardInputs, setCardInputs] = useState<TCardInput>(initialCardInput);
   const cardNameRef = useRef<TextInput>(null);
   const expiryRef = useRef<TextInput>(null);
   const cardNumberRef = useRef<TextInput>(null);
@@ -49,38 +74,64 @@ const AddCardModal = (props: Props) => {
 
   const {openProfileSelection} = useProfileContext()!;
 
-  const handleCardNumber = (text: string) => {
-    let t = text;
-    const prevTextLastLetter = cardInputs.cardNumber.toString().split('').pop();
+  const formatCardNumber = useCallback((text: string) => {
+    // Remove any existing dashes
+    const cleaned = text.replace(/-/g, '');
+    // Group digits in fours and join with dashes
+    const groups = cleaned.match(/.{1,4}/g);
+    return groups ? groups.join('-') : '';
+  }, []);
+  const formatExpiry = useCallback((text: string) => {
+    // Remove any existing slashes
+    const cleaned = text.replace(/\//g, '');
+    // Group digits in fours and join with dashes
+    const groups = cleaned.match(/.{1,2}/g);
+    return groups ? groups.join('/') : '';
+  }, []);
 
-    if (text.length === 4 || text.length === 9 || text.length === 14) {
-      if (prevTextLastLetter !== '-') {
-        t = t + '-';
-      }
-    }
-    if (text.length === 19) {
+  const handleCardNumber = (text: string) => {
+    const formatted = formatCardNumber(text);
+    clearError('cardNumber');
+    setCardInputs(prev => ({
+      ...prev,
+      cardNumber: {...prev.cardNumber, value: formatted},
+    }));
+    if (formatted.length === 19) {
       expiryRef.current!.focus();
     }
-    setCardInputs(prev => ({...prev, cardNumber: t}));
   };
+
+  const clearError = useCallback((field: keyof TCardInput) => {
+    setCardInputs(prev => ({
+      ...prev,
+      [field]: {
+        ...prev[field],
+        error: '',
+      },
+    }));
+  }, []);
 
   const onChange = useCallback(
     (text: string, field: keyof typeof cardInputs) => {
       let t = text;
+      clearError(field);
 
       if (field === 'expiry') {
-        if (text.length === 2 && cardInputs.expiry.split('').pop() !== '/') {
-          if (!MONTHS.includes(text)) return;
-
-          t = t + '/';
-        }
-
-        if (text.length > 3) {
-          // validation for year
-          const year = parseInt(text.split('/')[1]); //Get the digits after the year
-          if (isNaN(year)) return;
-        }
+        t = formatExpiry(text);
         if (text.length === 5) {
+          const {error, status} = isValidExpiryForCard(text);
+
+          if (!status) {
+            setCardInputs(prev => ({
+              ...prev,
+              [field]: {
+                ...prev[field],
+                error: error ?? '',
+                value: text,
+              },
+            }));
+            return;
+          }
           cvvRef.current!.focus();
         }
       }
@@ -91,21 +142,42 @@ const AddCardModal = (props: Props) => {
         }
       }
 
-      if (field === 'cardName' || field === 'NameOnCard') {
-        if (text.trim().length > MAX_LENGTH_NAME) return;
-      }
-
-      setCardInputs(prev => ({...prev, [field]: t}));
+      setCardInputs(prev => ({...prev, [field]: {...prev[field], value: t}}));
     },
-    [cardInputs],
+    [clearError, formatExpiry],
   );
 
   const validateInputs = (inputs: TCardInput) => {
     let r = true;
     Object.keys(inputs).forEach(key => {
-      // @ts-expect-error: need to find later
-      if (inputs[key].trim().length < 2) {
+      const field = key as keyof TCardInput;
+
+      if (inputs[field].value.trim().length < 2) {
         r = false;
+        setCardInputs(prev => ({
+          ...prev,
+          [field]: {
+            ...prev[field],
+            error:
+              field === 'expiry'
+                ? isValidExpiryForCard(inputs[field].value).error
+                : errorMessages[field],
+          },
+        }));
+      }
+      if (field === 'cardNumber') {
+        r = false;
+        if (inputs[field].value.trim().length < 19) {
+          setCardInputs(prev => ({
+            ...prev,
+            cardNumber: {
+              ...prev.cardNumber,
+              error: errorMessages.cardNumber,
+            },
+          }));
+        } else {
+          r = true;
+        }
       }
     });
     return r;
@@ -117,20 +189,55 @@ const AddCardModal = (props: Props) => {
 
   const AddACard = () => {
     if (!validateInputs(cardInputs)) return;
-    cardInputs.profileId = selectedProfileForNew?.id ?? '';
-    addCard(cardInputs);
-    setCardInputs(initState);
+    const profileId = selectedProfileForNew?.id ?? HOME_PROFILE_ID;
+    Keyboard.dismiss();
+    addCard({
+      CVV: cardInputs.CVV.value,
+      NameOnCard: cardInputs.NameOnCard.value,
+      cardName: cardInputs.cardName.value,
+      cardNumber: cardInputs.cardNumber.value,
+      expiry: cardInputs.expiry.value,
+      profileId,
+    });
+    const id = cardInputs.cardNumber.value;
+
+    setFocusedCard(id);
+    setCardInputs(initialCardInput);
     props.setVisible(false);
   };
 
+  const anyErrors = useMemo(() => {
+    return Object.keys(cardInputs).some(
+      k => cardInputs[k as keyof TCardInput].error.trim().length > 0,
+    );
+  }, [cardInputs]);
+
+  const renderErrors = useCallback(() => {
+    return Object.keys(cardInputs).map(key => {
+      if (!cardInputs[key as keyof TCardInput].error) return null;
+      return (
+        <View style={{marginBottom: 5}} key={key}>
+          <LightText>
+            {uCFirst(key)} : {cardInputs[key as keyof TCardInput].error}
+          </LightText>
+        </View>
+      );
+    });
+  }, [cardInputs]);
+
   const close = useCallback(() => {
-    setCardInputs(initState);
+    setCardInputs(initialCardInput);
     props.setVisible(false);
   }, [props]);
 
   return (
-    <ModalWrapper width={'90%'} onClose={close} visible={props.visible}>
+    <ModalWrapper
+      width={'90%'}
+      onClose={close}
+      bg={myTheme.main}
+      visible={props.visible}>
       <Container style={styles.cardContainer}>
+        {anyErrors && <View style={styles.errorBox}>{renderErrors()}</View>}
         <View style={styles.profileSwitch}>
           <LightText>Card will be saved in : </LightText>
           <PressableWithFeedback
@@ -147,9 +254,10 @@ const AddCardModal = (props: Props) => {
         </View>
         <Box style={[styles.cardContent]}>
           <View style={styles.cardNameAndNumber}>
-            <TextInput
-              value={cardInputs.cardName}
+            <MTextInput
+              value={cardInputs.cardName.value}
               autoFocus
+              maxLength={MAX_LENGTH_NAME}
               ref={cardNameRef}
               onChangeText={t => onChange(t, 'cardName')}
               style={[styles.textInput, styles.title]}
@@ -157,36 +265,42 @@ const AddCardModal = (props: Props) => {
               placeholder="Card name"
               returnKeyType="next"
               onSubmitEditing={moveToNext}
+              error={cardInputs.cardName.error}
+              clearError={() => clearError('cardName')}
             />
-            <TextInput
+            <MTextInput
               ref={cardNumberRef}
-              value={cardInputs.cardNumber.toString()}
+              value={cardInputs.cardNumber.value}
               onChangeText={handleCardNumber}
               keyboardType="number-pad"
               maxLength={19}
               style={[styles.textInput, styles.number, styles.cardText]}
               placeholderTextColor={PlaceholderTextColor}
               placeholder="Number"
+              error={cardInputs.cardNumber.error}
+              clearError={() => clearError('cardNumber')}
             />
           </View>
           <View style={styles.cardExpiryCvvButtonBox}>
             <View style={styles.expiryAndCvvBox}>
               <LightText style={styles.title}>Valid Thru</LightText>
-              <TextInput
+              <MTextInput
                 ref={expiryRef}
-                value={cardInputs.expiry}
+                value={cardInputs.expiry.value}
                 onChangeText={text => onChange(text, 'expiry')}
                 maxLength={5}
-                keyboardType="number-pad"
+                keyboardType="phone-pad"
                 style={[styles.textInput, styles.cardText]}
                 placeholderTextColor={PlaceholderTextColor}
-                placeholder="Exp"
+                placeholder="MM/YY"
+                error={cardInputs.expiry.error}
+                clearError={() => clearError('expiry')}
               />
             </View>
             <View style={styles.expiryAndCvvBox}>
               <LightText style={styles.title}>CVV</LightText>
-              <TextInput
-                value={cardInputs.CVV.toString()}
+              <MTextInput
+                value={cardInputs.CVV.value}
                 maxLength={3}
                 ref={cvvRef}
                 keyboardType="number-pad"
@@ -194,17 +308,22 @@ const AddCardModal = (props: Props) => {
                 style={[styles.textInput, styles.cardText]}
                 placeholderTextColor={PlaceholderTextColor}
                 placeholder="CVV"
+                error={cardInputs.CVV.error}
+                clearError={() => clearError('CVV')}
               />
             </View>
           </View>
           <View>
-            <TextInput
-              value={cardInputs.NameOnCard}
+            <MTextInput
+              value={cardInputs.NameOnCard.value}
               onChangeText={t => onChange(t, 'NameOnCard')}
               style={[styles.textInput, styles.cardText]}
+              maxLength={MAX_LENGTH_NAME}
               ref={nameOnCardRef}
               placeholderTextColor={PlaceholderTextColor}
               placeholder="Name on card"
+              error={cardInputs.NameOnCard.error}
+              clearError={() => clearError('NameOnCard')}
             />
           </View>
         </Box>
@@ -222,6 +341,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     gap: 20,
   },
+  errorBox: {
+    backgroundColor: myTheme.warningBg,
+    padding: 10,
+    borderRadius: 10,
+    width: '80%',
+  },
   number: {
     width: '70%',
   },
@@ -231,8 +356,8 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   textInput: {
-    fontSize: 15,
-    padding: 2,
+    fontSize: 12,
+    padding: 5,
     borderRadius: 5,
   },
   buttonsBox: {
@@ -257,7 +382,7 @@ const styles = StyleSheet.create({
   },
   cardNameAndNumber: {
     paddingTop: 10,
-    gap: 2,
+    gap: 10,
   },
   cardExpiryCvvButtonBox: {
     display: 'flex',
@@ -281,18 +406,18 @@ const styles = StyleSheet.create({
   },
   title: {
     color: myTheme.cardTitleText,
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
     textTransform: 'uppercase',
   },
   cardNumberText: {
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: '700',
     textTransform: 'uppercase',
   },
 
   cardText: {
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: '500',
     textTransform: 'uppercase',
     color: myTheme.secondary,

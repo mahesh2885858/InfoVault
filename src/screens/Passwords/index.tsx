@@ -1,6 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native';
-import React, {useCallback, useState} from 'react';
-import {BackHandler, StatusBar, StyleSheet, View} from 'react-native';
+import React, {useCallback, useRef, useState} from 'react';
+import {BackHandler, FlatList, StatusBar, StyleSheet, View} from 'react-native';
 import {myTheme} from '../../../theme';
 import Fab from '../../components/Fab';
 import Container from '../../components/atoms/Container';
@@ -8,14 +8,20 @@ import {usePasswordsStore} from '../../store/passwordStore';
 import RenderPassword from './RenderPassword';
 import AddPasswordModal from './AddPasswordModal';
 import {useProfileStore} from '../../store/profileStore';
-import {DEFAULT_PROFILE_ID} from '../../constants';
+import {DEFAULT_PROFILE_ID, PASSWORD_HEIGHT} from '../../constants';
 import Animated, {LinearTransition} from 'react-native-reanimated';
 
 const Passwords = () => {
   const [visible, setVisibility] = useState(false);
-  const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
-  const deSelectAll = usePasswordsStore(state => state.deSelectAll);
-  const passwords = usePasswordsStore(state => state.passwords);
+  const listRef = useRef<FlatList>(null);
+  const {selectedPasswords, deSelectAll, passwords, focusedId} =
+    usePasswordsStore(state => ({
+      selectedPasswords: state.selectedPasswords,
+      deSelectAll: state.deSelectAll,
+      passwords: state.passwords,
+      focusedId: state.focusedPassword,
+      setFocusedId: state.setFocusedPassword,
+    }));
   const selectedProfile = useProfileStore(state => state.selectedProfileId);
   const passwordsToRender = passwords.filter(
     password =>
@@ -40,11 +46,28 @@ const Passwords = () => {
     }, [selectedPasswords, deSelectAll]),
   );
 
+  useFocusEffect(
+    useCallback(() => {
+      if (focusedId.trim().length === 0) return;
+      const indexOfFocusedId = passwords.findIndex(
+        password => password.id === focusedId,
+      );
+
+      if (indexOfFocusedId >= 0) {
+        listRef.current!.scrollToIndex({
+          index: indexOfFocusedId,
+          animated: true,
+        });
+      }
+    }, [focusedId, passwords]),
+  );
+
   return (
     <Container style={styles.container}>
       <StatusBar backgroundColor={myTheme.main} />
 
       <Animated.FlatList
+        ref={listRef}
         data={passwordsToRender}
         contentContainerStyle={styles.cardConatiner}
         renderItem={item => {
@@ -52,6 +75,11 @@ const Passwords = () => {
         }}
         itemLayoutAnimation={LinearTransition}
         keyExtractor={item => item.id}
+        getItemLayout={(_, index) => ({
+          length: PASSWORD_HEIGHT,
+          index,
+          offset: PASSWORD_HEIGHT * index,
+        })}
       />
 
       <Fab

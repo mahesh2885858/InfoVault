@@ -7,4 +7,6 @@ export const myTheme = {
   cardSelectedBg: '#784c70',
   buttonBg: '#bf03ab',
   textMain: '#FFFFFF',
+  errorText: '#E21714',
+  warningBg: '#E58729',
 };

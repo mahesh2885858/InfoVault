@@ -1,4 +1,6 @@
 import React from 'react';
+import {ColorValue} from 'react-native';
+import {StyleProp} from 'react-native';
 import {Pressable} from 'react-native';
 import {Modal, StatusBar, StyleSheet} from 'react-native';
 
@@ -7,6 +9,7 @@ type TProps = {
   onClose: () => void;
   children: React.ReactNode;
   width?: null | '90%';
+  bg?: StyleProp<ColorValue>;
 };
 
 const ModalWrapper = (props: TProps) => {
@@ -18,7 +21,12 @@ const ModalWrapper = (props: TProps) => {
       onRequestClose={props.onClose}>
       <StatusBar backgroundColor={'#00000099'} />
       <Pressable
-        style={styles.container}
+        style={[
+          styles.container,
+          {
+            backgroundColor: props.bg ? props.bg : '#00000099',
+          },
+        ]}
         onPress={e => {
           props.onClose();
         }}>

@@ -1,8 +1,8 @@
-import React, {useRef, useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import {myTheme} from '../../../theme';
 
-import {TPassword} from '../../types/passwords';
+import {TPasswordInput} from '../../types';
 import {usePasswordsStore} from '../../store/passwordStore';
 import ModalWrapper from '../../components/ModalWrapper';
 import Container from '../../components/atoms/Container';
@@ -12,33 +12,42 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ButtonsForForms from '../../components/Molecules/ButtonsForForms';
 import {useProfileStore} from '../../store/profileStore';
 import LightText from '../../components/atoms/LightText';
-import {DEFAULT_PROFILE_ID, MAX_LENGTH_NAME} from '../../constants';
+import {HOME_PROFILE_ID, MAX_LENGTH_NAME} from '../../constants';
 import {useProfileContext} from '../../context/ProfileContext';
+import {TBaseInput} from '../../types';
+import MTextInput from '../../components/Molecules/MTextInput';
+import {uCFirst} from 'commonutil-core';
 
 type Props = {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-type TPasswordInput = Omit<TPassword, 'isSelected' | 'id'>;
+const baseInput: TBaseInput = {
+  value: '',
+  error: '',
+};
 
 const initState: TPasswordInput = {
-  password: '',
-  username: '',
-  website: '',
-  profileId: '123abd',
+  password: baseInput,
+  username: baseInput,
+  website: baseInput,
 };
 
 const PlaceholderTextColor = 'grey';
 
 const AddPasswordModal = (props: Props) => {
-  const addPassword = usePasswordsStore(state => state.addPassword);
+  const {addPassword, setFocusedPassword} = usePasswordsStore(state => ({
+    addPassword: state.addPassword,
+    setFocusedPassword: state.setFocusedPassword,
+  }));
   const [passwordInputs, setPasswordInputs] =
     useState<TPasswordInput>(initState);
   const userNameRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
   const websiteRef = useRef<TextInput>(null);
   const [showPassword, setShowPassword] = useState(false);
+
   const {selectedProfileForNew} = useProfileStore(state => ({
     selectedProfile: state.getSelectedProfile(),
     selectedProfileForNew: state.profiles.find(
@@ -56,28 +65,53 @@ const AddPasswordModal = (props: Props) => {
     if (field === 'username' || field === 'website') {
       if (text.trim().length > MAX_LENGTH_NAME) return;
     }
-    setPasswordInputs(prev => ({...prev, [field]: text}));
+    setPasswordInputs(prev => ({
+      ...prev,
+      [field]: {...prev[field], value: text, error: ''},
+    }));
   };
 
   const validateInputs = (inputs: TPasswordInput) => {
     let r = true;
     Object.keys(inputs).forEach(key => {
-      // @ts-expect-error: need to find later
-      if (inputs[key].trim().length < 2) {
+      const field = key as keyof TPasswordInput;
+      if (inputs[field].value.trim().length < 3) {
+        setPasswordInputs(prev => ({
+          ...prev,
+          [field]: {
+            ...prev[field],
+            error: 'The input should be more than three characters',
+          },
+        }));
         r = false;
+      } else {
       }
     });
     return r;
   };
+  const clearError = useCallback((field: keyof TPasswordInput) => {
+    setPasswordInputs(prev => ({
+      ...prev,
+      [field]: {
+        ...prev[field],
+        error: '',
+      },
+    }));
+  }, []);
 
   const AddAPassword = () => {
     if (!validateInputs(passwordInputs)) return;
+    const {password, username, website} = passwordInputs;
+    const id = String(Date.now());
     addPassword({
-      ...passwordInputs,
-      id: Date.now().toString(),
+      password: password.value,
+      username: username.value,
+      website: website.value,
+      id,
       isSelected: false,
-      profileId: selectedProfileForNew?.id ?? DEFAULT_PROFILE_ID,
+      profileId: selectedProfileForNew?.id ?? HOME_PROFILE_ID,
     });
+    setFocusedPassword(id);
     setPasswordInputs(initState);
     props.setVisible(false);
   };
@@ -85,6 +119,25 @@ const AddPasswordModal = (props: Props) => {
   const moveToNext = (nextRef: React.RefObject<TextInput>) => {
     nextRef.current?.focus();
   };
+
+  const anyErrors = useMemo(() => {
+    return Object.keys(passwordInputs).some(
+      k => passwordInputs[k as keyof TPasswordInput].error.trim().length > 0,
+    );
+  }, [passwordInputs]);
+
+  const renderErrors = useCallback(() => {
+    return Object.keys(passwordInputs).map(key => {
+      if (!passwordInputs[key as keyof TPasswordInput].error) return null;
+      return (
+        <View key={key}>
+          <LightText>
+            {uCFirst(key)} : {passwordInputs[key as keyof TPasswordInput].error}
+          </LightText>
+        </View>
+      );
+    });
+  }, [passwordInputs]);
 
   const closeModal = () => {
     setPasswordInputs(initState);
@@ -95,8 +148,11 @@ const AddPasswordModal = (props: Props) => {
     <ModalWrapper
       width={'90%'}
       onClose={() => closeModal()}
+      bg={myTheme.main}
       visible={props.visible}>
       <Container style={styles.cardContainer}>
+        {anyErrors && <View style={styles.errorBox}>{renderErrors()}</View>}
+
         <View style={styles.profileSwitch}>
           <LightText>Card will be saved in : </LightText>
           <PressableWithFeedback
@@ -113,8 +169,8 @@ const AddPasswordModal = (props: Props) => {
         </View>
         <Box style={[styles.cardContent]}>
           <View style={styles.cardNameAndNumber}>
-            <TextInput
-              value={passwordInputs.website}
+            <MTextInput
+              value={passwordInputs.website.value}
               autoFocus
               ref={websiteRef}
               onChangeText={t => onChange(t, 'website')}
@@ -123,11 +179,13 @@ const AddPasswordModal = (props: Props) => {
               placeholder="Web site"
               returnKeyType="next"
               onSubmitEditing={() => moveToNext(userNameRef)}
+              error={passwordInputs.website.error}
+              clearError={() => clearError('website')}
             />
           </View>
           <View style={styles.username}>
-            <TextInput
-              value={passwordInputs.username}
+            <MTextInput
+              value={passwordInputs.username.value}
               ref={userNameRef}
               onChangeText={t => onChange(t, 'username')}
               style={[styles.textInput, styles.cardText]}
@@ -135,13 +193,15 @@ const AddPasswordModal = (props: Props) => {
               placeholder="Username"
               returnKeyType="next"
               onSubmitEditing={() => moveToNext(passwordRef)}
+              clearError={() => clearError('username')}
+              error={passwordInputs.username.error}
             />
           </View>
 
           <View style={styles.passwordBox}>
             <View style={{width: '100%'}}>
-              <TextInput
-                value={passwordInputs.password}
+              <MTextInput
+                value={passwordInputs.password.value}
                 ref={passwordRef}
                 onChangeText={t => onChange(t, 'password')}
                 style={[styles.textInput, styles.cardText, {paddingRight: 50}]}
@@ -149,6 +209,8 @@ const AddPasswordModal = (props: Props) => {
                 placeholder="Password"
                 returnKeyType="next"
                 secureTextEntry={!showPassword}
+                clearError={() => clearError('password')}
+                error={passwordInputs.password.error}
               />
               <PressableWithFeedback
                 onPress={() => togglePasswordVisibility()}
@@ -184,7 +246,12 @@ const styles = StyleSheet.create({
   number: {
     width: '70%',
   },
-
+  errorBox: {
+    backgroundColor: myTheme.warningBg,
+    padding: 10,
+    borderRadius: 10,
+    width: '80%',
+  },
   textInput: {
     fontSize: 15,
     padding: 5,

@@ -12,6 +12,8 @@ type TCardStore = {
   toggleCardSelection: (id: string) => void;
   deSelectAll: () => void;
   setCards: (cards: TCard[]) => void;
+  focusedCard: string;
+  setFocusedCard: (cardNumber: string) => void;
 };
 
 export const useCardStore = create(
@@ -20,6 +22,7 @@ export const useCardStore = create(
       return {
         cards: [],
         selectedCards: [],
+        focusedCard: '',
 
         deSelectAll: () => {
           set(state => {
@@ -56,6 +59,9 @@ export const useCardStore = create(
               selectedCards: updatedCards.filter(c => c.isSelected),
             };
           });
+        },
+        setFocusedCard(cardNumber) {
+          set({focusedCard: cardNumber});
         },
         setCards(cards) {
           set({cards});

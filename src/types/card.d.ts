@@ -7,3 +7,10 @@ export type TCard = {
   isSelected: boolean;
   profileId: string;
 };
+export type TCardInput = {
+  cardName: TBaseInput;
+  cardNumber: TBaseInput;
+  CVV: TBaseInput;
+  expiry: TBaseInput;
+  NameOnCard: TBaseInput;
+};
