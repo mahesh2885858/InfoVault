@@ -3,9 +3,10 @@ import {StyleSheet, View} from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {myTheme} from '../../../theme';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
-import LightText from '../../components/atoms/LightText';
+import Typography from '../../components/atoms/Typography';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 import {useCardStore} from '../../store/cardStore';
+import {StyleService} from '@ui-kitten/components';
 
 const CardHeaderTitleWithBackButton = () => {
   const navigation = useNavigation();
@@ -37,11 +38,11 @@ const CardHeaderTitleWithBackButton = () => {
         }}>
         <MaterialIcon name="menu" size={24} color={myTheme.textMain} />
       </PressableWithFeedback>
-      <LightText style={styles.text}>Cards</LightText>
+      <Typography style={styles.text}>Cards</Typography>
     </View>
   );
 };
-const styles = StyleSheet.create({
+const styles = StyleService.create({
   container: {
     flexDirection: 'row',
     gap: 20,

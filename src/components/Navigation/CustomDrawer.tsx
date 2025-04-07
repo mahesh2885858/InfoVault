@@ -6,23 +6,25 @@ import {
 import React from 'react';
 import {myTheme} from '../../../theme';
 import {View} from 'react-native';
-import LightText from '../atoms/LightText';
+import Typography from '../atoms/Typography';
 import {StyleSheet} from 'react-native';
 import PressableWithFeedback from '../PressableWithFeedback';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
+import {StyleService, useTheme} from '@ui-kitten/components';
 
 const CustomDrawer = (props: DrawerContentComponentProps) => {
   const navigation = useNavigation();
+  const theme = useTheme();
   return (
     <DrawerContentScrollView
       style={{
-        backgroundColor: myTheme.cardBg,
+        backgroundColor: theme['bg-main'],
       }}
       {...props}>
       <View style={styles.container}>
-        <LightText style={styles.largeText}>Hi,</LightText>
-        <LightText style={styles.subTitleText}>User</LightText>
+        <Typography style={styles.largeText}>Hi,</Typography>
+        <Typography style={styles.subTitleText}>User</Typography>
         <PressableWithFeedback
           onPress={() => {
             props.navigation.closeDrawer();
@@ -36,7 +38,7 @@ const CustomDrawer = (props: DrawerContentComponentProps) => {
     </DrawerContentScrollView>
   );
 };
-const styles = StyleSheet.create({
+const styles = StyleService.create({
   container: {
     paddingLeft: 20,
     paddingTop: 30,

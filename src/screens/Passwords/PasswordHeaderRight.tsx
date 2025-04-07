@@ -1,7 +1,7 @@
 import React from 'react';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import {usePasswordsStore} from '../../store/passwordStore';
-import LightText from '../../components/atoms/LightText';
+import Typography from '../../components/atoms/Typography';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useProfileContext} from '../../context/ProfileContext';
 import {useProfileStore} from '../../store/profileStore';
@@ -20,7 +20,7 @@ const PasswordHeaderRight = () => {
       <PressableWithFeedback
         onPress={openProfileSelection}
         style={styles.switch}>
-        <LightText>{selectedProfile?.name ?? 'Mahesh'}</LightText>
+        <Typography>{selectedProfile?.name ?? 'Mahesh'}</Typography>
         <MaterialIcon
           onPress={openProfileSelection}
           name="chevron-down"
@@ -36,7 +36,7 @@ const PasswordHeaderRight = () => {
       onPress={() => {
         deletePasswords();
       }}>
-      <LightText>Delete</LightText>
+      <Typography>Delete</Typography>
     </PressableWithFeedback>
   );
 };

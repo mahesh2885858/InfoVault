@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import LightText from '../../components/atoms/LightText';
+import Typography from '../../components/atoms/Typography';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {TProfile} from '../../types';
 
@@ -14,7 +14,7 @@ const RenderProfile = (props: TProps) => {
   if (!item) return null;
   return (
     <View style={styles.item}>
-      <LightText style={styles.text}>{item.name}</LightText>
+      <Typography style={styles.text}>{item.name}</Typography>
       <MaterialIcon
         name="pencil"
         onPress={() => props.onEditPress(item.id)}

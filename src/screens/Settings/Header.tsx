@@ -1,14 +1,14 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {myTheme} from '../../../theme';
-import LightText from '../../components/atoms/LightText';
+import Typography from '../../components/atoms/Typography';
 import BackButton from '../../components/Molecules/BackButton';
 
 const SettingsHeader = () => {
   return (
     <View style={styles.container}>
       <BackButton />
-      <LightText style={styles.headerText}>Settings</LightText>
+      <Typography style={styles.headerText}>Settings</Typography>
     </View>
   );
 };

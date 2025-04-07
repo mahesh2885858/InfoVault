@@ -1,12 +1,13 @@
 import React from 'react';
 import {useCardStore} from '../../store/cardStore';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
-import LightText from '../../components/atoms/LightText';
+import Typography from '../../components/atoms/Typography';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useProfileContext} from '../../context/ProfileContext';
 import {useProfileStore} from '../../store/profileStore';
 import {StyleSheet} from 'react-native';
 import {myTheme} from '../../../theme';
+import {useStyleSheet} from '@ui-kitten/components';
 
 const CardHeaderRight = () => {
   const selectedCards = useCardStore(state => state.selectedCards);
@@ -16,12 +17,14 @@ const CardHeaderRight = () => {
     selectedProfile: state.getSelectedProfile(),
   }));
 
+  const styles = useStyleSheet(themedStyles);
+
   if (selectedCards.length === 0) {
     return (
       <PressableWithFeedback
         onPress={() => openProfileSelection()}
         style={styles.switch}>
-        <LightText>{selectedProfile?.name ?? ''}</LightText>
+        <Typography>{selectedProfile?.name ?? ''}</Typography>
         <MaterialIcon
           onPress={() => openProfileSelection()}
           name="chevron-down"
@@ -35,18 +38,18 @@ const CardHeaderRight = () => {
   return (
     <PressableWithFeedback
       onPress={() => removeCards(selectedCards.map(c => c.cardNumber))}>
-      <LightText>Delete</LightText>
+      <Typography>Delete</Typography>
     </PressableWithFeedback>
   );
 };
 
 export default CardHeaderRight;
 
-const styles = StyleSheet.create({
+const themedStyles = StyleSheet.create({
   switch: {
     flexDirection: 'row',
     paddingHorizontal: 5,
-    backgroundColor: myTheme.buttonBg,
+    backgroundColor: 'bg-card',
     alignItems: 'center',
     gap: 10,
     borderRadius: 5,

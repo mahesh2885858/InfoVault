@@ -1,0 +1,14 @@
+{
+  "bg-main": "$color-primary-900",
+  "bg-card": "$color-primary-700",
+  "text-primary": "$color-primary-100",
+  "text-secondary": "$color-primary-300",
+  "button-primary-bg": "$color-primary-300",
+  "button-primary-text": "$color-primary-900",
+  "button-secondary-bg": "$color-primary-600",
+  "button-secondary-text": "$color-basic-100",
+  "button-disabled-bg": "$color-primary-700",
+  "button-disabled-text": "$color-primary-400",
+  "button-ghost-border": "$color-primary-100",
+  "button-ghost-text": "$color-primary-100"
+}

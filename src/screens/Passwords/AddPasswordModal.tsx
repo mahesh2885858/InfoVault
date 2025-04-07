@@ -11,7 +11,7 @@ import PressableWithFeedback from '../../components/PressableWithFeedback';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ButtonsForForms from '../../components/Molecules/ButtonsForForms';
 import {useProfileStore} from '../../store/profileStore';
-import LightText from '../../components/atoms/LightText';
+import Typography from '../../components/atoms/Typography';
 import {HOME_PROFILE_ID, MAX_LENGTH_NAME} from '../../constants';
 import {useProfileContext} from '../../context/ProfileContext';
 import {TBaseInput} from '../../types';
@@ -131,9 +131,9 @@ const AddPasswordModal = (props: Props) => {
       if (!passwordInputs[key as keyof TPasswordInput].error) return null;
       return (
         <View key={key}>
-          <LightText>
+          <Typography>
             {uCFirst(key)} : {passwordInputs[key as keyof TPasswordInput].error}
-          </LightText>
+          </Typography>
         </View>
       );
     });
@@ -154,11 +154,11 @@ const AddPasswordModal = (props: Props) => {
         {anyErrors && <View style={styles.errorBox}>{renderErrors()}</View>}
 
         <View style={styles.profileSwitch}>
-          <LightText>Card will be saved in : </LightText>
+          <Typography>Card will be saved in : </Typography>
           <PressableWithFeedback
             onPress={() => openProfileSelection({renderForNew: true})}
             style={styles.switch}>
-            <LightText>{selectedProfileForNew?.name ?? ''}</LightText>
+            <Typography>{selectedProfileForNew?.name ?? ''}</Typography>
             <MaterialIcon
               onPress={() => openProfileSelection({renderForNew: true})}
               name="chevron-down"

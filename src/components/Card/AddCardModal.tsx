@@ -5,7 +5,7 @@ import {useCardStore} from '../../store/cardStore';
 import ModalWrapper from '../ModalWrapper';
 import Box from '../atoms/Box';
 import Container from '../atoms/Container';
-import LightText from '../atoms/LightText';
+import Typography from '../atoms/Typography';
 import ButtonsForForms from '../Molecules/ButtonsForForms';
 import {useProfileStore} from '../../store/profileStore';
 import {useProfileContext} from '../../context/ProfileContext';
@@ -217,9 +217,9 @@ const AddCardModal = (props: Props) => {
       if (!cardInputs[key as keyof TCardInput].error) return null;
       return (
         <View style={{marginBottom: 5}} key={key}>
-          <LightText>
+          <Typography>
             {uCFirst(key)} : {cardInputs[key as keyof TCardInput].error}
-          </LightText>
+          </Typography>
         </View>
       );
     });
@@ -239,11 +239,11 @@ const AddCardModal = (props: Props) => {
       <Container style={styles.cardContainer}>
         {anyErrors && <View style={styles.errorBox}>{renderErrors()}</View>}
         <View style={styles.profileSwitch}>
-          <LightText>Card will be saved in : </LightText>
+          <Typography>Card will be saved in : </Typography>
           <PressableWithFeedback
             onPress={() => openProfileSelection({renderForNew: true})}
             style={styles.switch}>
-            <LightText>{selectedProfileForNew?.name ?? ''}</LightText>
+            <Typography>{selectedProfileForNew?.name ?? ''}</Typography>
             <MaterialIcon
               onPress={() => openProfileSelection({renderForNew: true})}
               name="chevron-down"
@@ -283,7 +283,7 @@ const AddCardModal = (props: Props) => {
           </View>
           <View style={styles.cardExpiryCvvButtonBox}>
             <View style={styles.expiryAndCvvBox}>
-              <LightText style={styles.title}>Valid Thru</LightText>
+              <Typography style={styles.title}>Valid Thru</Typography>
               <MTextInput
                 ref={expiryRef}
                 value={cardInputs.expiry.value}
@@ -298,7 +298,7 @@ const AddCardModal = (props: Props) => {
               />
             </View>
             <View style={styles.expiryAndCvvBox}>
-              <LightText style={styles.title}>CVV</LightText>
+              <Typography style={styles.title}>CVV</Typography>
               <MTextInput
                 value={cardInputs.CVV.value}
                 maxLength={3}

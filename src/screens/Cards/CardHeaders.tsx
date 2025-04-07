@@ -1,22 +1,22 @@
 import {View} from 'react-native';
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import CardHeaderTitleWithBackButton from './CardHeaderTitleWithBackButton';
 import CardHeaderRight from './CardHeaderRight';
 import {DrawerHeaderProps} from '@react-navigation/drawer';
-import {myTheme} from '../../../theme';
+import {StyleService, useStyleSheet} from '@ui-kitten/components';
 
 const CardHeaders = (_props: DrawerHeaderProps) => {
+  const styles = useStyleSheet(themedStyles);
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       <CardHeaderTitleWithBackButton />
       <CardHeaderRight />
     </View>
   );
 };
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   container: {
-    backgroundColor: myTheme.main,
+    backgroundColor: 'bg-main',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',

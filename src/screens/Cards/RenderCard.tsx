@@ -7,7 +7,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {myTheme} from '../../../theme';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Box from '../../components/atoms/Box';
-import LightText from '../../components/atoms/LightText';
+import Typography from '../../components/atoms/Typography';
 import {useCardStore} from '../../store/cardStore';
 import {TCard} from '../../types/card';
 import {authenticateLocal} from '../../utils/authenticateLocal';
@@ -23,9 +23,12 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {CARD_HEIGHT} from '../../constants';
+import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
 
 const RenderCard = (card: TCard) => {
   const opacity = useSharedValue(1);
+  const theme = useTheme();
+  const styles = useStyleSheet(themedStyles);
 
   const breath = useAnimatedStyle(() => ({
     opacity: opacity.value,
@@ -121,23 +124,23 @@ const RenderCard = (card: TCard) => {
               {
                 backgroundColor: card.isSelected
                   ? myTheme.cardSelectedBg
-                  : myTheme.cardBg,
+                  : theme['bg-card'],
               },
               breath,
             ]}>
             <View style={styles.cardNameAndNuberBox}>
               <View style={styles.cardNameAndNumber}>
-                <LightText style={styles.title}>{card.cardName}</LightText>
-                <LightText style={styles.cardNumberText}>
+                <Typography style={styles.title}>{card.cardName}</Typography>
+                <Typography style={styles.cardNumberText}>
                   {card.cardNumber}
-                </LightText>
+                </Typography>
               </View>
               <PressableWithFeedback
                 onPress={() => copyContent('cardNumber')}
-                style={styles.Button}>
+                style={[styles.Button]}>
                 <MaterialIcon
                   onPress={() => copyContent('cardNumber')}
-                  color={myTheme.secondary}
+                  color={theme['bg-main']}
                   name="content-copy"
                   size={15}
                 />
@@ -145,23 +148,28 @@ const RenderCard = (card: TCard) => {
             </View>
             <View style={styles.cardExpiryCvvButtonBox}>
               <View style={styles.expiryAndCvvBox}>
-                <LightText style={styles.title}>Valid Thru</LightText>
-                <LightText style={styles.cardText}> {card.expiry}</LightText>
+                <Typography style={styles.title}>Valid Thru</Typography>
+                <Typography style={styles.cardText}> {card.expiry}</Typography>
               </View>
               <View style={styles.expiryAndCvvBox}>
-                <LightText style={styles.title}>CVV</LightText>
-                <LightText style={styles.cardText}>
+                <Typography style={styles.title}>CVV</Typography>
+                <Typography style={styles.cardText}>
                   {showCVV ? card.CVV : '***'}
-                </LightText>
+                </Typography>
               </View>
               <PressableWithFeedback
                 onPress={() => toggleCvv()}
-                style={styles.cvvButton}>
-                <LightText>{showCVV ? 'Hide CVV' : 'View CVV'}</LightText>
+                style={[styles.cvvButton]}>
+                <Typography
+                  style={{
+                    color: theme['bg-main'],
+                  }}>
+                  {showCVV ? 'Hide CVV' : 'View CVV'}
+                </Typography>
               </PressableWithFeedback>
             </View>
             <View>
-              <LightText style={styles.cardText}>{card.NameOnCard}</LightText>
+              <Typography style={styles.cardText}>{card.NameOnCard}</Typography>
             </View>
           </Animated.View>
         </SwipeContainer>
@@ -170,7 +178,7 @@ const RenderCard = (card: TCard) => {
   );
 };
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   card: {
     width: '100%',
     alignItems: 'center',
@@ -200,7 +208,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 7,
     borderRadius: 5,
-    backgroundColor: '#bf03ab',
+    backgroundColor: 'text-primary',
   },
   cardExpiryCvvButtonBox: {
     display: 'flex',
@@ -216,10 +224,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 7,
     borderRadius: 5,
-    backgroundColor: '#bf03ab',
+    backgroundColor: 'text-primary',
   },
   title: {
-    color: myTheme.cardTitleText,
+    color: 'text-secondary',
     fontSize: 16,
     fontWeight: '600',
     textTransform: 'uppercase',

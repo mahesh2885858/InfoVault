@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {myTheme} from '../../../theme';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
-import LightText from '../../components/atoms/LightText';
+import Typography from '../../components/atoms/Typography';
 import {usePasswordsStore} from '../../store/passwordStore';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 
@@ -36,7 +36,7 @@ const PasswordHeaderTitleWithBackButton = () => {
         <MaterialIcon name="menu" size={24} color={myTheme.textMain} />
       </PressableWithFeedback>
 
-      <LightText style={styles.text}>Passwords</LightText>
+      <Typography style={styles.text}>Passwords</Typography>
     </View>
   );
 };

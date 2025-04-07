@@ -5,7 +5,7 @@ import {useToast} from 'react-native-toast-notifications';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {myTheme} from '../../../theme';
 import Box from '../../components/atoms/Box';
-import LightText from '../../components/atoms/LightText';
+import Typography from '../../components/atoms/Typography';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import {usePasswordsStore} from '../../store/passwordStore';
 import {TPassword} from '../../types/passwords';
@@ -143,16 +143,16 @@ const RenderPassword = (password: TPassword) => {
               },
             ]}>
             <View style={styles.webSiteBox}>
-              <LightText style={styles.cardNumberText}>
+              <Typography style={styles.cardNumberText}>
                 {password.website}
-              </LightText>
+              </Typography>
             </View>
             <View style={styles.usernameBox}>
               <View style={styles.username}>
-                <LightText style={styles.title}>User name</LightText>
-                <LightText style={styles.cardText}>
+                <Typography style={styles.title}>User name</Typography>
+                <Typography style={styles.cardText}>
                   {password.username}
-                </LightText>
+                </Typography>
               </View>
 
               <PressableWithFeedback
@@ -167,10 +167,10 @@ const RenderPassword = (password: TPassword) => {
             </View>
             <View style={styles.passwordBox}>
               <View>
-                <LightText style={styles.title}>Password</LightText>
-                <LightText style={styles.cardText}>
+                <Typography style={styles.title}>Password</Typography>
+                <Typography style={styles.cardText}>
                   {showPassword ? password.password : '*********'}
-                </LightText>
+                </Typography>
               </View>
               <View style={{flexDirection: 'row', gap: 10}}>
                 <Animated.View style={slidingStyle}>
