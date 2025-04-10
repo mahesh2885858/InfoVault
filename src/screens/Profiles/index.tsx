@@ -6,8 +6,10 @@ import AddProfileModal from './AddProfileModal';
 import {useProfileStore} from '../../store/profileStore';
 import {FlatList} from 'react-native';
 import RenderProfile from './RenderProfile';
+import {StyleService, useStyleSheet} from '@ui-kitten/components';
 
 const Profiles = () => {
+  const styles = useStyleSheet(themedStyles);
   const [renderAddModal, setRenderAddModal] = useState(false);
   const [mode, setMode] = useState<'new' | 'edit'>('new');
 
@@ -55,10 +57,10 @@ const Profiles = () => {
   );
 };
 export default Profiles;
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   container: {
     flex: 1,
-    backgroundColor: myTheme.main,
+    backgroundColor: 'bg-main',
   },
   fab: {
     position: 'absolute',

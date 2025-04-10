@@ -10,9 +10,11 @@ import AddPasswordModal from './AddPasswordModal';
 import {useProfileStore} from '../../store/profileStore';
 import {DEFAULT_PROFILE_ID, PASSWORD_HEIGHT} from '../../constants';
 import Animated, {LinearTransition} from 'react-native-reanimated';
+import {useTheme} from '@ui-kitten/components';
 
 const Passwords = () => {
   const [visible, setVisibility] = useState(false);
+  const theme = useTheme();
   const listRef = useRef<FlatList>(null);
   const {selectedPasswords, deSelectAll, passwords, focusedId} =
     usePasswordsStore(state => ({
@@ -64,7 +66,7 @@ const Passwords = () => {
 
   return (
     <Container style={styles.container}>
-      <StatusBar backgroundColor={myTheme.main} />
+      <StatusBar backgroundColor={theme['bg-main']} />
 
       <Animated.FlatList
         ref={listRef}

@@ -4,7 +4,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {DrawerParamsList, RootStackParamList} from './types';
 import CustomDrawer from './components/Navigation/CustomDrawer';
-import {CardHeaderOptions} from './screens/Cards/CardHeaderOptions';
 import Cards from './screens/Cards/Cards';
 import Passwords from './screens/Passwords';
 import {PasswordsHeaderOptions} from './screens/Passwords/PasswordHeaderOptions';
@@ -13,6 +12,7 @@ import SettingsHeader from './screens/Settings/Header';
 import {useTheme} from '@ui-kitten/components';
 import Settings from './screens/Settings';
 import CardHeaders from './screens/Cards/CardHeaders';
+import PasswordHeader from './screens/Passwords/PasswordHeader';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator<DrawerParamsList>();
@@ -43,7 +43,12 @@ function DrawerNavigator() {
       <Drawer.Screen
         name="Passwords"
         component={Passwords}
-        options={PasswordsHeaderOptions}
+        options={{
+          headerStyle: {backgroundColor: theme['bg-main']},
+          header: PasswordHeader,
+          headerTitle: '',
+          headerShadowVisible: false,
+        }}
       />
       <Drawer.Screen
         name="Profiles"
@@ -52,7 +57,7 @@ function DrawerNavigator() {
           title: 'Profiles',
           headerStyle: {backgroundColor: theme['bg-main']},
 
-          // headerTintColor: myTheme.textMain,
+          headerTintColor: theme['text-primary'],
         }}
       />
     </Drawer.Navigator>

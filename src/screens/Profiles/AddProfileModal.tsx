@@ -7,6 +7,7 @@ import {View} from 'react-native';
 
 import {myTheme} from '../../../theme';
 import {useProfileStore} from '../../store/profileStore';
+import {StyleService, useStyleSheet} from '@ui-kitten/components';
 
 type TProps = {
   onClose: () => void;
@@ -16,6 +17,7 @@ type TProps = {
 
 const AddProfileModal = (props: TProps) => {
   const {mode = 'new'} = props;
+  const styles = useStyleSheet(themedStyles);
 
   const {selectedId, selectedProfile, createProfile, updateProfile} =
     useProfileStore(state => ({
@@ -65,7 +67,7 @@ const AddProfileModal = (props: TProps) => {
 };
 export default AddProfileModal;
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   container: {
     width: '100%',
     alignItems: 'center',
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: 20,
     fontSize: 20,
-    backgroundColor: myTheme.main,
+    backgroundColor: 'bg-main',
     borderRadius: 10,
     color: 'white',
   },

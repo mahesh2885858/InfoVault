@@ -7,6 +7,7 @@ import {useProfileContext} from '../../context/ProfileContext';
 import {useProfileStore} from '../../store/profileStore';
 import {StyleSheet} from 'react-native';
 import {myTheme} from '../../../theme';
+import {StyleService, useStyleSheet} from '@ui-kitten/components';
 
 const PasswordHeaderRight = () => {
   const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
@@ -15,14 +16,15 @@ const PasswordHeaderRight = () => {
   const {selectedProfile} = useProfileStore(state => ({
     selectedProfile: state.getSelectedProfile(),
   }));
+  const styles = useStyleSheet(themedStyles);
   if (selectedPasswords.length === 0) {
     return (
       <PressableWithFeedback
-        onPress={openProfileSelection}
+        onPress={() => openProfileSelection()}
         style={styles.switch}>
         <Typography>{selectedProfile?.name ?? 'Mahesh'}</Typography>
         <MaterialIcon
-          onPress={openProfileSelection}
+          onPress={() => openProfileSelection()}
           name="chevron-down"
           color="white"
           size={25}
@@ -42,11 +44,11 @@ const PasswordHeaderRight = () => {
 };
 
 export default PasswordHeaderRight;
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   switch: {
     flexDirection: 'row',
     paddingHorizontal: 5,
-    backgroundColor: myTheme.buttonBg,
+    backgroundColor: 'button-primary-bg',
     alignItems: 'center',
     gap: 10,
     borderRadius: 5,

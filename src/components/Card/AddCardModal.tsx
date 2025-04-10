@@ -18,6 +18,7 @@ import MTextInput from '../Molecules/MTextInput';
 import {TCardInput} from '../../types';
 
 import {Keyboard} from 'react-native';
+import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
 
 type Props = {
   visible: boolean;
@@ -58,6 +59,8 @@ const errorMessages: Record<keyof TCardInput, string> = {
 const PlaceholderTextColor = 'grey';
 
 const AddCardModal = (props: Props) => {
+  const styles = useStyleSheet(themedStyles);
+  const theme = useTheme();
   const {addCard, cards, setFocusedCard} = useCardStore();
   const [cardInputs, setCardInputs] = useState<TCardInput>(initialCardInput);
   const cardNameRef = useRef<TextInput>(null);
@@ -234,7 +237,7 @@ const AddCardModal = (props: Props) => {
     <ModalWrapper
       width={'90%'}
       onClose={close}
-      bg={myTheme.main}
+      bg={theme['bg-main']}
       visible={props.visible}>
       <Container style={styles.cardContainer}>
         {anyErrors && <View style={styles.errorBox}>{renderErrors()}</View>}
@@ -243,11 +246,16 @@ const AddCardModal = (props: Props) => {
           <PressableWithFeedback
             onPress={() => openProfileSelection({renderForNew: true})}
             style={styles.switch}>
-            <Typography>{selectedProfileForNew?.name ?? ''}</Typography>
+            <Typography
+              style={{
+                color: theme['bg-main'],
+              }}>
+              {selectedProfileForNew?.name ?? ''}
+            </Typography>
             <MaterialIcon
               onPress={() => openProfileSelection({renderForNew: true})}
               name="chevron-down"
-              color="white"
+              color={theme['bg-main']}
               size={25}
             />
           </PressableWithFeedback>
@@ -333,7 +341,7 @@ const AddCardModal = (props: Props) => {
   );
 };
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   content: {
     width: '85%',
     padding: 20,
@@ -378,7 +386,7 @@ const styles = StyleSheet.create({
     padding: 15,
     gap: 20,
     flexDirection: 'column',
-    backgroundColor: myTheme.cardBg,
+    backgroundColor: 'bg-card',
   },
   cardNameAndNumber: {
     paddingTop: 10,
@@ -405,7 +413,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    color: myTheme.cardTitleText,
+    color: 'text-primary',
     fontSize: 15,
     fontWeight: '600',
     textTransform: 'uppercase',
@@ -425,7 +433,7 @@ const styles = StyleSheet.create({
   switch: {
     flexDirection: 'row',
     paddingHorizontal: 5,
-    backgroundColor: myTheme.buttonBg,
+    backgroundColor: 'button-primary-bg',
     alignItems: 'center',
     gap: 10,
     borderRadius: 5,

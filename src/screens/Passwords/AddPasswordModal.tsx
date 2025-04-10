@@ -17,6 +17,7 @@ import {useProfileContext} from '../../context/ProfileContext';
 import {TBaseInput} from '../../types';
 import MTextInput from '../../components/Molecules/MTextInput';
 import {uCFirst} from 'commonutil-core';
+import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
 
 type Props = {
   visible: boolean;
@@ -34,9 +35,10 @@ const initState: TPasswordInput = {
   website: baseInput,
 };
 
-const PlaceholderTextColor = 'grey';
-
 const AddPasswordModal = (props: Props) => {
+  const styles = useStyleSheet(themedStyles);
+  const theme = useTheme();
+  const PlaceholderTextColor = theme['text-secondary'];
   const {addPassword, setFocusedPassword} = usePasswordsStore(state => ({
     addPassword: state.addPassword,
     setFocusedPassword: state.setFocusedPassword,
@@ -148,7 +150,7 @@ const AddPasswordModal = (props: Props) => {
     <ModalWrapper
       width={'90%'}
       onClose={() => closeModal()}
-      bg={myTheme.main}
+      bg={theme['bg-main']}
       visible={props.visible}>
       <Container style={styles.cardContainer}>
         {anyErrors && <View style={styles.errorBox}>{renderErrors()}</View>}
@@ -158,11 +160,16 @@ const AddPasswordModal = (props: Props) => {
           <PressableWithFeedback
             onPress={() => openProfileSelection({renderForNew: true})}
             style={styles.switch}>
-            <Typography>{selectedProfileForNew?.name ?? ''}</Typography>
+            <Typography
+              style={{
+                color: theme['bg-main'],
+              }}>
+              {selectedProfileForNew?.name ?? ''}
+            </Typography>
             <MaterialIcon
               onPress={() => openProfileSelection({renderForNew: true})}
               name="chevron-down"
-              color="white"
+              color={theme['bg-main']}
               size={25}
             />
           </PressableWithFeedback>
@@ -235,7 +242,7 @@ const AddPasswordModal = (props: Props) => {
   );
 };
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   content: {
     width: '85%',
     padding: 20,
@@ -253,11 +260,11 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   textInput: {
-    fontSize: 15,
-    padding: 5,
+    fontSize: 12,
+    padding: 10,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: '#bf03ab50',
+    borderColor: 'text-primary',
   },
   buttonsBox: {
     flexDirection: 'row',
@@ -277,7 +284,7 @@ const styles = StyleSheet.create({
     padding: 15,
     gap: 20,
     flexDirection: 'column',
-    backgroundColor: myTheme.cardBg,
+    backgroundColor: 'bg-card',
   },
   cardNameAndNumber: {
     paddingTop: 10,
@@ -304,7 +311,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    color: myTheme.cardTitleText,
+    color: 'text-secondary',
     fontSize: 16,
     fontWeight: '600',
   },
@@ -355,7 +362,7 @@ const styles = StyleSheet.create({
   switch: {
     flexDirection: 'row',
     paddingHorizontal: 5,
-    backgroundColor: myTheme.buttonBg,
+    backgroundColor: 'button-primary-bg',
     alignItems: 'center',
     gap: 10,
     borderRadius: 5,

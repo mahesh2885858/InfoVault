@@ -6,7 +6,6 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useProfileContext} from '../../context/ProfileContext';
 import {useProfileStore} from '../../store/profileStore';
 import {StyleSheet} from 'react-native';
-import {myTheme} from '../../../theme';
 import {useStyleSheet} from '@ui-kitten/components';
 
 const CardHeaderRight = () => {
@@ -49,7 +48,7 @@ const themedStyles = StyleSheet.create({
   switch: {
     flexDirection: 'row',
     paddingHorizontal: 5,
-    backgroundColor: 'bg-card',
+    backgroundColor: 'button-primary-bg',
     alignItems: 'center',
     gap: 10,
     borderRadius: 5,
