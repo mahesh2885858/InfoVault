@@ -5,28 +5,29 @@ import Typography from '../../components/atoms/Typography';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useProfileContext} from '../../context/ProfileContext';
 import {useProfileStore} from '../../store/profileStore';
-import {StyleSheet} from 'react-native';
-import {myTheme} from '../../../theme';
-import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
 
 const PasswordHeaderRight = () => {
+  const styles = useStyleSheet(themedStyles);
+  const theme = useTheme();
   const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
   const deletePasswords = usePasswordsStore(state => state.deletePasswords);
   const {openProfileSelection} = useProfileContext()!;
   const {selectedProfile} = useProfileStore(state => ({
     selectedProfile: state.getSelectedProfile(),
   }));
-  const styles = useStyleSheet(themedStyles);
   if (selectedPasswords.length === 0) {
     return (
       <PressableWithFeedback
         onPress={() => openProfileSelection()}
         style={styles.switch}>
-        <Typography>{selectedProfile?.name ?? 'Mahesh'}</Typography>
+        <Typography style={styles.text}>
+          {selectedProfile?.name ?? 'Mahesh'}
+        </Typography>
         <MaterialIcon
           onPress={() => openProfileSelection()}
           name="chevron-down"
-          color="white"
+          color={theme['bg-main']}
           size={25}
         />
       </PressableWithFeedback>
@@ -38,7 +39,7 @@ const PasswordHeaderRight = () => {
       onPress={() => {
         deletePasswords();
       }}>
-      <Typography>Delete</Typography>
+      <MaterialIcon name="delete" size={24} color={theme['text-primary']} />
     </PressableWithFeedback>
   );
 };
@@ -52,5 +53,8 @@ const themedStyles = StyleService.create({
     alignItems: 'center',
     gap: 10,
     borderRadius: 5,
+  },
+  text: {
+    color: 'bg-main',
   },
 });

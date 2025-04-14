@@ -4,10 +4,8 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 import React from 'react';
-import {myTheme} from '../../../theme';
 import {View} from 'react-native';
 import Typography from '../atoms/Typography';
-import {StyleSheet} from 'react-native';
 import PressableWithFeedback from '../PressableWithFeedback';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
@@ -31,7 +29,7 @@ const CustomDrawer = (props: DrawerContentComponentProps) => {
             navigation.navigate('Settings');
           }}
           style={styles.icon}>
-          <MaterialIcon name="cog" size={24} color={myTheme.textMain} />
+          <MaterialIcon name="cog" size={24} color={theme['text-primary']} />
         </PressableWithFeedback>
       </View>
       <DrawerItemList {...props} />

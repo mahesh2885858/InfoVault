@@ -1,9 +1,8 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import React, {useEffect, useState} from 'react';
-import {GestureResponderEvent, StyleSheet, View} from 'react-native';
+import {GestureResponderEvent, View} from 'react-native';
 import {useToast} from 'react-native-toast-notifications';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {myTheme} from '../../../theme';
 import Box from '../../components/atoms/Box';
 import Typography from '../../components/atoms/Typography';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
@@ -140,7 +139,7 @@ const RenderPassword = (password: TPassword) => {
               styles.cardContent,
               {
                 backgroundColor: password.isSelected
-                  ? myTheme.cardSelectedBg
+                  ? theme['bg-card-selected']
                   : theme['bg-card'],
               },
             ]}>

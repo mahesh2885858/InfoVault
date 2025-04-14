@@ -28,5 +28,6 @@ const themedstyles = StyleService.create({
   },
   headerText: {
     fontSize: 20,
+    fontWeight: '800',
   },
 });

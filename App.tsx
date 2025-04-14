@@ -20,9 +20,13 @@ import {default as dark} from './src/theme/dark.json';
 import {default as appTheme} from './src/theme/appTheme.json';
 import './src/translations/i18n';
 import AppNavigator from './src/app';
+import {useUiStore} from './src/store/UiStore';
 
 function App(): React.JSX.Element {
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const {theme} = useUiStore(state => ({
+    theme: state.theme,
+    setTheme: state.setTheme,
+  }));
 
   return (
     <ApplicationProvider

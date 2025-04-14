@@ -1,6 +1,8 @@
 {
   "bg-main": "$color-primary-900",
   "bg-card": "$color-primary-700",
+  "bg-card-selected": "$color-primary-500",
+
   "text-primary": "$color-primary-100",
   "text-secondary": "$color-primary-300",
   "button-primary-bg": "$color-primary-300",

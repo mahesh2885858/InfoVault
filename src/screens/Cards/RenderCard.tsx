@@ -1,12 +1,9 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import React, {useEffect, useState} from 'react';
-import {GestureResponderEvent, StyleSheet, View} from 'react-native';
-
+import {GestureResponderEvent, View} from 'react-native';
 import {useToast} from 'react-native-toast-notifications';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {myTheme} from '../../../theme';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
-import Box from '../../components/atoms/Box';
 import Typography from '../../components/atoms/Typography';
 import {useCardStore} from '../../store/cardStore';
 import {TCard} from '../../types/card';
@@ -123,7 +120,7 @@ const RenderCard = (card: TCard) => {
               styles.cardContent,
               {
                 backgroundColor: card.isSelected
-                  ? myTheme.cardSelectedBg
+                  ? theme['bg-card-selected']
                   : theme['bg-card'],
               },
               breath,

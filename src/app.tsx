@@ -6,7 +6,6 @@ import {DrawerParamsList, RootStackParamList} from './types';
 import CustomDrawer from './components/Navigation/CustomDrawer';
 import Cards from './screens/Cards/Cards';
 import Passwords from './screens/Passwords';
-import {PasswordsHeaderOptions} from './screens/Passwords/PasswordHeaderOptions';
 import Profiles from './screens/Profiles';
 import SettingsHeader from './screens/Settings/Header';
 import {useTheme} from '@ui-kitten/components';
@@ -24,7 +23,7 @@ function DrawerNavigator() {
       screenOptions={{
         drawerActiveBackgroundColor: theme['bg-card'],
         drawerLabelStyle: {
-          color: 'white',
+          color: theme['text-primary'],
         },
         swipeEdgeWidth: 50,
       }}
