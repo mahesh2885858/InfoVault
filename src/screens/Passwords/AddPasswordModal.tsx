@@ -1,6 +1,5 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {StyleSheet, TextInput, View} from 'react-native';
-import {myTheme} from '../../../theme';
+import {TextInput, View} from 'react-native';
 
 import {TPasswordInput} from '../../types';
 import {usePasswordsStore} from '../../store/passwordStore';
@@ -133,13 +132,13 @@ const AddPasswordModal = (props: Props) => {
       if (!passwordInputs[key as keyof TPasswordInput].error) return null;
       return (
         <View key={key}>
-          <Typography>
+          <Typography style={{color: theme['warning-text-with-bg']}}>
             {uCFirst(key)} : {passwordInputs[key as keyof TPasswordInput].error}
           </Typography>
         </View>
       );
     });
-  }, [passwordInputs]);
+  }, [passwordInputs, theme]);
 
   const closeModal = () => {
     setPasswordInputs(initState);
@@ -222,15 +221,11 @@ const AddPasswordModal = (props: Props) => {
               <PressableWithFeedback
                 onPress={() => togglePasswordVisibility()}
                 style={styles.eyeIcon}>
-                {showPassword ? (
-                  <MaterialIcon
-                    name="eye-off-outline"
-                    size={20}
-                    color="white"
-                  />
-                ) : (
-                  <MaterialIcon name="eye-outline" size={20} color="white" />
-                )}
+                <MaterialIcon
+                  name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                  size={20}
+                  color={theme['text-primary']}
+                />
               </PressableWithFeedback>
             </View>
           </View>
@@ -254,7 +249,7 @@ const themedStyles = StyleService.create({
     width: '70%',
   },
   errorBox: {
-    backgroundColor: myTheme.warningBg,
+    backgroundColor: 'warning-bg',
     padding: 10,
     borderRadius: 10,
     width: '80%',
@@ -324,7 +319,7 @@ const themedStyles = StyleService.create({
   cardText: {
     fontSize: 17,
     fontWeight: '500',
-    color: 'white',
+    color: 'text-primary',
   },
   card: {
     width: '100%',
