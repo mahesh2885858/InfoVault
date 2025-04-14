@@ -11,5 +11,7 @@
   "button-disabled-bg": "$color-primary-200",
   "button-disabled-text": "$color-primary-400",
   "button-ghost-border": "$color-primary-500",
-  "button-ghost-text": "$color-primary-500"
+  "button-ghost-text": "$color-primary-500",
+  "warning-bg": "$color-warning-700",
+  "warning-text-with-bg": "$color-info-200"
 }

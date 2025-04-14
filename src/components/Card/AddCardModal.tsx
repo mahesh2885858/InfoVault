@@ -1,6 +1,5 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {StyleSheet, TextInput, View} from 'react-native';
-import {myTheme} from '../../../theme';
+import {TextInput, View} from 'react-native';
 import {useCardStore} from '../../store/cardStore';
 import ModalWrapper from '../ModalWrapper';
 import Box from '../atoms/Box';
@@ -61,7 +60,7 @@ const PlaceholderTextColor = 'grey';
 const AddCardModal = (props: Props) => {
   const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
-  const {addCard, cards, setFocusedCard} = useCardStore();
+  const {addCard, setFocusedCard} = useCardStore();
   const [cardInputs, setCardInputs] = useState<TCardInput>(initialCardInput);
   const cardNameRef = useRef<TextInput>(null);
   const expiryRef = useRef<TextInput>(null);
@@ -220,13 +219,16 @@ const AddCardModal = (props: Props) => {
       if (!cardInputs[key as keyof TCardInput].error) return null;
       return (
         <View style={{marginBottom: 5}} key={key}>
-          <Typography>
+          <Typography
+            style={{
+              color: theme['warning-text-with-bg'],
+            }}>
             {uCFirst(key)} : {cardInputs[key as keyof TCardInput].error}
           </Typography>
         </View>
       );
     });
-  }, [cardInputs]);
+  }, [cardInputs, theme]);
 
   const close = useCallback(() => {
     setCardInputs(initialCardInput);
@@ -350,7 +352,7 @@ const themedStyles = StyleService.create({
     gap: 20,
   },
   errorBox: {
-    backgroundColor: myTheme.warningBg,
+    backgroundColor: 'warning-bg',
     padding: 10,
     borderRadius: 10,
     width: '80%',
@@ -428,7 +430,7 @@ const themedStyles = StyleService.create({
     fontSize: 15,
     fontWeight: '500',
     textTransform: 'uppercase',
-    color: myTheme.secondary,
+    color: 'text-primary',
   },
   switch: {
     flexDirection: 'row',
