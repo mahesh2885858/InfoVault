@@ -37,7 +37,10 @@ function App(): React.JSX.Element {
           : {...eva.light, ...appTheme, ...light}
       }>
       <SafeAreaProvider>
-        <StatusBar backgroundColor={appTheme['color-primary-900']} />
+        <StatusBar
+          barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
+          backgroundColor={appTheme['color-primary-900']}
+        />
         <GestureHandlerRootView style={{flex: 1}}>
           <PaperProvider>
             <AuthContextProvider>

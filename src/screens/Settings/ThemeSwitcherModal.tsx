@@ -31,6 +31,7 @@ const ThemeSwitcherModal = (props: TCommonModalProps) => {
           onPress={() => siwtchTheme('light')}
           style={styles.option}>
           <RadioButton.Android
+            onPress={() => siwtchTheme('light')}
             value="mahesh"
             status={theme === 'light' ? 'checked' : 'unchecked'}
           />
@@ -40,6 +41,7 @@ const ThemeSwitcherModal = (props: TCommonModalProps) => {
           onPress={() => siwtchTheme('dark')}
           style={styles.option}>
           <RadioButton.Android
+            onPress={() => siwtchTheme('dark')}
             value="mahesh"
             status={theme === 'dark' ? 'checked' : 'unchecked'}
           />
