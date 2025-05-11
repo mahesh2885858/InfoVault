@@ -1,0 +1,17 @@
+{
+  "bg-main": "$color-primary-100",
+  "bg-card": "$color-primary-200",
+  "bg-card-selected": "$color-primary-400",
+  "text-primary": "$color-primary-900",
+  "text-secondary": "$color-primary-500",
+  "button-primary-bg": "$color-primary-500",
+  "button-primary-text": "$color-basic-100",
+  "button-secondary-bg": "$color-primary-100",
+  "button-secondary-text": "$color-primary-500",
+  "button-disabled-bg": "$color-primary-200",
+  "button-disabled-text": "$color-primary-400",
+  "button-ghost-border": "$color-primary-500",
+  "button-ghost-text": "$color-primary-500",
+  "warning-bg": "$color-warning-700",
+  "warning-text-with-bg": "$color-info-200"
+}

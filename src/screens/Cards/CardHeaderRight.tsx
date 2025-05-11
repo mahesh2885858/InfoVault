@@ -1,14 +1,19 @@
 import React from 'react';
 import {useCardStore} from '../../store/cardStore';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
-import LightText from '../../components/atoms/LightText';
+import Typography from '../../components/atoms/Typography';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useProfileContext} from '../../context/ProfileContext';
 import {useProfileStore} from '../../store/profileStore';
-import {StyleSheet} from 'react-native';
-import {myTheme} from '../../../theme';
+import {useStyleSheet, StyleService, useTheme} from '@ui-kitten/components';
+import {useTranslation} from 'react-i18next';
 
 const CardHeaderRight = () => {
+  const styles = useStyleSheet(themedStyles);
+  const theme = useTheme();
+
+  const {t} = useTranslation();
+
   const selectedCards = useCardStore(state => state.selectedCards);
   const removeCards = useCardStore(state => state.removeCards);
   const {openProfileSelection} = useProfileContext()!;
@@ -21,11 +26,13 @@ const CardHeaderRight = () => {
       <PressableWithFeedback
         onPress={() => openProfileSelection()}
         style={styles.switch}>
-        <LightText>{selectedProfile?.name ?? ''}</LightText>
+        <Typography style={styles.text}>
+          {selectedProfile?.name ?? ''}
+        </Typography>
         <MaterialIcon
           onPress={() => openProfileSelection()}
           name="chevron-down"
-          color="white"
+          color={theme['bg-main']}
           size={25}
         />
       </PressableWithFeedback>
@@ -35,20 +42,23 @@ const CardHeaderRight = () => {
   return (
     <PressableWithFeedback
       onPress={() => removeCards(selectedCards.map(c => c.cardNumber))}>
-      <LightText>Delete</LightText>
+      <MaterialIcon name="delete" size={24} color={theme['text-primary']} />
     </PressableWithFeedback>
   );
 };
 
 export default CardHeaderRight;
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   switch: {
     flexDirection: 'row',
     paddingHorizontal: 5,
-    backgroundColor: myTheme.buttonBg,
+    backgroundColor: 'button-primary-bg',
     alignItems: 'center',
     gap: 10,
     borderRadius: 5,
+  },
+  text: {
+    color: 'bg-main',
   },
 });

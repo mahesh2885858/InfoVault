@@ -1,14 +1,15 @@
 import React from 'react';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import {usePasswordsStore} from '../../store/passwordStore';
-import LightText from '../../components/atoms/LightText';
+import Typography from '../../components/atoms/Typography';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useProfileContext} from '../../context/ProfileContext';
 import {useProfileStore} from '../../store/profileStore';
-import {StyleSheet} from 'react-native';
-import {myTheme} from '../../../theme';
+import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
 
 const PasswordHeaderRight = () => {
+  const styles = useStyleSheet(themedStyles);
+  const theme = useTheme();
   const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
   const deletePasswords = usePasswordsStore(state => state.deletePasswords);
   const {openProfileSelection} = useProfileContext()!;
@@ -18,13 +19,15 @@ const PasswordHeaderRight = () => {
   if (selectedPasswords.length === 0) {
     return (
       <PressableWithFeedback
-        onPress={openProfileSelection}
+        onPress={() => openProfileSelection()}
         style={styles.switch}>
-        <LightText>{selectedProfile?.name ?? 'Mahesh'}</LightText>
+        <Typography style={styles.text}>
+          {selectedProfile?.name ?? 'Mahesh'}
+        </Typography>
         <MaterialIcon
-          onPress={openProfileSelection}
+          onPress={() => openProfileSelection()}
           name="chevron-down"
-          color="white"
+          color={theme['bg-main']}
           size={25}
         />
       </PressableWithFeedback>
@@ -36,19 +39,22 @@ const PasswordHeaderRight = () => {
       onPress={() => {
         deletePasswords();
       }}>
-      <LightText>Delete</LightText>
+      <MaterialIcon name="delete" size={24} color={theme['text-primary']} />
     </PressableWithFeedback>
   );
 };
 
 export default PasswordHeaderRight;
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   switch: {
     flexDirection: 'row',
     paddingHorizontal: 5,
-    backgroundColor: myTheme.buttonBg,
+    backgroundColor: 'button-primary-bg',
     alignItems: 'center',
     gap: 10,
     borderRadius: 5,
+  },
+  text: {
+    color: 'bg-main',
   },
 });

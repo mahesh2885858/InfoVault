@@ -9,11 +9,19 @@ import LoadingIndicator from '../../components/Molecules/LoadingIndicator';
 import {validateImportedData} from '../../utils/validateImportedData';
 import {usePasswordsStore} from '../../store/passwordStore';
 import {useProfileStore} from '../../store/profileStore';
-
+import PressableWithFeedback from '../../components/PressableWithFeedback';
+import Typography from '../../components/atoms/Typography';
+import {useTranslation} from 'react-i18next';
+import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import ThemeSwitcherModal from './ThemeSwitcherModal';
+import {useUiStore} from '../../store/UiStore';
+import {uCFirst} from 'commonutil-core';
 const FILE_NAME = 'data.json';
 const DIR_PATH = 'exportPath';
 
 const Settings = () => {
+  const styles = useStyleSheet(themedStyles);
+  const {t} = useTranslation();
   const {cData, setCards} = useCardStore(state => ({
     cData: state.cards,
     setCards: state.setCards,
@@ -28,7 +36,12 @@ const Settings = () => {
     setProfiels: state.setProfiles,
   }));
 
+  const {theme} = useUiStore(state => ({
+    theme: state.theme,
+  }));
+
   const [isExporting, setIsExporting] = useState(false);
+  const [openThemeSwitcher, setOpenThemeSwitcher] = useState(false);
 
   const pickTheDirectory = async () => {
     return (await ScopedStorage.openDocumentTree(true)).uri;
@@ -115,28 +128,49 @@ const Settings = () => {
 
   return (
     <Container style={styles.container}>
-      {isExporting ? (
-        <LoadingIndicator />
-      ) : (
-        <Button label="Export existing data" onButtonPress={exportData} />
+      <PressableWithFeedback
+        onPress={importData}
+        style={[styles.setting, {paddingTop: 20}]}>
+        <Typography style={styles.text}>{t('common.import')}</Typography>
+      </PressableWithFeedback>
+      <PressableWithFeedback onPress={exportData} style={styles.setting}>
+        <Typography style={styles.text}>{t('common.export')}</Typography>
+      </PressableWithFeedback>
+      <PressableWithFeedback
+        onPress={() => setOpenThemeSwitcher(true)}
+        style={styles.setting}>
+        <Typography style={styles.text}>{t('common.theme')}</Typography>
+        <Typography style={styles.subText}>{uCFirst(theme ?? '')}</Typography>
+      </PressableWithFeedback>
+      {openThemeSwitcher && (
+        <ThemeSwitcherModal
+          onClose={() => setOpenThemeSwitcher(false)}
+          visible={openThemeSwitcher}
+        />
       )}
-      <Button label="Import data" onButtonPress={importData} />
     </Container>
   );
 };
 
 export default Settings;
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     gap: 20,
   },
   button: {},
-
+  setting: {
+    paddingBottom: 10,
+    borderBottomColor: '#ffffff10',
+    borderBottomWidth: 1,
+    paddingLeft: 20,
+  },
   text: {
-    fontSize: 20,
+    fontSize: 18,
+  },
+  subText: {
+    fontSize: 13,
+    color: 'text-secondary',
   },
 });

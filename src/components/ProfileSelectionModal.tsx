@@ -5,16 +5,18 @@ import {RadioButton} from 'react-native-paper';
 import {View} from 'react-native';
 import {StyleSheet} from 'react-native';
 import PressableWithFeedback from './PressableWithFeedback';
-import LightText from './atoms/LightText';
+import Typography from './atoms/Typography';
 import {myTheme} from '../../theme';
 import Button from './atoms/Button';
 import {DEFAULT_PROFILE_ID} from '../constants';
+import {StyleService, useStyleSheet} from '@ui-kitten/components';
 type TProps = {
   visible: boolean;
   onClose: () => void;
   renderingForNewItemAdd?: boolean;
 };
 const ProfileSelectionModal = (props: TProps) => {
+  const styles = useStyleSheet(themedStyles);
   const {
     profiles,
     selectedId,
@@ -64,7 +66,7 @@ const ProfileSelectionModal = (props: TProps) => {
                   status={idToCompare === item.id ? 'checked' : 'unchecked'}
                   onPress={() => selectItem(item.id)}
                 />
-                <LightText style={styles.text}>{item.name}</LightText>
+                <Typography style={styles.text}>{item.name}</Typography>
               </PressableWithFeedback>
             );
           })}
@@ -77,7 +79,7 @@ const ProfileSelectionModal = (props: TProps) => {
 
 export default ProfileSelectionModal;
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   rootView: {
     width: '100%',
     justifyContent: 'center',
@@ -88,7 +90,7 @@ const styles = StyleSheet.create({
     gap: 15,
     width: '80%',
     alignItems: 'flex-start',
-    backgroundColor: myTheme.cardBg,
+    backgroundColor: 'bg-main',
     padding: 10,
     borderRadius: 5,
   },

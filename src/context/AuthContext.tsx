@@ -3,9 +3,10 @@ import {createContext} from 'react';
 import {BackHandler, Modal} from 'react-native';
 import {View} from 'react-native';
 import {StyleSheet, AppState} from 'react-native';
-import LightText from '../components/atoms/LightText';
+import Typography from '../components/atoms/Typography';
 import {authenticateLocal} from '../utils/authenticateLocal';
 import Button from '../components/atoms/Button';
+import {StyleService, useStyleSheet} from '@ui-kitten/components';
 
 export const AuthContext = createContext<{
   setIsAuthenticated: (choice: boolean) => void;
@@ -23,6 +24,7 @@ export const AuthContextProvider = ({
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const styles = useStyleSheet(themedStyles);
 
   const authenticate = useCallback(async () => {
     setIsAuthenticating(true);
@@ -49,11 +51,11 @@ export const AuthContextProvider = ({
       {(!isAuthenticated || AppState.currentState === 'background') && (
         <Modal visible={!isAuthenticated} transparent>
           <View style={[StyleSheet.absoluteFill, styles.container]}>
-            <LightText>
+            <Typography>
               {isAuthenticating
                 ? 'Authenticating user'
                 : 'Not authenticated please authenticate your self.'}
-            </LightText>
+            </Typography>
             {!isAuthenticating && (
               <View style={styles.buttonBox}>
                 <Button label="Authenticate" onButtonPress={authenticate} />
@@ -68,9 +70,9 @@ export const AuthContextProvider = ({
   );
 };
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   container: {
-    backgroundColor: '#1b0017',
+    backgroundColor: 'bg-main',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 20,

@@ -1,8 +1,7 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import PressableWithFeedback from '../PressableWithFeedback';
-import LightText from './LightText';
-import {myTheme} from '../../../theme';
+import Typography from './Typography';
+import {StyleService, useStyleSheet} from '@ui-kitten/components';
 
 type TProps = {
   onButtonPress: () => void;
@@ -10,27 +9,28 @@ type TProps = {
 };
 
 const Button = (props: TProps) => {
+  const styles = useStyleSheet(themedStyles);
   return (
     <PressableWithFeedback
       style={styles.button}
       onPress={() => props.onButtonPress()}>
-      <LightText style={styles.text}>{props.label}</LightText>
+      <Typography style={styles.text}>{props.label}</Typography>
     </PressableWithFeedback>
   );
 };
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   button: {
     paddingHorizontal: 15,
     paddingVertical: 7,
     borderRadius: 5,
-    backgroundColor: myTheme.buttonBg,
-    // width: 'auto',
+    backgroundColor: 'button-primary-bg',
     justifyContent: 'center',
     alignItems: 'center',
   },
   text: {
     fontSize: 16,
+    color: 'button-primary-text',
   },
 });
 

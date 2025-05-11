@@ -1,16 +1,14 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import React, {useEffect, useState} from 'react';
-import {GestureResponderEvent, StyleSheet, View} from 'react-native';
+import {GestureResponderEvent, View} from 'react-native';
 import {useToast} from 'react-native-toast-notifications';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {myTheme} from '../../../theme';
 import Box from '../../components/atoms/Box';
-import LightText from '../../components/atoms/LightText';
+import Typography from '../../components/atoms/Typography';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import {usePasswordsStore} from '../../store/passwordStore';
 import {TPassword} from '../../types/passwords';
 import {authenticateLocal} from '../../utils/authenticateLocal';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import SwipeContainer from '../../components/Molecules/SwipeContainer';
 import Animated, {
   Easing,
@@ -24,7 +22,10 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import {PASSWORD_HEIGHT} from '../../constants';
+import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
 const RenderPassword = (password: TPassword) => {
+  const styles = useStyleSheet(themedStyles);
+  const theme = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [isSwiped, setIsSwiped] = useState(false);
 
@@ -138,28 +139,28 @@ const RenderPassword = (password: TPassword) => {
               styles.cardContent,
               {
                 backgroundColor: password.isSelected
-                  ? myTheme.cardSelectedBg
-                  : myTheme.cardBg,
+                  ? theme['bg-card-selected']
+                  : theme['bg-card'],
               },
             ]}>
             <View style={styles.webSiteBox}>
-              <LightText style={styles.cardNumberText}>
+              <Typography style={styles.cardNumberText}>
                 {password.website}
-              </LightText>
+              </Typography>
             </View>
             <View style={styles.usernameBox}>
               <View style={styles.username}>
-                <LightText style={styles.title}>User name</LightText>
-                <LightText style={styles.cardText}>
+                <Typography style={styles.title}>User name</Typography>
+                <Typography style={styles.cardText}>
                   {password.username}
-                </LightText>
+                </Typography>
               </View>
 
               <PressableWithFeedback
                 onPress={() => copyContent('username')}
                 style={styles.Button}>
                 <MaterialIcon
-                  color={myTheme.secondary}
+                  color={theme['bg-main']}
                   name="content-copy"
                   size={15}
                 />
@@ -167,10 +168,10 @@ const RenderPassword = (password: TPassword) => {
             </View>
             <View style={styles.passwordBox}>
               <View>
-                <LightText style={styles.title}>Password</LightText>
-                <LightText style={styles.cardText}>
+                <Typography style={styles.title}>Password</Typography>
+                <Typography style={styles.cardText}>
                   {showPassword ? password.password : '*********'}
-                </LightText>
+                </Typography>
               </View>
               <View style={{flexDirection: 'row', gap: 10}}>
                 <Animated.View style={slidingStyle}>
@@ -180,14 +181,14 @@ const RenderPassword = (password: TPassword) => {
                     {showPassword ? (
                       <MaterialIcon
                         onPress={() => togglePasswordVisibility()}
-                        color={myTheme.secondary}
+                        color={theme['bg-main']}
                         name="eye-off-outline"
                         size={15}
                       />
                     ) : (
                       <MaterialIcon
                         onPress={() => togglePasswordVisibility()}
-                        color={myTheme.secondary}
+                        color={theme['bg-main']}
                         name="eye-outline"
                         size={15}
                       />
@@ -201,7 +202,7 @@ const RenderPassword = (password: TPassword) => {
                       style={styles.Button}>
                       <MaterialIcon
                         onPress={() => copyContent('password')}
-                        color={myTheme.secondary}
+                        color={theme['bg-main']}
                         name="content-copy"
                         size={15}
                       />
@@ -217,7 +218,7 @@ const RenderPassword = (password: TPassword) => {
   );
 };
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   card: {
     width: '100%',
     alignItems: 'center',
@@ -252,10 +253,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 7,
     borderRadius: 5,
-    backgroundColor: '#bf03ab',
+    backgroundColor: 'text-primary',
   },
   title: {
-    color: myTheme.cardTitleText,
+    color: 'text-secondary',
     fontSize: 14,
     fontWeight: '600',
     textTransform: 'uppercase',

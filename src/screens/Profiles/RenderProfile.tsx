@@ -1,8 +1,9 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import LightText from '../../components/atoms/LightText';
+import {View} from 'react-native';
+import Typography from '../../components/atoms/Typography';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {TProfile} from '../../types';
+import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
 
 type TProps = {
   item: TProfile;
@@ -11,15 +12,17 @@ type TProps = {
 
 const RenderProfile = (props: TProps) => {
   const {item} = props;
+  const styles = useStyleSheet(themedStyles);
+  const theme = useTheme();
   if (!item) return null;
   return (
     <View style={styles.item}>
-      <LightText style={styles.text}>{item.name}</LightText>
+      <Typography style={styles.text}>{item.name}</Typography>
       <MaterialIcon
         name="pencil"
         onPress={() => props.onEditPress(item.id)}
         size={20}
-        color={'white'}
+        color={theme['text-primary']}
       />
     </View>
   );
@@ -27,7 +30,7 @@ const RenderProfile = (props: TProps) => {
 
 export default RenderProfile;
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   item: {
     flexDirection: 'row',
     alignItems: 'center',

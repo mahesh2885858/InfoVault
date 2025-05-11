@@ -1,10 +1,11 @@
 import React from 'react';
 import {View, ViewProps} from 'react-native';
-import {myTheme} from '../../../theme';
+import {useTheme} from '@ui-kitten/components';
 
 const Container = (props: ViewProps) => {
+  const theme = useTheme();
   return (
-    <View {...props} style={[{backgroundColor: myTheme.main}, props.style]}>
+    <View {...props} style={[{backgroundColor: theme['bg-main']}, props.style]}>
       {props.children}
     </View>
   );

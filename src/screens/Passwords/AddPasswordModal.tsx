@@ -1,6 +1,5 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {StyleSheet, TextInput, View} from 'react-native';
-import {myTheme} from '../../../theme';
+import {TextInput, View} from 'react-native';
 
 import {TPasswordInput} from '../../types';
 import {usePasswordsStore} from '../../store/passwordStore';
@@ -11,12 +10,13 @@ import PressableWithFeedback from '../../components/PressableWithFeedback';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ButtonsForForms from '../../components/Molecules/ButtonsForForms';
 import {useProfileStore} from '../../store/profileStore';
-import LightText from '../../components/atoms/LightText';
+import Typography from '../../components/atoms/Typography';
 import {HOME_PROFILE_ID, MAX_LENGTH_NAME} from '../../constants';
 import {useProfileContext} from '../../context/ProfileContext';
 import {TBaseInput} from '../../types';
 import MTextInput from '../../components/Molecules/MTextInput';
 import {uCFirst} from 'commonutil-core';
+import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
 
 type Props = {
   visible: boolean;
@@ -34,9 +34,10 @@ const initState: TPasswordInput = {
   website: baseInput,
 };
 
-const PlaceholderTextColor = 'grey';
-
 const AddPasswordModal = (props: Props) => {
+  const styles = useStyleSheet(themedStyles);
+  const theme = useTheme();
+  const PlaceholderTextColor = theme['text-secondary'];
   const {addPassword, setFocusedPassword} = usePasswordsStore(state => ({
     addPassword: state.addPassword,
     setFocusedPassword: state.setFocusedPassword,
@@ -131,13 +132,13 @@ const AddPasswordModal = (props: Props) => {
       if (!passwordInputs[key as keyof TPasswordInput].error) return null;
       return (
         <View key={key}>
-          <LightText>
+          <Typography style={{color: theme['warning-text-with-bg']}}>
             {uCFirst(key)} : {passwordInputs[key as keyof TPasswordInput].error}
-          </LightText>
+          </Typography>
         </View>
       );
     });
-  }, [passwordInputs]);
+  }, [passwordInputs, theme]);
 
   const closeModal = () => {
     setPasswordInputs(initState);
@@ -148,21 +149,26 @@ const AddPasswordModal = (props: Props) => {
     <ModalWrapper
       width={'90%'}
       onClose={() => closeModal()}
-      bg={myTheme.main}
+      bg={theme['bg-main']}
       visible={props.visible}>
       <Container style={styles.cardContainer}>
         {anyErrors && <View style={styles.errorBox}>{renderErrors()}</View>}
 
         <View style={styles.profileSwitch}>
-          <LightText>Card will be saved in : </LightText>
+          <Typography>Card will be saved in : </Typography>
           <PressableWithFeedback
             onPress={() => openProfileSelection({renderForNew: true})}
             style={styles.switch}>
-            <LightText>{selectedProfileForNew?.name ?? ''}</LightText>
+            <Typography
+              style={{
+                color: theme['bg-main'],
+              }}>
+              {selectedProfileForNew?.name ?? ''}
+            </Typography>
             <MaterialIcon
               onPress={() => openProfileSelection({renderForNew: true})}
               name="chevron-down"
-              color="white"
+              color={theme['bg-main']}
               size={25}
             />
           </PressableWithFeedback>
@@ -215,15 +221,11 @@ const AddPasswordModal = (props: Props) => {
               <PressableWithFeedback
                 onPress={() => togglePasswordVisibility()}
                 style={styles.eyeIcon}>
-                {showPassword ? (
-                  <MaterialIcon
-                    name="eye-off-outline"
-                    size={20}
-                    color="white"
-                  />
-                ) : (
-                  <MaterialIcon name="eye-outline" size={20} color="white" />
-                )}
+                <MaterialIcon
+                  name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                  size={20}
+                  color={theme['text-primary']}
+                />
               </PressableWithFeedback>
             </View>
           </View>
@@ -235,7 +237,7 @@ const AddPasswordModal = (props: Props) => {
   );
 };
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   content: {
     width: '85%',
     padding: 20,
@@ -247,17 +249,17 @@ const styles = StyleSheet.create({
     width: '70%',
   },
   errorBox: {
-    backgroundColor: myTheme.warningBg,
+    backgroundColor: 'warning-bg',
     padding: 10,
     borderRadius: 10,
     width: '80%',
   },
   textInput: {
-    fontSize: 15,
-    padding: 5,
+    fontSize: 12,
+    padding: 10,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: '#bf03ab50',
+    borderColor: 'text-primary',
   },
   buttonsBox: {
     flexDirection: 'row',
@@ -277,7 +279,7 @@ const styles = StyleSheet.create({
     padding: 15,
     gap: 20,
     flexDirection: 'column',
-    backgroundColor: myTheme.cardBg,
+    backgroundColor: 'bg-card',
   },
   cardNameAndNumber: {
     paddingTop: 10,
@@ -304,7 +306,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    color: myTheme.cardTitleText,
+    color: 'text-secondary',
     fontSize: 16,
     fontWeight: '600',
   },
@@ -317,7 +319,7 @@ const styles = StyleSheet.create({
   cardText: {
     fontSize: 17,
     fontWeight: '500',
-    color: 'white',
+    color: 'text-primary',
   },
   card: {
     width: '100%',
@@ -355,7 +357,7 @@ const styles = StyleSheet.create({
   switch: {
     flexDirection: 'row',
     paddingHorizontal: 5,
-    backgroundColor: myTheme.buttonBg,
+    backgroundColor: 'button-primary-bg',
     alignItems: 'center',
     gap: 10,
     borderRadius: 5,

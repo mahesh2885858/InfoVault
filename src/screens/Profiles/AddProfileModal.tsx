@@ -2,11 +2,10 @@ import React, {useState} from 'react';
 import ModalWrapper from '../../components/ModalWrapper';
 import {TextInput} from 'react-native';
 import Button from '../../components/atoms/Button';
-import {StyleSheet} from 'react-native';
 import {View} from 'react-native';
 
-import {myTheme} from '../../../theme';
 import {useProfileStore} from '../../store/profileStore';
+import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
 
 type TProps = {
   onClose: () => void;
@@ -16,6 +15,8 @@ type TProps = {
 
 const AddProfileModal = (props: TProps) => {
   const {mode = 'new'} = props;
+  const styles = useStyleSheet(themedStyles);
+  const theme = useTheme();
 
   const {selectedId, selectedProfile, createProfile, updateProfile} =
     useProfileStore(state => ({
@@ -54,6 +55,7 @@ const AddProfileModal = (props: TProps) => {
           onChangeText={setInput}
           style={styles.input}
           placeholder="Add profile"
+          placeholderTextColor={theme['text-secondary']}
         />
         <Button
           label={mode === 'new' ? 'Add' : 'Update'}
@@ -65,7 +67,7 @@ const AddProfileModal = (props: TProps) => {
 };
 export default AddProfileModal;
 
-const styles = StyleSheet.create({
+const themedStyles = StyleService.create({
   container: {
     width: '100%',
     alignItems: 'center',
@@ -76,8 +78,8 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: 20,
     fontSize: 20,
-    backgroundColor: myTheme.main,
+    backgroundColor: 'bg-main',
     borderRadius: 10,
-    color: 'white',
+    color: 'text-primary',
   },
 });

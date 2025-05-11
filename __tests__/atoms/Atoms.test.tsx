@@ -1,5 +1,5 @@
 import 'react-native';
-import LightText from '../../src/components/atoms/LightText';
+import Typography from '../../src/components/atoms/Typography';
 import {it} from '@jest/globals';
 import React from 'react';
 // import renderer from 'react-test-renderer';
@@ -11,7 +11,7 @@ import PressableWithFeedback from '../../src/components/PressableWithFeedback';
 import {fireEvent, render, screen} from '@testing-library/react-native';
 
 it('renders Light Text correctly', () => {
-  render(<LightText />);
+  render(<Typography />);
 });
 
 it('renders Dark Text correctly', () => {

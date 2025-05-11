@@ -1,7 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native';
 import React, {useCallback, useRef, useState} from 'react';
 import {BackHandler, FlatList, StatusBar, StyleSheet} from 'react-native';
-import {myTheme} from '../../../theme';
 import {useCardStore} from '../../store/cardStore';
 import AddCardModal from '../../components/Card/AddCardModal';
 import Fab from '../../components/Fab';
@@ -12,9 +11,11 @@ import {useProfileStore} from '../../store/profileStore';
 import {CARD_HEIGHT, DEFAULT_PROFILE_ID} from '../../constants';
 import Animated, {LinearTransition} from 'react-native-reanimated';
 import {View} from 'react-native';
+import {useTheme} from '@ui-kitten/components';
 
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
+  const theme = useTheme();
   const {selectedCards, cards, deSelectAll, focusedId} = useCardStore(
     state => ({
       selectedCards: state.selectedCards,
@@ -71,7 +72,7 @@ const Cards = () => {
         BootSplash.hide();
       }}
       style={styles.container}>
-      <StatusBar backgroundColor={myTheme.main} />
+      <StatusBar backgroundColor={theme['bg-main']} />
 
       <Animated.FlatList
         extraData={focusedId}

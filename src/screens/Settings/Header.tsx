@@ -1,23 +1,24 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import {myTheme} from '../../../theme';
-import LightText from '../../components/atoms/LightText';
+import {View} from 'react-native';
+import Typography from '../../components/atoms/Typography';
 import BackButton from '../../components/Molecules/BackButton';
+import {StyleService, useStyleSheet} from '@ui-kitten/components';
 
 const SettingsHeader = () => {
+  const styles = useStyleSheet(themedstyles);
   return (
     <View style={styles.container}>
       <BackButton />
-      <LightText style={styles.headerText}>Settings</LightText>
+      <Typography style={styles.headerText}>Settings</Typography>
     </View>
   );
 };
 
 export default SettingsHeader;
 
-const styles = StyleSheet.create({
+const themedstyles = StyleService.create({
   container: {
-    backgroundColor: myTheme.main,
+    backgroundColor: 'bg-main',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -27,5 +28,6 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
+    fontWeight: '800',
   },
 });
