@@ -21,7 +21,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import {CARD_HEIGHT} from '../../constants';
 import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
-
+import {getMaxText} from 'commonutil-core';
 const RenderCard = (card: TCard) => {
   const opacity = useSharedValue(1);
   const theme = useTheme();
@@ -127,7 +127,9 @@ const RenderCard = (card: TCard) => {
             ]}>
             <View style={styles.cardNameAndNuberBox}>
               <View style={styles.cardNameAndNumber}>
-                <Typography style={styles.title}>{card.cardName}</Typography>
+                <Typography style={styles.title}>
+                  {getMaxText(card.cardName, 22)}
+                </Typography>
                 <Typography style={styles.cardNumberText}>
                   {card.cardNumber}
                 </Typography>
@@ -166,7 +168,9 @@ const RenderCard = (card: TCard) => {
               </PressableWithFeedback>
             </View>
             <View>
-              <Typography style={styles.cardText}>{card.NameOnCard}</Typography>
+              <Typography style={styles.cardText}>
+                {getMaxText(card.NameOnCard, 25)}
+              </Typography>
             </View>
           </Animated.View>
         </SwipeContainer>

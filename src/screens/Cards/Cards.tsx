@@ -12,9 +12,11 @@ import {CARD_HEIGHT, DEFAULT_PROFILE_ID} from '../../constants';
 import Animated, {LinearTransition} from 'react-native-reanimated';
 import {View} from 'react-native';
 import {useTheme} from '@ui-kitten/components';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
+  const {top} = useSafeAreaInsets();
   const theme = useTheme();
   const {selectedCards, cards, deSelectAll, focusedId} = useCardStore(
     state => ({
@@ -67,39 +69,41 @@ const Cards = () => {
   );
 
   return (
-    <Container
-      onLayout={() => {
-        BootSplash.hide();
-      }}
-      style={styles.container}>
-      <StatusBar backgroundColor={theme['bg-main']} />
-
-      <Animated.FlatList
-        extraData={focusedId}
-        data={cardsToRender}
-        contentContainerStyle={styles.cardConatiner}
-        renderItem={item => {
-          return <RenderCard {...item.item} />;
+    <SafeAreaView style={[styles.container, {paddingTop: top}]}>
+      <Container
+        onLayout={() => {
+          BootSplash.hide();
         }}
-        ref={listRef}
-        itemLayoutAnimation={LinearTransition}
-        keyExtractor={item => item.cardNumber}
-        getItemLayout={(_, index) => ({
-          length: CARD_HEIGHT,
-          index,
-          offset: CARD_HEIGHT * index,
-        })}
-      />
+        style={styles.container}>
+        <StatusBar backgroundColor={theme['bg-main']} />
 
-      <Fab
-        callBack={() => {
-          setVisibility(true);
-        }}
-      />
-      <View>
-        <AddCardModal setVisible={setVisibility} visible={visible} />
-      </View>
-    </Container>
+        <Animated.FlatList
+          extraData={focusedId}
+          data={cardsToRender}
+          contentContainerStyle={styles.cardConatiner}
+          renderItem={item => {
+            return <RenderCard {...item.item} />;
+          }}
+          ref={listRef}
+          itemLayoutAnimation={LinearTransition}
+          keyExtractor={item => item.cardNumber}
+          getItemLayout={(_, index) => ({
+            length: CARD_HEIGHT,
+            index,
+            offset: CARD_HEIGHT * index,
+          })}
+        />
+
+        <Fab
+          callBack={() => {
+            setVisibility(true);
+          }}
+        />
+        <View>
+          <AddCardModal setVisible={setVisibility} visible={visible} />
+        </View>
+      </Container>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

@@ -7,12 +7,13 @@ import {useProfileStore} from '../../store/profileStore';
 import {FlatList} from 'react-native';
 import RenderProfile from './RenderProfile';
 import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const Profiles = () => {
   const styles = useStyleSheet(themedStyles);
   const [renderAddModal, setRenderAddModal] = useState(false);
   const [mode, setMode] = useState<'new' | 'edit'>('new');
-
+  const {top} = useSafeAreaInsets();
   const {profiles, selectProfile, reset} = useProfileStore(state => ({
     profiles: state.profiles,
     selectProfile: state.selectProfile,
@@ -32,7 +33,7 @@ const Profiles = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={[styles.container, {paddingTop: top}]}>
       <FlatList
         data={profiles}
         contentContainerStyle={styles.listContainer}
@@ -53,7 +54,7 @@ const Profiles = () => {
           visible={renderAddModal}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 export default Profiles;
