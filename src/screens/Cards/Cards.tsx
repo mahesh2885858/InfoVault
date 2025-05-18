@@ -1,22 +1,19 @@
 import {useFocusEffect} from '@react-navigation/native';
+import {useTheme} from '@ui-kitten/components';
 import React, {useCallback, useRef, useState} from 'react';
-import {BackHandler, FlatList, StatusBar, StyleSheet} from 'react-native';
-import {useCardStore} from '../../store/cardStore';
+import {BackHandler, FlatList, StatusBar, StyleSheet, View} from 'react-native';
+import BootSplash from 'react-native-bootsplash';
+import Animated, {LinearTransition} from 'react-native-reanimated';
 import AddCardModal from '../../components/Card/AddCardModal';
 import Fab from '../../components/Fab';
 import Container from '../../components/atoms/Container';
-import RenderCard from './RenderCard';
-import BootSplash from 'react-native-bootsplash';
-import {useProfileStore} from '../../store/profileStore';
 import {CARD_HEIGHT, DEFAULT_PROFILE_ID} from '../../constants';
-import Animated, {LinearTransition} from 'react-native-reanimated';
-import {View} from 'react-native';
-import {useTheme} from '@ui-kitten/components';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useCardStore} from '../../store/cardStore';
+import {useProfileStore} from '../../store/profileStore';
+import RenderCard from './RenderCard';
 
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
-  const {top} = useSafeAreaInsets();
   const theme = useTheme();
   const {selectedCards, cards, deSelectAll, focusedId} = useCardStore(
     state => ({
@@ -69,41 +66,39 @@ const Cards = () => {
   );
 
   return (
-    <SafeAreaView style={[styles.container, {paddingTop: top}]}>
-      <Container
-        onLayout={() => {
-          BootSplash.hide();
+    <Container
+      onLayout={() => {
+        BootSplash.hide();
+      }}
+      style={styles.container}>
+      <StatusBar backgroundColor={theme['bg-main']} />
+
+      <Animated.FlatList
+        extraData={focusedId}
+        data={cardsToRender}
+        contentContainerStyle={styles.cardConatiner}
+        renderItem={item => {
+          return <RenderCard {...item.item} />;
         }}
-        style={styles.container}>
-        <StatusBar backgroundColor={theme['bg-main']} />
+        ref={listRef}
+        itemLayoutAnimation={LinearTransition}
+        keyExtractor={item => item.cardNumber}
+        getItemLayout={(_, index) => ({
+          length: CARD_HEIGHT,
+          index,
+          offset: CARD_HEIGHT * index,
+        })}
+      />
 
-        <Animated.FlatList
-          extraData={focusedId}
-          data={cardsToRender}
-          contentContainerStyle={styles.cardConatiner}
-          renderItem={item => {
-            return <RenderCard {...item.item} />;
-          }}
-          ref={listRef}
-          itemLayoutAnimation={LinearTransition}
-          keyExtractor={item => item.cardNumber}
-          getItemLayout={(_, index) => ({
-            length: CARD_HEIGHT,
-            index,
-            offset: CARD_HEIGHT * index,
-          })}
-        />
-
-        <Fab
-          callBack={() => {
-            setVisibility(true);
-          }}
-        />
-        <View>
-          <AddCardModal setVisible={setVisibility} visible={visible} />
-        </View>
-      </Container>
-    </SafeAreaView>
+      <Fab
+        callBack={() => {
+          setVisibility(true);
+        }}
+      />
+      <View>
+        <AddCardModal setVisible={setVisibility} visible={visible} />
+      </View>
+    </Container>
   );
 };
 const styles = StyleSheet.create({

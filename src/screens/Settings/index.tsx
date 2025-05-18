@@ -3,7 +3,6 @@ import {StyleService, useStyleSheet} from '@ui-kitten/components';
 import {uCFirst} from 'commonutil-core';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import * as ScopedStorage from 'react-native-scoped-storage';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Container from '../../components/atoms/Container';
@@ -14,13 +13,13 @@ import {usePasswordsStore} from '../../store/passwordStore';
 import {useProfileStore} from '../../store/profileStore';
 import {validateImportedData} from '../../utils/validateImportedData';
 import ThemeSwitcherModal from './ThemeSwitcherModal';
+import {TCard, TPassword, TProfile} from '../../types';
 const FILE_NAME = 'data.json';
 const DIR_PATH = 'exportPath';
 
 const Settings = () => {
   const styles = useStyleSheet(themedStyles);
   const {t} = useTranslation();
-  const {top} = useSafeAreaInsets();
   const {cData, setCards} = useCardStore(state => ({
     cData: state.cards,
     setCards: state.setCards,
@@ -30,9 +29,9 @@ const Settings = () => {
     setPasswords: state.setPasswords,
   }));
 
-  const {profiles, setProfiels} = useProfileStore(state => ({
+  const {profiles, setProfiles} = useProfileStore(state => ({
     profiles: state.profiles,
-    setProfiels: state.setProfiles,
+    setProfiles: state.setProfiles,
   }));
 
   const {theme} = useUiStore(state => ({
@@ -98,6 +97,17 @@ const Settings = () => {
     }
   };
 
+  const getUniqueData = <T extends {[key: string]: any}>(
+    input: T[],
+    field: keyof T,
+  ): T[] => {
+    const unique = input.filter(
+      (item, index, self) =>
+        index === self.findIndex(t => t[field] === item[field]),
+    );
+    return unique;
+  };
+
   const importData = async () => {
     try {
       let dir = await ScopedStorage.openDocument(true);
@@ -109,14 +119,21 @@ const Settings = () => {
         }
         if (validateImportedData(response)) {
           if (response.cards && response.cards.length > 0) {
-            setCards(response.cards);
+            const data: TCard[] = [...cData, ...response.cards];
+            const uniqueData = getUniqueData(data, 'cardNumber');
+
+            setCards(uniqueData);
           }
           if (response.passwords && response.passwords.length > 0) {
-            setPasswords(response.passwords);
+            const data: TPassword[] = [...pData, ...response.passwords];
+            const uniqueData = getUniqueData(data, 'id');
+            setPasswords(uniqueData);
           }
 
           if (response.profiles && response.profiles.length > 0) {
-            setProfiels(response.profiles);
+            const data: TProfile[] = [...profiles, ...response.profiles];
+            const uniqueData = getUniqueData(data, 'id');
+            setProfiles(uniqueData);
           }
         }
       }
@@ -126,30 +143,28 @@ const Settings = () => {
   };
 
   return (
-    <SafeAreaView style={[styles.container, {paddingTop: top}]}>
-      <Container style={styles.container}>
-        <PressableWithFeedback
-          onPress={importData}
-          style={[styles.setting, {paddingTop: 20}]}>
-          <Typography style={styles.text}>{t('common.import')}</Typography>
-        </PressableWithFeedback>
-        <PressableWithFeedback onPress={exportData} style={styles.setting}>
-          <Typography style={styles.text}>{t('common.export')}</Typography>
-        </PressableWithFeedback>
-        <PressableWithFeedback
-          onPress={() => setOpenThemeSwitcher(true)}
-          style={styles.setting}>
-          <Typography style={styles.text}>{t('common.theme')}</Typography>
-          <Typography style={styles.subText}>{uCFirst(theme ?? '')}</Typography>
-        </PressableWithFeedback>
-        {openThemeSwitcher && (
-          <ThemeSwitcherModal
-            onClose={() => setOpenThemeSwitcher(false)}
-            visible={openThemeSwitcher}
-          />
-        )}
-      </Container>
-    </SafeAreaView>
+    <Container style={styles.container}>
+      <PressableWithFeedback
+        onPress={importData}
+        style={[styles.setting, {paddingTop: 20}]}>
+        <Typography style={styles.text}>{t('common.import')}</Typography>
+      </PressableWithFeedback>
+      <PressableWithFeedback onPress={exportData} style={styles.setting}>
+        <Typography style={styles.text}>{t('common.export')}</Typography>
+      </PressableWithFeedback>
+      <PressableWithFeedback
+        onPress={() => setOpenThemeSwitcher(true)}
+        style={styles.setting}>
+        <Typography style={styles.text}>{t('common.theme')}</Typography>
+        <Typography style={styles.subText}>{uCFirst(theme ?? '')}</Typography>
+      </PressableWithFeedback>
+      {openThemeSwitcher && (
+        <ThemeSwitcherModal
+          onClose={() => setOpenThemeSwitcher(false)}
+          visible={openThemeSwitcher}
+        />
+      )}
+    </Container>
   );
 };
 

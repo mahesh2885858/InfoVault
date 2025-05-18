@@ -1,18 +1,15 @@
+import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
 import React from 'react';
-import {useCardStore} from '../../store/cardStore';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Typography from '../../components/atoms/Typography';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useProfileContext} from '../../context/ProfileContext';
+import {useCardStore} from '../../store/cardStore';
 import {useProfileStore} from '../../store/profileStore';
-import {useStyleSheet, StyleService, useTheme} from '@ui-kitten/components';
-import {useTranslation} from 'react-i18next';
 
 const CardHeaderRight = () => {
   const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
-
-  const {t} = useTranslation();
 
   const selectedCards = useCardStore(state => state.selectedCards);
   const removeCards = useCardStore(state => state.removeCards);

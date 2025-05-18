@@ -5,20 +5,23 @@ import {DrawerHeaderProps} from '@react-navigation/drawer';
 import {useTheme} from '@ui-kitten/components';
 import {View} from 'react-native';
 import {StyleSheet} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const PasswordHeader = (_props: DrawerHeaderProps) => {
   const theme = useTheme();
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          backgroundColor: theme['bg-main'],
-        },
-      ]}>
-      <PasswordHeaderTitleWithBackButton />
-      <PasswordHeaderRight />
-    </View>
+    <SafeAreaView>
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: theme['bg-main'],
+          },
+        ]}>
+        <PasswordHeaderTitleWithBackButton />
+        <PasswordHeaderRight />
+      </View>
+    </SafeAreaView>
   );
 };
 export default PasswordHeader;

@@ -4,14 +4,17 @@ import CardHeaderTitleWithBackButton from './CardHeaderTitleWithBackButton';
 import CardHeaderRight from './CardHeaderRight';
 import {DrawerHeaderProps} from '@react-navigation/drawer';
 import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const CardHeaders = (_props: DrawerHeaderProps) => {
   const styles = useStyleSheet(themedStyles);
   return (
-    <View style={[styles.container]}>
-      <CardHeaderTitleWithBackButton />
-      <CardHeaderRight />
-    </View>
+    <SafeAreaView>
+      <View style={[styles.container]}>
+        <CardHeaderTitleWithBackButton />
+        <CardHeaderRight />
+      </View>
+    </SafeAreaView>
   );
 };
 const themedStyles = StyleService.create({
