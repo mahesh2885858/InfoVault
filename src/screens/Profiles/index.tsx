@@ -1,19 +1,15 @@
-import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {myTheme} from '../../../theme';
-import Fab from '../../components/Fab';
-import AddProfileModal from './AddProfileModal';
-import {useProfileStore} from '../../store/profileStore';
-import {FlatList} from 'react-native';
-import RenderProfile from './RenderProfile';
 import {StyleService, useStyleSheet} from '@ui-kitten/components';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import React, {useState} from 'react';
+import {FlatList, View} from 'react-native';
+import Fab from '../../components/Fab';
+import {useProfileStore} from '../../store/profileStore';
+import AddProfileModal from './AddProfileModal';
+import RenderProfile from './RenderProfile';
 
 const Profiles = () => {
   const styles = useStyleSheet(themedStyles);
   const [renderAddModal, setRenderAddModal] = useState(false);
   const [mode, setMode] = useState<'new' | 'edit'>('new');
-  const {top} = useSafeAreaInsets();
   const {profiles, selectProfile, reset} = useProfileStore(state => ({
     profiles: state.profiles,
     selectProfile: state.selectProfile,
@@ -33,7 +29,7 @@ const Profiles = () => {
   };
 
   return (
-    <SafeAreaView style={[styles.container, {paddingTop: top}]}>
+    <View style={styles.container}>
       <FlatList
         data={profiles}
         contentContainerStyle={styles.listContainer}
@@ -54,7 +50,7 @@ const Profiles = () => {
           visible={renderAddModal}
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 export default Profiles;
