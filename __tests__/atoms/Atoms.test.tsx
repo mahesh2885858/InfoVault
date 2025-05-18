@@ -9,9 +9,19 @@ import Button from '../../src/components/atoms/Button';
 import Container from '../../src/components/atoms/Container';
 import PressableWithFeedback from '../../src/components/PressableWithFeedback';
 import {fireEvent, render, screen} from '@testing-library/react-native';
+import * as eva from '@eva-design/eva';
+import {EvaIconsPack} from '@ui-kitten/eva-icons';
+import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 
 it('renders Light Text correctly', () => {
-  render(<Typography />);
+  render(
+    <>
+      <IconRegistry icons={EvaIconsPack} />
+      <ApplicationProvider {...eva} theme={eva.light}>
+        <Typography />
+      </ApplicationProvider>
+    </>,
+  );
 });
 
 it('renders Dark Text correctly', () => {

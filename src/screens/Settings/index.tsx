@@ -1,27 +1,26 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import {uCFirst} from 'commonutil-core';
 import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {useTranslation} from 'react-i18next';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import * as ScopedStorage from 'react-native-scoped-storage';
-import Button from '../../components/atoms/Button';
+import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Container from '../../components/atoms/Container';
+import Typography from '../../components/atoms/Typography';
+import {useUiStore} from '../../store/UiStore';
 import {useCardStore} from '../../store/cardStore';
-import LoadingIndicator from '../../components/Molecules/LoadingIndicator';
-import {validateImportedData} from '../../utils/validateImportedData';
 import {usePasswordsStore} from '../../store/passwordStore';
 import {useProfileStore} from '../../store/profileStore';
-import PressableWithFeedback from '../../components/PressableWithFeedback';
-import Typography from '../../components/atoms/Typography';
-import {useTranslation} from 'react-i18next';
-import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import {validateImportedData} from '../../utils/validateImportedData';
 import ThemeSwitcherModal from './ThemeSwitcherModal';
-import {useUiStore} from '../../store/UiStore';
-import {uCFirst} from 'commonutil-core';
 const FILE_NAME = 'data.json';
 const DIR_PATH = 'exportPath';
 
 const Settings = () => {
   const styles = useStyleSheet(themedStyles);
   const {t} = useTranslation();
+  const {top} = useSafeAreaInsets();
   const {cData, setCards} = useCardStore(state => ({
     cData: state.cards,
     setCards: state.setCards,
@@ -127,28 +126,30 @@ const Settings = () => {
   };
 
   return (
-    <Container style={styles.container}>
-      <PressableWithFeedback
-        onPress={importData}
-        style={[styles.setting, {paddingTop: 20}]}>
-        <Typography style={styles.text}>{t('common.import')}</Typography>
-      </PressableWithFeedback>
-      <PressableWithFeedback onPress={exportData} style={styles.setting}>
-        <Typography style={styles.text}>{t('common.export')}</Typography>
-      </PressableWithFeedback>
-      <PressableWithFeedback
-        onPress={() => setOpenThemeSwitcher(true)}
-        style={styles.setting}>
-        <Typography style={styles.text}>{t('common.theme')}</Typography>
-        <Typography style={styles.subText}>{uCFirst(theme ?? '')}</Typography>
-      </PressableWithFeedback>
-      {openThemeSwitcher && (
-        <ThemeSwitcherModal
-          onClose={() => setOpenThemeSwitcher(false)}
-          visible={openThemeSwitcher}
-        />
-      )}
-    </Container>
+    <SafeAreaView style={[styles.container, {paddingTop: top}]}>
+      <Container style={styles.container}>
+        <PressableWithFeedback
+          onPress={importData}
+          style={[styles.setting, {paddingTop: 20}]}>
+          <Typography style={styles.text}>{t('common.import')}</Typography>
+        </PressableWithFeedback>
+        <PressableWithFeedback onPress={exportData} style={styles.setting}>
+          <Typography style={styles.text}>{t('common.export')}</Typography>
+        </PressableWithFeedback>
+        <PressableWithFeedback
+          onPress={() => setOpenThemeSwitcher(true)}
+          style={styles.setting}>
+          <Typography style={styles.text}>{t('common.theme')}</Typography>
+          <Typography style={styles.subText}>{uCFirst(theme ?? '')}</Typography>
+        </PressableWithFeedback>
+        {openThemeSwitcher && (
+          <ThemeSwitcherModal
+            onClose={() => setOpenThemeSwitcher(false)}
+            visible={openThemeSwitcher}
+          />
+        )}
+      </Container>
+    </SafeAreaView>
   );
 };
 

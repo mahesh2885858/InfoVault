@@ -1,19 +1,20 @@
 import {useFocusEffect} from '@react-navigation/native';
+import {useTheme} from '@ui-kitten/components';
 import React, {useCallback, useRef, useState} from 'react';
 import {BackHandler, FlatList, StatusBar, StyleSheet, View} from 'react-native';
-import {myTheme} from '../../../theme';
+import Animated, {LinearTransition} from 'react-native-reanimated';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import Fab from '../../components/Fab';
 import Container from '../../components/atoms/Container';
-import {usePasswordsStore} from '../../store/passwordStore';
-import RenderPassword from './RenderPassword';
-import AddPasswordModal from './AddPasswordModal';
-import {useProfileStore} from '../../store/profileStore';
 import {DEFAULT_PROFILE_ID, PASSWORD_HEIGHT} from '../../constants';
-import Animated, {LinearTransition} from 'react-native-reanimated';
-import {useTheme} from '@ui-kitten/components';
+import {usePasswordsStore} from '../../store/passwordStore';
+import {useProfileStore} from '../../store/profileStore';
+import AddPasswordModal from './AddPasswordModal';
+import RenderPassword from './RenderPassword';
 
 const Passwords = () => {
   const [visible, setVisibility] = useState(false);
+  const {top} = useSafeAreaInsets();
   const theme = useTheme();
   const listRef = useRef<FlatList>(null);
   const {selectedPasswords, deSelectAll, passwords, focusedId} =
@@ -65,34 +66,36 @@ const Passwords = () => {
   );
 
   return (
-    <Container style={styles.container}>
-      <StatusBar backgroundColor={theme['bg-main']} />
+    <SafeAreaView style={[styles.container, {paddingTop: top}]}>
+      <Container style={styles.container}>
+        <StatusBar backgroundColor={theme['bg-main']} />
 
-      <Animated.FlatList
-        ref={listRef}
-        data={passwordsToRender}
-        contentContainerStyle={styles.cardConatiner}
-        renderItem={item => {
-          return <RenderPassword {...item.item} />;
-        }}
-        itemLayoutAnimation={LinearTransition}
-        keyExtractor={item => item.id}
-        getItemLayout={(_, index) => ({
-          length: PASSWORD_HEIGHT,
-          index,
-          offset: PASSWORD_HEIGHT * index,
-        })}
-      />
+        <Animated.FlatList
+          ref={listRef}
+          data={passwordsToRender}
+          contentContainerStyle={styles.cardConatiner}
+          renderItem={item => {
+            return <RenderPassword {...item.item} />;
+          }}
+          itemLayoutAnimation={LinearTransition}
+          keyExtractor={item => item.id}
+          getItemLayout={(_, index) => ({
+            length: PASSWORD_HEIGHT,
+            index,
+            offset: PASSWORD_HEIGHT * index,
+          })}
+        />
 
-      <Fab
-        callBack={() => {
-          setVisibility(true);
-        }}
-      />
-      <View>
-        <AddPasswordModal setVisible={setVisibility} visible={visible} />
-      </View>
-    </Container>
+        <Fab
+          callBack={() => {
+            setVisibility(true);
+          }}
+        />
+        <View>
+          <AddPasswordModal setVisible={setVisibility} visible={visible} />
+        </View>
+      </Container>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
