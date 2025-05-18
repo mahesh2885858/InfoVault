@@ -1,6 +1,5 @@
 package com.infoVault.app
 import android.os.Bundle;
-import android.view.WindowManager
 import com.zoontek.rnbootsplash.RNBootSplash
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
@@ -16,7 +15,6 @@ class MainActivity : ReactActivity() {
   override fun getMainComponentName(): String = "InfoVault"
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
     RNBootSplash.init(this, R.style.BootTheme)
     super.onCreate(null)
   }
