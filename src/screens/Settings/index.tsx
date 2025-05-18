@@ -13,6 +13,7 @@ import {usePasswordsStore} from '../../store/passwordStore';
 import {useProfileStore} from '../../store/profileStore';
 import {validateImportedData} from '../../utils/validateImportedData';
 import ThemeSwitcherModal from './ThemeSwitcherModal';
+import {TCard, TPassword, TProfile} from '../../types';
 const FILE_NAME = 'data.json';
 const DIR_PATH = 'exportPath';
 
@@ -28,9 +29,9 @@ const Settings = () => {
     setPasswords: state.setPasswords,
   }));
 
-  const {profiles, setProfiels} = useProfileStore(state => ({
+  const {profiles, setProfiles} = useProfileStore(state => ({
     profiles: state.profiles,
-    setProfiels: state.setProfiles,
+    setProfiles: state.setProfiles,
   }));
 
   const {theme} = useUiStore(state => ({
@@ -96,6 +97,17 @@ const Settings = () => {
     }
   };
 
+  const getUniqueData = <T extends {[key: string]: any}>(
+    input: T[],
+    field: keyof T,
+  ): T[] => {
+    const unique = input.filter(
+      (item, index, self) =>
+        index === self.findIndex(t => t[field] === item[field]),
+    );
+    return unique;
+  };
+
   const importData = async () => {
     try {
       let dir = await ScopedStorage.openDocument(true);
@@ -107,14 +119,21 @@ const Settings = () => {
         }
         if (validateImportedData(response)) {
           if (response.cards && response.cards.length > 0) {
-            setCards(response.cards);
+            const data: TCard[] = [...cData, ...response.cards];
+            const uniqueData = getUniqueData(data, 'cardNumber');
+
+            setCards(uniqueData);
           }
           if (response.passwords && response.passwords.length > 0) {
-            setPasswords(response.passwords);
+            const data: TPassword[] = [...pData, ...response.passwords];
+            const uniqueData = getUniqueData(data, 'id');
+            setPasswords(uniqueData);
           }
 
           if (response.profiles && response.profiles.length > 0) {
-            setProfiels(response.profiles);
+            const data: TProfile[] = [...profiles, ...response.profiles];
+            const uniqueData = getUniqueData(data, 'id');
+            setProfiles(uniqueData);
           }
         }
       }
