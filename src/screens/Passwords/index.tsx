@@ -10,6 +10,8 @@ import {usePasswordsStore} from '../../store/passwordStore';
 import {useProfileStore} from '../../store/profileStore';
 import AddPasswordModal from './AddPasswordModal';
 import RenderPassword from './RenderPassword';
+import PasswordHeader from './PasswordHeader';
+import {useMiscStore} from '../../store/miscStore';
 
 const Passwords = () => {
   const [visible, setVisibility] = useState(false);
@@ -24,10 +26,13 @@ const Passwords = () => {
       setFocusedId: state.setFocusedPassword,
     }));
   const selectedProfile = useProfileStore(state => state.selectedProfileId);
+  const search = useMiscStore(state => state.search);
   const passwordsToRender = passwords.filter(
     password =>
-      selectedProfile === DEFAULT_PROFILE_ID ||
-      password.profileId === selectedProfile,
+      (selectedProfile === DEFAULT_PROFILE_ID ||
+        password.profileId === selectedProfile) &&
+      (search.trim().length === 0 ||
+        password.website.toLowerCase().includes(search.toLowerCase())),
   );
 
   useFocusEffect(
@@ -64,13 +69,15 @@ const Passwords = () => {
   );
 
   return (
-    <Container style={styles.container}>
+    <Container style={[styles.container]}>
       <StatusBar backgroundColor={theme['bg-main']} />
-
+      <View style={styles.header}>
+        <PasswordHeader />
+      </View>
       <Animated.FlatList
         ref={listRef}
         data={passwordsToRender}
-        contentContainerStyle={styles.cardConatiner}
+        contentContainerStyle={styles.cardContainer}
         renderItem={item => {
           return <RenderPassword {...item.item} />;
         }}
@@ -98,7 +105,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  cardConatiner: {
+  cardContainer: {
     gap: 13,
     paddingBottom: 100,
     paddingTop: 20,
@@ -114,6 +121,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     paddingBottom: 20,
+  },
+  header: {
+    paddingTop: 10,
   },
 });
 

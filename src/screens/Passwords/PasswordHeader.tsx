@@ -1,31 +1,45 @@
-import React from 'react';
-import PasswordHeaderTitleWithBackButton from './PasswordHeaderTitleWithBackButton';
-import PasswordHeaderRight from './PasswordHeaderRight';
-import {DrawerHeaderProps} from '@react-navigation/drawer';
-import {useTheme} from '@ui-kitten/components';
+import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import React, {useState} from 'react';
 import {View} from 'react-native';
-import {StyleSheet} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import SearchBox from '../../components/Molecules/SearchBox';
+import PasswordHeaderRight from './PasswordHeaderRight';
+import PasswordHeaderTitleWithBackButton from './PasswordHeaderTitleWithBackButton';
 
-const PasswordHeader = (_props: DrawerHeaderProps) => {
-  const theme = useTheme();
+const PasswordHeader = () => {
+  const styles = useStyleSheet(themedStyles);
+  const [renderSearch, setRenderSearch] = useState(false);
+  const {top} = useSafeAreaInsets();
+
   return (
-    <SafeAreaView>
-      <View
-        style={[
-          styles.container,
-          {
-            backgroundColor: theme['bg-main'],
-          },
-        ]}>
-        <PasswordHeaderTitleWithBackButton />
-        <PasswordHeaderRight />
-      </View>
-    </SafeAreaView>
+    <View style={[styles.container, {paddingTop: top}]}>
+      {renderSearch ? (
+        <SearchBox
+          mode="passwords"
+          onClose={() => setRenderSearch(false)}
+          visible={renderSearch}
+        />
+      ) : (
+        <View style={styles.box}>
+          <PasswordHeaderTitleWithBackButton />
+          <View style={[styles.box, styles.gap]}>
+            <MaterialIcon
+              onPress={() => setRenderSearch(true)}
+              name="magnify"
+              color={'black'}
+              size={25}
+            />
+            <PasswordHeaderRight />
+          </View>
+        </View>
+      )}
+    </View>
   );
 };
 export default PasswordHeader;
-const styles = StyleSheet.create({
+
+const themedStyles = StyleService.create({
   container: {
     backgroundColor: 'bg-main',
     display: 'flex',
@@ -34,5 +48,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 10,
+  },
+  box: {flexDirection: 'row', alignItems: 'center'},
+  gap: {
+    gap: 10,
   },
 });

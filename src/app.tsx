@@ -1,17 +1,16 @@
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useTheme} from '@ui-kitten/components';
 import React from 'react';
-import {DrawerParamsList, RootStackParamList} from './types';
 import CustomDrawer from './components/Navigation/CustomDrawer';
+import CardHeaders from './screens/Cards/CardHeaders';
 import Cards from './screens/Cards/Cards';
 import Passwords from './screens/Passwords';
 import Profiles from './screens/Profiles';
-import SettingsHeader from './screens/Settings/Header';
-import {useTheme} from '@ui-kitten/components';
 import Settings from './screens/Settings';
-import CardHeaders from './screens/Cards/CardHeaders';
-import PasswordHeader from './screens/Passwords/PasswordHeader';
+import SettingsHeader from './screens/Settings/Header';
+import {DrawerParamsList, RootStackParamList} from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator<DrawerParamsList>();
@@ -43,10 +42,7 @@ function DrawerNavigator() {
         name="Passwords"
         component={Passwords}
         options={{
-          headerStyle: {backgroundColor: theme['bg-main']},
-          header: PasswordHeader,
-          headerTitle: '',
-          headerShadowVisible: false,
+          headerShown: false,
         }}
       />
       <Drawer.Screen
