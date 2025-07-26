@@ -2,13 +2,19 @@ import React from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '@ui-kitten/components';
-
-const BackButton = () => {
+type TProps = {
+  onPress?: () => void;
+};
+const BackButton = (props: TProps) => {
   const navigation = useNavigation();
   const theme = useTheme();
   return (
     <MaterialIcon
-      onPress={() => navigation.goBack()}
+      onPress={() =>
+        props.onPress
+          ? props.onPress()
+          : navigation.canGoBack() && navigation.goBack()
+      }
       name="arrow-left-thin"
       size={24}
       color={theme['text-primary']}

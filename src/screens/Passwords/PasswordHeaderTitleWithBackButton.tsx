@@ -1,12 +1,11 @@
+import {DrawerActions, useNavigation} from '@react-navigation/native';
+import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {myTheme} from '../../../theme';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Typography from '../../components/atoms/Typography';
 import {usePasswordsStore} from '../../store/passwordStore';
-import {DrawerActions, useNavigation} from '@react-navigation/native';
-import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
 
 const PasswordHeaderTitleWithBackButton = () => {
   const styles = useStyleSheet(themedStyles);
@@ -48,6 +47,7 @@ const themedStyles = StyleService.create({
     flexDirection: 'row',
     gap: 20,
     alignItems: 'center',
+    flex: 1,
   },
   text: {
     fontSize: 20,
