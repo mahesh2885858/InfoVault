@@ -1,15 +1,13 @@
+import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
 import React, {useCallback} from 'react';
-import ModalWrapper from './ModalWrapper';
-import {useProfileStore} from '../store/profileStore';
-import {RadioButton} from 'react-native-paper';
 import {View} from 'react-native';
-import {StyleSheet} from 'react-native';
-import PressableWithFeedback from './PressableWithFeedback';
-import Typography from './atoms/Typography';
-import {myTheme} from '../../theme';
-import Button from './atoms/Button';
+import {RadioButton} from 'react-native-paper';
 import {DEFAULT_PROFILE_ID} from '../constants';
-import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import {useProfileStore} from '../store/profileStore';
+import ModalWrapper from './ModalWrapper';
+import PressableWithFeedback from './PressableWithFeedback';
+import Button from './atoms/Button';
+import Typography from './atoms/Typography';
 type TProps = {
   visible: boolean;
   onClose: () => void;
@@ -17,6 +15,7 @@ type TProps = {
 };
 const ProfileSelectionModal = (props: TProps) => {
   const styles = useStyleSheet(themedStyles);
+  const theme = useTheme();
   const {
     profiles,
     selectedId,
@@ -65,6 +64,7 @@ const ProfileSelectionModal = (props: TProps) => {
                   value={item.name}
                   status={idToCompare === item.id ? 'checked' : 'unchecked'}
                   onPress={() => selectItem(item.id)}
+                  color={theme['button-primary-bg']}
                 />
                 <Typography style={styles.text}>{item.name}</Typography>
               </PressableWithFeedback>
