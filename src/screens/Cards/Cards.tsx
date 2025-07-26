@@ -11,10 +11,12 @@ import {CARD_HEIGHT, DEFAULT_PROFILE_ID} from '../../constants';
 import {useCardStore} from '../../store/cardStore';
 import {useProfileStore} from '../../store/profileStore';
 import RenderCard from './RenderCard';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
   const theme = useTheme();
+  const {bottom} = useSafeAreaInsets();
   const {selectedCards, cards, deSelectAll, focusedId} = useCardStore(
     state => ({
       selectedCards: state.selectedCards,
@@ -70,7 +72,7 @@ const Cards = () => {
       onLayout={() => {
         BootSplash.hide();
       }}
-      style={styles.container}>
+      style={[styles.container, {paddingBottom: bottom}]}>
       <StatusBar backgroundColor={theme['bg-main']} />
 
       <Animated.FlatList

@@ -22,6 +22,7 @@ const themedStyles = StyleService.create({
     backgroundColor: 'bg-main',
     display: 'flex',
     flexDirection: 'row',
+    height: 60,
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,

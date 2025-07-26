@@ -18,6 +18,6 @@ export const authenticateLocal = async () => {
     }
   } else {
     console.log('Biometrics not available');
-    return false;
+    return true;
   }
 };
