@@ -4,6 +4,7 @@ import Typography from '../../components/atoms/Typography';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {TProfile} from '../../types';
 import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
+import {DEFAULT_PROFILE_ID} from '../../constants';
 
 type TProps = {
   item: TProfile;
@@ -18,12 +19,14 @@ const RenderProfile = (props: TProps) => {
   return (
     <View style={styles.item}>
       <Typography style={styles.text}>{item.name}</Typography>
-      <MaterialIcon
-        name="pencil"
-        onPress={() => props.onEditPress(item.id)}
-        size={20}
-        color={theme['text-primary']}
-      />
+      {item.id !== DEFAULT_PROFILE_ID && (
+        <MaterialIcon
+          name="pencil"
+          onPress={() => props.onEditPress(item.id)}
+          size={20}
+          color={theme['text-primary']}
+        />
+      )}
     </View>
   );
 };
