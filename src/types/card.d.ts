@@ -6,6 +6,7 @@ export type TCard = {
   cardName: string;
   isSelected: boolean;
   profileId: string;
+  isPinned?: boolean;
 };
 export type TCardInput = {
   cardName: TBaseInput;

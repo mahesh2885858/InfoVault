@@ -12,6 +12,7 @@ const PasswordHeaderRight = () => {
   const theme = useTheme();
   const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
   const deletePasswords = usePasswordsStore(state => state.deletePasswords);
+  const togglePinPassword = usePasswordsStore(state => state.togglePinPassword);
   const {openProfileSelection} = useProfileContext()!;
   const {selectedProfile} = useProfileStore(state => ({
     selectedProfile: state.getSelectedProfile(),
@@ -35,12 +36,21 @@ const PasswordHeaderRight = () => {
   }
 
   return (
-    <PressableWithFeedback
-      onPress={() => {
-        deletePasswords();
-      }}>
-      <MaterialIcon name="delete" size={24} color={theme['text-primary']} />
-    </PressableWithFeedback>
+    <>
+      <PressableWithFeedback
+        onPress={() => {
+          deletePasswords();
+        }}>
+        <MaterialIcon name="delete" size={24} color={theme['text-primary']} />
+      </PressableWithFeedback>
+      <PressableWithFeedback
+        hidden={selectedPasswords.length > 1}
+        onPress={() => {
+          togglePinPassword();
+        }}>
+        <MaterialIcon name="pin" size={24} color={theme['text-primary']} />
+      </PressableWithFeedback>
+    </>
   );
 };
 

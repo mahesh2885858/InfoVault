@@ -12,6 +12,7 @@ import AddPasswordModal from './AddPasswordModal';
 import RenderPassword from './RenderPassword';
 import PasswordHeader from './PasswordHeader';
 import {useMiscStore} from '../../store/miscStore';
+import {TPassword} from '../../types';
 
 const Passwords = () => {
   const [visible, setVisibility] = useState(false);
@@ -27,13 +28,22 @@ const Passwords = () => {
     }));
   const selectedProfile = useProfileStore(state => state.selectedProfileId);
   const search = useMiscStore(state => state.search);
-  const passwordsToRender = passwords.filter(
-    password =>
-      (selectedProfile === DEFAULT_PROFILE_ID ||
-        password.profileId === selectedProfile) &&
-      (search.trim().length === 0 ||
-        password.website.toLowerCase().includes(search.toLowerCase())),
-  );
+  const passwordsToRender = passwords
+    .filter(
+      password =>
+        (selectedProfile === DEFAULT_PROFILE_ID ||
+          password.profileId === selectedProfile) &&
+        (search.trim().length === 0 ||
+          password.website.toLowerCase().includes(search.toLowerCase())),
+    )
+    .reduce((acc, password) => {
+      if (password.isPinned) {
+        acc.unshift(password);
+      } else {
+        acc.push(password);
+      }
+      return acc;
+    }, [] as TPassword[]);
 
   useFocusEffect(
     useCallback(() => {

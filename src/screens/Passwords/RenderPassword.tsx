@@ -35,13 +35,13 @@ const RenderPassword = (password: TPassword) => {
     opacity: opacityForNewItem.value,
   }));
 
-  const {togglePasswordSelection, focusedId, setFocusedId} = usePasswordsStore(
-    state => ({
+  const {togglePasswordSelection, focusedId, setFocusedId, unpinPassword} =
+    usePasswordsStore(state => ({
       togglePasswordSelection: state.togglePasswordSelection,
       focusedId: state.focusedPassword,
       setFocusedId: state.setFocusedPassword,
-    }),
-  );
+      unpinPassword: state.unPinPassword,
+    }));
   const toast = useToast();
   const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
 
@@ -147,6 +147,16 @@ const RenderPassword = (password: TPassword) => {
               <Typography style={styles.cardNumberText}>
                 {password.website}
               </Typography>
+              {password.isPinned && (
+                <MaterialIcon
+                  name="pin"
+                  size={20}
+                  color={theme['text-secondary']}
+                  onPress={() => {
+                    unpinPassword(password.id);
+                  }}
+                />
+              )}
             </View>
             <View style={styles.usernameBox}>
               <View style={styles.username}>
@@ -236,8 +246,11 @@ const themedStyles = StyleService.create({
     flexDirection: 'column',
   },
   webSiteBox: {
-    paddingTop: 10,
+    // paddingTop: 10,
     gap: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   usernameBox: {
     display: 'flex',

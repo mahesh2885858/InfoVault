@@ -14,6 +14,8 @@ type TCardStore = {
   setCards: (cards: TCard[]) => void;
   focusedCard: string;
   setFocusedCard: (cardNumber: string) => void;
+  togglePinCard: () => void;
+  unPinCard: (id: string) => void;
 };
 
 export const useCardStore = create(
@@ -65,6 +67,26 @@ export const useCardStore = create(
         },
         setCards(cards) {
           set({cards});
+        },
+        togglePinCard: () => {
+          set(state => {
+            const updatedCards = state.cards.map(c => {
+              if (c.isSelected) {
+                return {...c, isPinned: !c.isPinned};
+              } else return c;
+            });
+            return {cards: updatedCards};
+          });
+        },
+        unPinCard: id => {
+          set(state => {
+            const updatedCards = state.cards.map(c => {
+              if (c.cardNumber === id) {
+                return {...c, isPinned: false};
+              } else return c;
+            });
+            return {cards: updatedCards};
+          });
         },
       };
     },

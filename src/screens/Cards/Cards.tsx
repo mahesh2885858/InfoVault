@@ -13,6 +13,7 @@ import {useProfileStore} from '../../store/profileStore';
 import RenderCard from './RenderCard';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useMiscStore} from '../../store/miscStore';
+import {TCard} from '../../types';
 
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
@@ -30,13 +31,22 @@ const Cards = () => {
   const listRef = useRef<FlatList>(null);
   const selectedProfile = useProfileStore(state => state.selectedProfileId);
   const search = useMiscStore(state => state.search);
-  const cardsToRender = cards.filter(
-    card =>
-      (selectedProfile === DEFAULT_PROFILE_ID ||
-        card.profileId === selectedProfile) &&
-      (search.trim().length === 0 ||
-        card.cardName.toLowerCase().includes(search.toLowerCase())),
-  );
+  const cardsToRender = cards
+    .filter(
+      card =>
+        (selectedProfile === DEFAULT_PROFILE_ID ||
+          card.profileId === selectedProfile) &&
+        (search.trim().length === 0 ||
+          card.cardName.toLowerCase().includes(search.toLowerCase())),
+    )
+    .reduce((acc, card) => {
+      if (card.isPinned) {
+        acc.unshift(card);
+      } else {
+        acc.push(card);
+      }
+      return acc;
+    }, [] as TCard[]);
 
   useFocusEffect(
     useCallback(() => {
