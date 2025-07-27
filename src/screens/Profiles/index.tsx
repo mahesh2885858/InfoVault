@@ -5,8 +5,11 @@ import Fab from '../../components/Fab';
 import {useProfileStore} from '../../store/profileStore';
 import AddProfileModal from './AddProfileModal';
 import RenderProfile from './RenderProfile';
+import ProfileHeader from './ProfileHeader';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const Profiles = () => {
+  const {top, bottom} = useSafeAreaInsets();
   const styles = useStyleSheet(themedStyles);
   const [renderAddModal, setRenderAddModal] = useState(false);
   const [mode, setMode] = useState<'new' | 'edit'>('new');
@@ -29,7 +32,8 @@ const Profiles = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {paddingTop: top, paddingBottom: bottom}]}>
+      <ProfileHeader />
       <FlatList
         data={profiles}
         contentContainerStyle={styles.listContainer}

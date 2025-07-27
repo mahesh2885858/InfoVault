@@ -122,18 +122,8 @@ const styles = StyleSheet.create({
     minHeight: '100%', // should be added to fix an issue refer:https://github.com/software-mansion/react-native-reanimated/issues/5728#issuecomment-2551570107
   },
 
-  fab: {
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    paddingBottom: 20,
-  },
   header: {
-    paddingTop: 10,
+    paddingTop: 20,
   },
 });
 

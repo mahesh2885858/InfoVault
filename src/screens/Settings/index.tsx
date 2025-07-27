@@ -11,9 +11,10 @@ import {useUiStore} from '../../store/UiStore';
 import {useCardStore} from '../../store/cardStore';
 import {usePasswordsStore} from '../../store/passwordStore';
 import {useProfileStore} from '../../store/profileStore';
-import {validateImportedData} from '../../utils/validateImportedData';
-import ThemeSwitcherModal from './ThemeSwitcherModal';
 import {TCard, TPassword, TProfile} from '../../types';
+import {validateImportedData} from '../../utils/validateImportedData';
+import SettingsHeader from './Header';
+import ThemeSwitcherModal from './ThemeSwitcherModal';
 const FILE_NAME = 'data.json';
 const DIR_PATH = 'exportPath';
 
@@ -144,9 +145,10 @@ const Settings = () => {
 
   return (
     <Container style={styles.container}>
+      <SettingsHeader />
       <PressableWithFeedback
         onPress={importData}
-        style={[styles.setting, {paddingTop: 20}]}>
+        style={[styles.setting, {paddingTop: 10}]}>
         <Typography style={styles.text}>{t('common.import')}</Typography>
       </PressableWithFeedback>
       <PressableWithFeedback onPress={exportData} style={styles.setting}>

@@ -5,7 +5,7 @@ import BackButton from '../../components/Molecules/BackButton';
 import {StyleService, useStyleSheet} from '@ui-kitten/components';
 
 const SettingsHeader = () => {
-  const styles = useStyleSheet(themedstyles);
+  const styles = useStyleSheet(themedStyles);
   return (
     <View style={styles.container}>
       <BackButton />
@@ -16,14 +16,14 @@ const SettingsHeader = () => {
 
 export default SettingsHeader;
 
-const themedstyles = StyleService.create({
+const themedStyles = StyleService.create({
   container: {
     backgroundColor: 'bg-main',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 10,
+    paddingTop: 15,
     gap: 20,
   },
   headerText: {

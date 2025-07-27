@@ -3,10 +3,12 @@ import {StyleSheet, View} from 'react-native';
 import {FAB} from 'react-native-paper';
 import {myTheme} from '../../../theme';
 import {colors} from '../../globals';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const Fab = (props: {callBack: () => void}) => {
+  const {bottom} = useSafeAreaInsets();
   return (
-    <View style={styles.fab}>
+    <View style={[styles.fab, {bottom: bottom}]}>
       <FAB
         mode="elevated"
         icon="plus"

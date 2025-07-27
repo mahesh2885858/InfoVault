@@ -4,12 +4,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useTheme} from '@ui-kitten/components';
 import React from 'react';
 import CustomDrawer from './components/Navigation/CustomDrawer';
-import CardHeaders from './screens/Cards/CardHeaders';
 import Cards from './screens/Cards/Cards';
 import Passwords from './screens/Passwords';
 import Profiles from './screens/Profiles';
 import Settings from './screens/Settings';
-import SettingsHeader from './screens/Settings/Header';
 import {DrawerParamsList, RootStackParamList} from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -32,10 +30,7 @@ function DrawerNavigator() {
         name="Cards"
         component={Cards}
         options={{
-          headerTitle: '',
-          headerShadowVisible: false,
-          header: CardHeaders,
-          headerStyle: {backgroundColor: theme['bg-main']},
+          headerShown: false,
         }}
       />
       <Drawer.Screen
@@ -49,10 +44,7 @@ function DrawerNavigator() {
         name="Profiles"
         component={Profiles}
         options={{
-          title: 'Profiles',
-          headerStyle: {backgroundColor: theme['bg-main']},
-
-          headerTintColor: theme['text-primary'],
+          headerShown: false,
         }}
       />
     </Drawer.Navigator>
@@ -72,7 +64,7 @@ function AppNavigator(): React.JSX.Element {
           name="Settings"
           component={Settings}
           options={{
-            header: SettingsHeader,
+            headerShown: false,
           }}
         />
       </Stack.Navigator>
