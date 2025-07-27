@@ -1,22 +1,20 @@
 import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
 import React, {useState} from 'react';
 import {View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SearchBox from '../../components/Molecules/SearchBox';
+import {usePasswordsStore} from '../../store/passwordStore';
 import PasswordHeaderRight from './PasswordHeaderRight';
 import PasswordHeaderTitleWithBackButton from './PasswordHeaderTitleWithBackButton';
-import {usePasswordsStore} from '../../store/passwordStore';
 
 const PasswordHeader = () => {
   const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
   const [renderSearch, setRenderSearch] = useState(false);
-  const {top} = useSafeAreaInsets();
   const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
 
   return (
-    <View style={[styles.container, {paddingTop: top}]}>
+    <View style={[styles.container]}>
       {renderSearch ? (
         <SearchBox
           mode="passwords"
@@ -52,7 +50,7 @@ const themedStyles = StyleService.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    // paddingVertical: 10,
   },
   box: {flexDirection: 'row', alignItems: 'center'},
   gap: {
