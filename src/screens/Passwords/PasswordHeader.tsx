@@ -1,4 +1,4 @@
-import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
 import React, {useState} from 'react';
 import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -10,6 +10,7 @@ import {usePasswordsStore} from '../../store/passwordStore';
 
 const PasswordHeader = () => {
   const styles = useStyleSheet(themedStyles);
+  const theme = useTheme();
   const [renderSearch, setRenderSearch] = useState(false);
   const {top} = useSafeAreaInsets();
   const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
@@ -30,7 +31,7 @@ const PasswordHeader = () => {
               <MaterialIcon
                 onPress={() => setRenderSearch(true)}
                 name="magnify"
-                color={'black'}
+                color={theme['text-primary']}
                 size={25}
               />
             )}

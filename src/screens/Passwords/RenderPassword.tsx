@@ -283,7 +283,6 @@ const themedStyles = StyleService.create({
   cardText: {
     fontSize: 17,
     fontWeight: '500',
-    textTransform: 'uppercase',
   },
   passwordBox: {
     flexDirection: 'row',

@@ -1,5 +1,5 @@
 import {DrawerHeaderProps} from '@react-navigation/drawer';
-import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
 import React, {useState} from 'react';
 import {View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -11,6 +11,7 @@ import {useCardStore} from '../../store/cardStore';
 
 const CardHeaders = (_props: DrawerHeaderProps) => {
   const styles = useStyleSheet(themedStyles);
+  const theme = useTheme();
   const [renderSearch, setRenderSearch] = useState(false);
   const selectedCards = useCardStore(state => state.selectedCards);
 
@@ -31,7 +32,7 @@ const CardHeaders = (_props: DrawerHeaderProps) => {
                 <MaterialIcon
                   onPress={() => setRenderSearch(true)}
                   name="magnify"
-                  color={'black'}
+                  color={theme['text-primary']}
                   size={25}
                 />
               )}
