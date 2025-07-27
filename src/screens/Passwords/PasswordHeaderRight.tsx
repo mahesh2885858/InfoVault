@@ -13,6 +13,7 @@ const PasswordHeaderRight = () => {
   const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
   const deletePasswords = usePasswordsStore(state => state.deletePasswords);
   const togglePinPassword = usePasswordsStore(state => state.togglePinPassword);
+  const deSelectAll = usePasswordsStore(state => state.deSelectAll);
   const {openProfileSelection} = useProfileContext()!;
   const {selectedProfile} = useProfileStore(state => ({
     selectedProfile: state.getSelectedProfile(),
@@ -47,6 +48,7 @@ const PasswordHeaderRight = () => {
         hidden={selectedPasswords.length > 1}
         onPress={() => {
           togglePinPassword();
+          deSelectAll();
         }}>
         <MaterialIcon name="pin" size={24} color={theme['text-primary']} />
       </PressableWithFeedback>

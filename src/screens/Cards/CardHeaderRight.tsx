@@ -14,6 +14,7 @@ const CardHeaderRight = () => {
   const selectedCards = useCardStore(state => state.selectedCards);
   const removeCards = useCardStore(state => state.removeCards);
   const togglePinCard = useCardStore(state => state.togglePinCard);
+  const deSelectAll = useCardStore(state => state.deSelectAll);
   const {openProfileSelection} = useProfileContext()!;
   const {selectedProfile} = useProfileStore(state => ({
     selectedProfile: state.getSelectedProfile(),
@@ -44,7 +45,11 @@ const CardHeaderRight = () => {
         <MaterialIcon name="delete" size={24} color={theme['text-primary']} />
       </PressableWithFeedback>
       {selectedCards.length === 1 && (
-        <PressableWithFeedback onPress={() => togglePinCard()}>
+        <PressableWithFeedback
+          onPress={() => {
+            togglePinCard();
+            deSelectAll();
+          }}>
           <MaterialIcon name="pin" size={24} color={theme['text-primary']} />
         </PressableWithFeedback>
       )}
