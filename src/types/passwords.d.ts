@@ -5,6 +5,7 @@ export type TPassword = {
   website: string;
   isSelected: boolean;
   profileId: string;
+  isPinned?: boolean;
 };
 
 export type TBaseInput = {

@@ -7,10 +7,13 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SearchBox from '../../components/Molecules/SearchBox';
 import CardHeaderRight from './CardHeaderRight';
 import CardHeaderTitleWithBackButton from './CardHeaderTitleWithBackButton';
+import {useCardStore} from '../../store/cardStore';
 
 const CardHeaders = (_props: DrawerHeaderProps) => {
   const styles = useStyleSheet(themedStyles);
   const [renderSearch, setRenderSearch] = useState(false);
+  const selectedCards = useCardStore(state => state.selectedCards);
+
   return (
     <SafeAreaView>
       <View style={[styles.container]}>
@@ -24,12 +27,14 @@ const CardHeaders = (_props: DrawerHeaderProps) => {
           <View style={styles.box}>
             <CardHeaderTitleWithBackButton />
             <View style={[styles.box, styles.gap]}>
-              <MaterialIcon
-                onPress={() => setRenderSearch(true)}
-                name="magnify"
-                color={'black'}
-                size={25}
-              />
+              {selectedCards.length === 0 && (
+                <MaterialIcon
+                  onPress={() => setRenderSearch(true)}
+                  name="magnify"
+                  color={'black'}
+                  size={25}
+                />
+              )}
               <CardHeaderRight />
             </View>
           </View>

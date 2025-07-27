@@ -6,11 +6,13 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SearchBox from '../../components/Molecules/SearchBox';
 import PasswordHeaderRight from './PasswordHeaderRight';
 import PasswordHeaderTitleWithBackButton from './PasswordHeaderTitleWithBackButton';
+import {usePasswordsStore} from '../../store/passwordStore';
 
 const PasswordHeader = () => {
   const styles = useStyleSheet(themedStyles);
   const [renderSearch, setRenderSearch] = useState(false);
   const {top} = useSafeAreaInsets();
+  const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
 
   return (
     <View style={[styles.container, {paddingTop: top}]}>
@@ -24,12 +26,14 @@ const PasswordHeader = () => {
         <View style={styles.box}>
           <PasswordHeaderTitleWithBackButton />
           <View style={[styles.box, styles.gap]}>
-            <MaterialIcon
-              onPress={() => setRenderSearch(true)}
-              name="magnify"
-              color={'black'}
-              size={25}
-            />
+            {selectedPasswords.length === 0 && (
+              <MaterialIcon
+                onPress={() => setRenderSearch(true)}
+                name="magnify"
+                color={'black'}
+                size={25}
+              />
+            )}
             <PasswordHeaderRight />
           </View>
         </View>

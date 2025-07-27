@@ -31,14 +31,20 @@ const RenderCard = (card: TCard) => {
     opacity: opacity.value,
   }));
 
-  const {selectedCards, toggleCardSelection, focusedId, setFocusedCard} =
-    useCardStore(state => ({
-      toggleCardSelection: state.toggleCardSelection,
-      selectedCards: state.selectedCards,
-      deSelectAll: state.deSelectAll,
-      focusedId: state.focusedCard,
-      setFocusedCard: state.setFocusedCard,
-    }));
+  const {
+    selectedCards,
+    toggleCardSelection,
+    focusedId,
+    setFocusedCard,
+    unPinCard,
+  } = useCardStore(state => ({
+    toggleCardSelection: state.toggleCardSelection,
+    selectedCards: state.selectedCards,
+    deSelectAll: state.deSelectAll,
+    focusedId: state.focusedCard,
+    setFocusedCard: state.setFocusedCard,
+    unPinCard: state.unPinCard,
+  }));
   const removeCards = useCardStore(state => state.removeCards);
 
   const [showCVV, setShowCVV] = useState(false);
@@ -167,10 +173,20 @@ const RenderCard = (card: TCard) => {
                 </Typography>
               </PressableWithFeedback>
             </View>
-            <View>
+            <View style={styles.nameOnCard}>
               <Typography style={styles.cardText}>
                 {getMaxText(card.NameOnCard, 25)}
               </Typography>
+              {card.isPinned && (
+                <MaterialIcon
+                  name="pin"
+                  size={20}
+                  color={theme['text-secondary']}
+                  onPress={() => {
+                    unPinCard(card.cardNumber);
+                  }}
+                />
+              )}
             </View>
           </Animated.View>
         </SwipeContainer>
@@ -258,6 +274,11 @@ const themedStyles = StyleService.create({
   deleteIcon: {
     flex: 1,
     justifyContent: 'center',
+  },
+  nameOnCard: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
 export default RenderCard;

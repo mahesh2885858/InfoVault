@@ -15,6 +15,8 @@ type TPasswordsStore = {
   removePassword: (id: string) => void;
   focusedPassword: string;
   setFocusedPassword: (cardNumber: string) => void;
+  togglePinPassword: () => void;
+  unPinPassword: (id: string) => void;
 };
 
 export const usePasswordsStore = create(
@@ -70,6 +72,27 @@ export const usePasswordsStore = create(
         focusedPassword: '',
         setFocusedPassword(cardNumber) {
           set({focusedPassword: cardNumber});
+        },
+        togglePinPassword() {
+          set(state => {
+            const id = state.selectedPasswords[0]?.id;
+            const updatedPasswords = state.passwords.map(p => {
+              if (p.id === id) {
+                return {...p, isPinned: !p.isPinned};
+              } else return p;
+            });
+            return {passwords: updatedPasswords};
+          });
+        },
+        unPinPassword: id => {
+          set(state => {
+            const updatedPasswords = state.passwords.map(p => {
+              if (p.id === id) {
+                return {...p, isPinned: false};
+              } else return p;
+            });
+            return {passwords: updatedPasswords};
+          });
         },
       };
     },
