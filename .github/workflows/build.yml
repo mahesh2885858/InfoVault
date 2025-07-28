@@ -48,6 +48,9 @@ jobs:
         run: |
           npm install --force
 
+      - name: Make Gradlew Executable
+        run: cd android && chmod +x ./gradlew
+
       # Clean build directories
       - name: Clean build
         run: |
