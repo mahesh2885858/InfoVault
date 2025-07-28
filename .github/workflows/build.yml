@@ -18,6 +18,14 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      # Setup Android SDK
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          api-level: 34
+          build-tools: '34.0.0'
+          ndk-version: '26.1.10909125'
+
       # Cache Gradle dependencies
       - name: Cache Gradle dependencies
         uses: actions/cache@v3
@@ -28,10 +36,22 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      # Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
       # Install npm dependencies
       - name: Install npm dependencies
         run: |
           npm install --force
+
+      # Clean build directories
+      - name: Clean build
+        run: |
+          cd android && ./gradlew clean
 
       # Decode and save keystore
       - name: Decode and save keystore
