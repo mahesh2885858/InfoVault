@@ -1,23 +1,21 @@
-import {StyleService, useStyleSheet} from '@ui-kitten/components';
-import React, {useState} from 'react';
-import {FlatList, View} from 'react-native';
+import { StyleService, useStyleSheet } from '@ui-kitten/components';
+import React, { useState } from 'react';
+import { FlatList, View } from 'react-native';
 import Fab from '../../components/Fab';
-import {useProfileStore} from '../../store/profileStore';
+import { useProfileStore } from '../../store/profileStore';
 import AddProfileModal from './AddProfileModal';
 import RenderProfile from './RenderProfile';
 import ProfileHeader from './ProfileHeader';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Profiles = () => {
-  const {top, bottom} = useSafeAreaInsets();
+  const { top, bottom } = useSafeAreaInsets();
   const styles = useStyleSheet(themedStyles);
   const [renderAddModal, setRenderAddModal] = useState(false);
   const [mode, setMode] = useState<'new' | 'edit'>('new');
-  const {profiles, selectProfile, reset} = useProfileStore(state => ({
-    profiles: state.profiles,
-    selectProfile: state.selectProfile,
-    reset: state.resetProfileSelection,
-  }));
+  const profiles = useProfileStore(state => state.profiles);
+  const selectProfile = useProfileStore(state => state.selectProfile);
+  const reset = useProfileStore(state => state.resetProfileSelection);
 
   const onEditPress = (id: string) => {
     selectProfile(id);
@@ -32,13 +30,18 @@ const Profiles = () => {
   };
 
   return (
-    <View style={[styles.container, {paddingTop: top, paddingBottom: bottom}]}>
+    <View
+      style={[
+        styles.container,
+        { paddingTop: top + 20, paddingBottom: bottom },
+      ]}
+    >
       <ProfileHeader />
       <FlatList
         data={profiles}
         contentContainerStyle={styles.listContainer}
         keyExtractor={item => item.id}
-        renderItem={({item}) => (
+        renderItem={({ item }) => (
           <RenderProfile item={item} onEditPress={onEditPress} />
         )}
       />

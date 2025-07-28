@@ -1,8 +1,8 @@
 import React from 'react';
-import {View} from 'react-native';
+import { View } from 'react-native';
 import Typography from '../../components/atoms/Typography';
 import BackButton from '../../components/Molecules/BackButton';
-import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import { StyleService, useStyleSheet } from '@ui-kitten/components';
 
 const SettingsHeader = () => {
   const styles = useStyleSheet(themedStyles);
@@ -23,7 +23,7 @@ const themedStyles = StyleService.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 15,
+    paddingTop: 20,
     gap: 20,
   },
   headerText: {

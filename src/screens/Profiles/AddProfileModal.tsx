@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import ModalWrapper from '../../components/ModalWrapper';
-import {TextInput} from 'react-native';
+import { TextInput } from 'react-native';
 import Button from '../../components/atoms/Button';
-import {View} from 'react-native';
+import { View } from 'react-native';
 
-import {useProfileStore} from '../../store/profileStore';
-import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
+import { useProfileStore } from '../../store/profileStore';
+import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
 
 type TProps = {
   onClose: () => void;
@@ -14,20 +14,17 @@ type TProps = {
 };
 
 const AddProfileModal = (props: TProps) => {
-  const {mode = 'new'} = props;
+  const { mode = 'new' } = props;
   const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
 
-  const {selectedId, selectedProfile, createProfile, updateProfile} =
-    useProfileStore(state => ({
-      selectedId: state.selectedProfileId,
-      selectedProfile: state.getSelectedProfile(),
-      createProfile: state.addProfile,
-      updateProfile: state.updateProfile,
-    }));
+  const selectedId = useProfileStore(state => state.selectedProfileId);
+  const selectedProfile = useProfileStore(state => state.getSelectedProfile);
+  const createProfile = useProfileStore(state => state.addProfile);
+  const updateProfile = useProfileStore(state => state.updateProfile);
 
   const [input, setInput] = useState(
-    mode === 'new' ? '' : selectedProfile?.name ?? '',
+    mode === 'new' ? '' : selectedProfile()?.name ?? '',
   );
 
   const onSave = () => {

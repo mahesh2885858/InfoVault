@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import { StyleSheet } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import Reanimated, {
   SharedValue,
@@ -21,7 +21,7 @@ function RightAction(
 ) {
   const styleAnimation = useAnimatedStyle(() => {
     return {
-      transform: [{translateX: drag.value + 50}],
+      transform: [{ translateX: drag.value + 50 }],
     };
   });
 
@@ -29,7 +29,8 @@ function RightAction(
     <Reanimated.View style={[styleAnimation, styles.rightPanel]}>
       <PressableWithFeedback
         onPress={() => onRightActionPress()}
-        style={styles.deleteIcon}>
+        style={styles.deleteIcon}
+      >
         <MaterialIcon
           onPress={() => onRightActionPress()}
           name="delete"
@@ -56,7 +57,8 @@ const SwipeContainer = (props: TProps) => {
       friction={2}
       overshootRight={false}
       childrenContainerStyle={styles.swipeableChild}
-      containerStyle={[styles.cardContainer]}>
+      containerStyle={[styles.cardContainer]}
+    >
       {props.children}
     </Swipeable>
   );

@@ -1,9 +1,9 @@
-import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
-import React, {useCallback} from 'react';
-import {View} from 'react-native';
-import {RadioButton} from 'react-native-paper';
-import {DEFAULT_PROFILE_ID} from '../constants';
-import {useProfileStore} from '../store/profileStore';
+import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
+import React, { useCallback } from 'react';
+import { View } from 'react-native';
+import { RadioButton } from 'react-native-paper';
+import { DEFAULT_PROFILE_ID } from '../constants';
+import { useProfileStore } from '../store/profileStore';
 import ModalWrapper from './ModalWrapper';
 import PressableWithFeedback from './PressableWithFeedback';
 import Button from './atoms/Button';
@@ -16,20 +16,15 @@ type TProps = {
 const ProfileSelectionModal = (props: TProps) => {
   const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
-  const {
-    profiles,
-    selectedId,
-    selectProfile,
-    selectedProfileForAddingANewRecord,
-    selectProfileForAddingANewRecord,
-  } = useProfileStore(state => ({
-    profiles: state.profiles,
-    selectedId: state.selectedProfileId,
-    selectProfile: state.selectProfile,
-    selectedProfileForAddingANewRecord:
-      state.selectedProfileForAddingANewRecord,
-    selectProfileForAddingANewRecord: state.selectProfileForAddingANewRecord,
-  }));
+  const profiles = useProfileStore(state => state.profiles);
+  const selectedId = useProfileStore(state => state.selectedProfileId);
+  const selectProfile = useProfileStore(state => state.selectProfile);
+  const selectedProfileForAddingANewRecord = useProfileStore(
+    state => state.selectedProfileForAddingANewRecord,
+  );
+  const selectProfileForAddingANewRecord = useProfileStore(
+    state => state.selectProfileForAddingANewRecord,
+  );
 
   const idToCompare = props.renderingForNewItemAdd
     ? selectedProfileForAddingANewRecord
@@ -59,7 +54,8 @@ const ProfileSelectionModal = (props: TProps) => {
               <PressableWithFeedback
                 key={item.id}
                 onPress={() => selectItem(item.id)}
-                style={styles.radioItem}>
+                style={styles.radioItem}
+              >
                 <RadioButton
                   value={item.name}
                   status={idToCompare === item.id ? 'checked' : 'unchecked'}

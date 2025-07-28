@@ -1,31 +1,33 @@
-import {useFocusEffect} from '@react-navigation/native';
-import {useTheme} from '@ui-kitten/components';
-import React, {useCallback, useRef, useState} from 'react';
-import {BackHandler, FlatList, StatusBar, StyleSheet, View} from 'react-native';
-import Animated, {LinearTransition} from 'react-native-reanimated';
+import { useFocusEffect } from '@react-navigation/native';
+import { useTheme } from '@ui-kitten/components';
+import React, { useCallback, useRef, useState } from 'react';
+import {
+  BackHandler,
+  FlatList,
+  StatusBar,
+  StyleSheet,
+  View,
+} from 'react-native';
+import Animated, { LinearTransition } from 'react-native-reanimated';
 import Fab from '../../components/Fab';
 import Container from '../../components/atoms/Container';
-import {DEFAULT_PROFILE_ID, PASSWORD_HEIGHT} from '../../constants';
-import {usePasswordsStore} from '../../store/passwordStore';
-import {useProfileStore} from '../../store/profileStore';
+import { DEFAULT_PROFILE_ID, PASSWORD_HEIGHT } from '../../constants';
+import { usePasswordsStore } from '../../store/passwordStore';
+import { useProfileStore } from '../../store/profileStore';
 import AddPasswordModal from './AddPasswordModal';
 import RenderPassword from './RenderPassword';
 import PasswordHeader from './PasswordHeader';
-import {useMiscStore} from '../../store/miscStore';
-import {TPassword} from '../../types';
+import { useMiscStore } from '../../store/miscStore';
+import { TPassword } from '../../types';
 
 const Passwords = () => {
   const [visible, setVisibility] = useState(false);
   const theme = useTheme();
   const listRef = useRef<FlatList>(null);
-  const {selectedPasswords, deSelectAll, passwords, focusedId} =
-    usePasswordsStore(state => ({
-      selectedPasswords: state.selectedPasswords,
-      deSelectAll: state.deSelectAll,
-      passwords: state.passwords,
-      focusedId: state.focusedPassword,
-      setFocusedId: state.setFocusedPassword,
-    }));
+  const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
+  const deSelectAll = usePasswordsStore(state => state.deSelectAll);
+  const passwords = usePasswordsStore(state => state.passwords);
+  const focusedId = usePasswordsStore(state => state.focusedPassword);
   const selectedProfile = useProfileStore(state => state.selectedProfileId);
   const search = useMiscStore(state => state.search);
   const passwordsToRender = passwords

@@ -1,20 +1,18 @@
-import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
+import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
 import React from 'react';
-import {View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Typography from '../../components/atoms/Typography';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
-import {DrawerActions, useNavigation} from '@react-navigation/native';
 
 const ProfileHeader = () => {
   const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
-  const {top} = useSafeAreaInsets();
   const navigation = useNavigation();
 
   return (
-    <View style={[styles.container, {paddingTop: top}]}>
+    <View style={[styles.container]}>
       <View style={styles.box}>
         <View style={styles.header}>
           <PressableWithFeedback>
@@ -44,7 +42,7 @@ const themedStyles = StyleService.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  box: {flexDirection: 'row', alignItems: 'center'},
+  box: { flexDirection: 'row', alignItems: 'center' },
   gap: {
     gap: 10,
   },

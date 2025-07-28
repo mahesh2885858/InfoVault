@@ -1,18 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {StyleService, useStyleSheet} from '@ui-kitten/components';
-import {uCFirst} from 'commonutil-core';
-import React, {useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import { StyleService, useStyleSheet } from '@ui-kitten/components';
+import { uCFirst } from 'commonutil-core';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import * as ScopedStorage from 'react-native-scoped-storage';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Container from '../../components/atoms/Container';
 import Typography from '../../components/atoms/Typography';
-import {useUiStore} from '../../store/UiStore';
-import {useCardStore} from '../../store/cardStore';
-import {usePasswordsStore} from '../../store/passwordStore';
-import {useProfileStore} from '../../store/profileStore';
-import {TCard, TPassword, TProfile} from '../../types';
-import {validateImportedData} from '../../utils/validateImportedData';
+import { useUiStore } from '../../store/UiStore';
+import { useCardStore } from '../../store/cardStore';
+import { usePasswordsStore } from '../../store/passwordStore';
+import { useProfileStore } from '../../store/profileStore';
+import { TCard, TPassword, TProfile } from '../../types';
+import { validateImportedData } from '../../utils/validateImportedData';
 import SettingsHeader from './Header';
 import ThemeSwitcherModal from './ThemeSwitcherModal';
 const FILE_NAME = 'data.json';
@@ -20,24 +20,17 @@ const DIR_PATH = 'exportPath';
 
 const Settings = () => {
   const styles = useStyleSheet(themedStyles);
-  const {t} = useTranslation();
-  const {cData, setCards} = useCardStore(state => ({
-    cData: state.cards,
-    setCards: state.setCards,
-  }));
-  const {pData, setPasswords} = usePasswordsStore(state => ({
-    pData: state.passwords,
-    setPasswords: state.setPasswords,
-  }));
+  const { t } = useTranslation();
+  const cData = useCardStore(state => state.cards);
+  const setCards = useCardStore(state => state.setCards);
 
-  const {profiles, setProfiles} = useProfileStore(state => ({
-    profiles: state.profiles,
-    setProfiles: state.setProfiles,
-  }));
+  const pData = usePasswordsStore(state => state.passwords);
+  const setPasswords = usePasswordsStore(state => state.setPasswords);
 
-  const {theme} = useUiStore(state => ({
-    theme: state.theme,
-  }));
+  const profiles = useProfileStore(state => state.profiles);
+  const setProfiles = useProfileStore(state => state.setProfiles);
+
+  const theme = useUiStore(state => state.theme);
 
   const [isExporting, setIsExporting] = useState(false);
   const [openThemeSwitcher, setOpenThemeSwitcher] = useState(false);
@@ -98,7 +91,7 @@ const Settings = () => {
     }
   };
 
-  const getUniqueData = <T extends {[key: string]: any}>(
+  const getUniqueData = <T extends { [key: string]: any }>(
     input: T[],
     field: keyof T,
   ): T[] => {
@@ -146,9 +139,7 @@ const Settings = () => {
   return (
     <Container style={styles.container}>
       <SettingsHeader />
-      <PressableWithFeedback
-        onPress={importData}
-        style={[styles.setting, {paddingTop: 10}]}>
+      <PressableWithFeedback onPress={importData} style={[styles.setting]}>
         <Typography style={styles.text}>{t('common.import')}</Typography>
       </PressableWithFeedback>
       <PressableWithFeedback onPress={exportData} style={styles.setting}>
@@ -156,7 +147,8 @@ const Settings = () => {
       </PressableWithFeedback>
       <PressableWithFeedback
         onPress={() => setOpenThemeSwitcher(true)}
-        style={styles.setting}>
+        style={styles.setting}
+      >
         <Typography style={styles.text}>{t('common.theme')}</Typography>
         <Typography style={styles.subText}>{uCFirst(theme ?? '')}</Typography>
       </PressableWithFeedback>
