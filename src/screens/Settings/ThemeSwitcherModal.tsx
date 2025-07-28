@@ -1,25 +1,23 @@
 import React from 'react';
 import ModalWrapper from '../../components/ModalWrapper';
 import Typography from '../../components/atoms/Typography';
-import {TCommonModalProps} from '../../types';
-import {RadioButton} from 'react-native-paper';
-import {View} from 'react-native';
-import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import { TCommonModalProps } from '../../types';
+import { RadioButton } from 'react-native-paper';
+import { View } from 'react-native';
+import { StyleService, useStyleSheet } from '@ui-kitten/components';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
-import {useTranslation} from 'react-i18next';
-import {useUiStore} from '../../store/UiStore';
-import {ColorSchemeName} from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useUiStore } from '../../store/UiStore';
+import { ColorSchemeName } from 'react-native';
 
 const ThemeSwitcherModal = (props: TCommonModalProps) => {
   const styles = useStyleSheet(themedStyles);
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
-  const {setTheme, theme} = useUiStore(state => ({
-    theme: state.theme,
-    setTheme: state.setTheme,
-  }));
+  const theme = useUiStore(state => state.theme);
+  const setTheme = useUiStore(state => state.setTheme);
 
-  const siwtchTheme = (mode: ColorSchemeName) => {
+  const switchTheme = (mode: ColorSchemeName) => {
     setTheme(mode);
     props.onClose();
   };
@@ -28,20 +26,22 @@ const ThemeSwitcherModal = (props: TCommonModalProps) => {
     <ModalWrapper onClose={props.onClose} visible={props.visible}>
       <View style={styles.container}>
         <PressableWithFeedback
-          onPress={() => siwtchTheme('light')}
-          style={styles.option}>
+          onPress={() => switchTheme('light')}
+          style={styles.option}
+        >
           <RadioButton.Android
-            onPress={() => siwtchTheme('light')}
+            onPress={() => switchTheme('light')}
             value="mahesh"
             status={theme === 'light' ? 'checked' : 'unchecked'}
           />
           <Typography style={styles.optionText}>{t('common.light')}</Typography>
         </PressableWithFeedback>
         <PressableWithFeedback
-          onPress={() => siwtchTheme('dark')}
-          style={styles.option}>
+          onPress={() => switchTheme('dark')}
+          style={styles.option}
+        >
           <RadioButton.Android
-            onPress={() => siwtchTheme('dark')}
+            onPress={() => switchTheme('dark')}
             value="mahesh"
             status={theme === 'dark' ? 'checked' : 'unchecked'}
           />

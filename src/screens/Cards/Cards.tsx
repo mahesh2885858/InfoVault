@@ -1,33 +1,35 @@
-import {useFocusEffect} from '@react-navigation/native';
-import {useTheme} from '@ui-kitten/components';
-import React, {useCallback, useRef, useState} from 'react';
-import {BackHandler, FlatList, StatusBar, StyleSheet, View} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { useTheme } from '@ui-kitten/components';
+import React, { useCallback, useRef, useState } from 'react';
+import {
+  BackHandler,
+  FlatList,
+  StatusBar,
+  StyleSheet,
+  View,
+} from 'react-native';
 import BootSplash from 'react-native-bootsplash';
-import Animated, {LinearTransition} from 'react-native-reanimated';
+import Animated, { LinearTransition } from 'react-native-reanimated';
 import AddCardModal from '../../components/Card/AddCardModal';
 import Fab from '../../components/Fab';
 import Container from '../../components/atoms/Container';
-import {CARD_HEIGHT, DEFAULT_PROFILE_ID} from '../../constants';
-import {useCardStore} from '../../store/cardStore';
-import {useProfileStore} from '../../store/profileStore';
+import { CARD_HEIGHT, DEFAULT_PROFILE_ID } from '../../constants';
+import { useCardStore } from '../../store/cardStore';
+import { useProfileStore } from '../../store/profileStore';
 import RenderCard from './RenderCard';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useMiscStore} from '../../store/miscStore';
-import {TCard} from '../../types';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useMiscStore } from '../../store/miscStore';
+import { TCard } from '../../types';
 import CardHeaders from './CardHeaders';
 
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
   const theme = useTheme();
-  const {bottom} = useSafeAreaInsets();
-  const {selectedCards, cards, deSelectAll, focusedId} = useCardStore(
-    state => ({
-      selectedCards: state.selectedCards,
-      deSelectAll: state.deSelectAll,
-      cards: state.cards,
-      focusedId: state.focusedCard,
-    }),
-  );
+  const { bottom } = useSafeAreaInsets();
+  const selectedCards = useCardStore(state => state.selectedCards);
+  const cards = useCardStore(state => state.cards);
+  const deSelectAll = useCardStore(state => state.deSelectAll);
+  const focusedId = useCardStore(state => state.focusedCard);
 
   const listRef = useRef<FlatList>(null);
   const selectedProfile = useProfileStore(state => state.selectedProfileId);
@@ -87,7 +89,8 @@ const Cards = () => {
       onLayout={() => {
         BootSplash.hide();
       }}
-      style={[styles.container, {paddingBottom: bottom}]}>
+      style={[styles.container, { paddingBottom: bottom }]}
+    >
       <StatusBar backgroundColor={theme['bg-main']} />
       <CardHeaders />
       <Animated.FlatList

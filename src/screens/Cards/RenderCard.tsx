@@ -1,27 +1,27 @@
 import Clipboard from '@react-native-clipboard/clipboard';
-import React, {useEffect, useState} from 'react';
-import {GestureResponderEvent, View} from 'react-native';
-import {useToast} from 'react-native-toast-notifications';
+import React, { useEffect, useState } from 'react';
+import { GestureResponderEvent, View } from 'react-native';
+import { useToast } from 'react-native-toast-notifications';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Typography from '../../components/atoms/Typography';
-import {useCardStore} from '../../store/cardStore';
-import {TCard} from '../../types/card';
-import {authenticateLocal} from '../../utils/authenticateLocal';
+import { useCardStore } from '../../store/cardStore';
+import { TCard } from '../../types/card';
+import { authenticateLocal } from '../../utils/authenticateLocal';
 import SwipeContainer from '../../components/Molecules/SwipeContainer';
 import Animated, {
   Easing,
   FadeIn,
   ZoomOut,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
-import {CARD_HEIGHT} from '../../constants';
-import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
-import {getMaxText} from 'commonutil-core';
+import { CARD_HEIGHT } from '../../constants';
+import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
+import { getMaxText } from 'commonutil-core';
+import { runOnJS } from 'react-native-worklets';
 const RenderCard = (card: TCard) => {
   const opacity = useSharedValue(1);
   const theme = useTheme();
@@ -31,20 +31,11 @@ const RenderCard = (card: TCard) => {
     opacity: opacity.value,
   }));
 
-  const {
-    selectedCards,
-    toggleCardSelection,
-    focusedId,
-    setFocusedCard,
-    unPinCard,
-  } = useCardStore(state => ({
-    toggleCardSelection: state.toggleCardSelection,
-    selectedCards: state.selectedCards,
-    deSelectAll: state.deSelectAll,
-    focusedId: state.focusedCard,
-    setFocusedCard: state.setFocusedCard,
-    unPinCard: state.unPinCard,
-  }));
+  const selectedCards = useCardStore(state => state.selectedCards);
+  const toggleCardSelection = useCardStore(state => state.toggleCardSelection);
+  const focusedId = useCardStore(state => state.focusedCard);
+  const setFocusedCard = useCardStore(state => state.setFocusedCard);
+  const unPinCard = useCardStore(state => state.unPinCard);
   const removeCards = useCardStore(state => state.removeCards);
 
   const [showCVV, setShowCVV] = useState(false);
@@ -62,7 +53,7 @@ const RenderCard = (card: TCard) => {
         setShowCVV(false);
       }
     } catch (e) {
-      console.log({e});
+      console.log({ e });
     }
   };
 
@@ -83,7 +74,7 @@ const RenderCard = (card: TCard) => {
 
   const copyContent = async (whatToCopy: 'NameOnCard' | 'cardNumber') => {
     Clipboard.setString(card[whatToCopy].replaceAll('-', ''));
-    toast.show(`${whatToCopy} is copied.`, {duration: 1500});
+    toast.show(`${whatToCopy} is copied.`, { duration: 1500 });
   };
 
   useEffect(() => {
@@ -110,17 +101,20 @@ const RenderCard = (card: TCard) => {
     <Animated.View
       entering={FadeIn}
       style={[styles.card, breath]}
-      exiting={ZoomOut}>
+      exiting={ZoomOut}
+    >
       <PressableWithFeedback
         onLongPress={handleLongPress}
         onPress={handlePress}
         delayLongPress={1000}
-        style={[styles.cardContainer]}>
+        style={[styles.cardContainer]}
+      >
         <SwipeContainer
           getSwipedValue={value => {
             setIsSwiped(value);
           }}
-          onRightActionPress={() => removeCards([card.cardNumber])}>
+          onRightActionPress={() => removeCards([card.cardNumber])}
+        >
           <Animated.View
             style={[
               styles.cardContent,
@@ -130,7 +124,8 @@ const RenderCard = (card: TCard) => {
                   : theme['bg-card'],
               },
               breath,
-            ]}>
+            ]}
+          >
             <View style={styles.cardNameAndNuberBox}>
               <View style={styles.cardNameAndNumber}>
                 <Typography style={styles.title}>
@@ -142,7 +137,8 @@ const RenderCard = (card: TCard) => {
               </View>
               <PressableWithFeedback
                 onPress={() => copyContent('cardNumber')}
-                style={[styles.Button]}>
+                style={[styles.Button]}
+              >
                 <MaterialIcon
                   onPress={() => copyContent('cardNumber')}
                   color={theme['bg-main']}
@@ -164,11 +160,13 @@ const RenderCard = (card: TCard) => {
               </View>
               <PressableWithFeedback
                 onPress={() => toggleCvv()}
-                style={[styles.cvvButton]}>
+                style={[styles.cvvButton]}
+              >
                 <Typography
                   style={{
                     color: theme['bg-main'],
-                  }}>
+                  }}
+                >
                   {showCVV ? 'Hide CVV' : 'View CVV'}
                 </Typography>
               </PressableWithFeedback>

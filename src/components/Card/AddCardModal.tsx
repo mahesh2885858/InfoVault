@@ -1,23 +1,23 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {TextInput, View} from 'react-native';
-import {useCardStore} from '../../store/cardStore';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { TextInput, View } from 'react-native';
+import { useCardStore } from '../../store/cardStore';
 import ModalWrapper from '../ModalWrapper';
 import Box from '../atoms/Box';
 import Container from '../atoms/Container';
 import Typography from '../atoms/Typography';
 import ButtonsForForms from '../Molecules/ButtonsForForms';
-import {useProfileStore} from '../../store/profileStore';
-import {useProfileContext} from '../../context/ProfileContext';
+import { useProfileStore } from '../../store/profileStore';
+import { useProfileContext } from '../../context/ProfileContext';
 import PressableWithFeedback from '../PressableWithFeedback';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {HOME_PROFILE_ID, MAX_LENGTH_NAME} from '../../constants';
-import {uCFirst, isValidExpiryForCard} from 'commonutil-core';
+import { HOME_PROFILE_ID, MAX_LENGTH_NAME } from '../../constants';
+import { uCFirst, isValidExpiryForCard } from 'commonutil-core';
 
 import MTextInput from '../Molecules/MTextInput';
-import {TCardInput} from '../../types';
+import { TCardInput } from '../../types';
 
-import {Keyboard} from 'react-native';
-import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
+import { Keyboard } from 'react-native';
+import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
 
 type Props = {
   visible: boolean;
@@ -60,21 +60,23 @@ const PlaceholderTextColor = 'grey';
 const AddCardModal = (props: Props) => {
   const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
-  const {addCard, setFocusedCard} = useCardStore();
+  const { addCard, setFocusedCard } = useCardStore();
   const [cardInputs, setCardInputs] = useState<TCardInput>(initialCardInput);
   const cardNameRef = useRef<TextInput>(null);
   const expiryRef = useRef<TextInput>(null);
   const cardNumberRef = useRef<TextInput>(null);
   const cvvRef = useRef<TextInput>(null);
   const nameOnCardRef = useRef<TextInput>(null);
-  const {selectedProfileForNew} = useProfileStore(state => ({
-    selectedProfile: state.getSelectedProfile(),
-    selectedProfileForNew: state.profiles.find(
-      p => p.id === state.selectedProfileForAddingANewRecord,
-    ),
-  }));
+  const profiles = useProfileStore(state => state.profiles);
+  const selectedProfileForAddingANewRecord = useProfileStore(
+    state => state.selectedProfileForAddingANewRecord,
+  );
 
-  const {openProfileSelection} = useProfileContext()!;
+  const selectedProfileForNew = useMemo(() => {
+    return profiles.find(p => p.id === selectedProfileForAddingANewRecord);
+  }, [profiles, selectedProfileForAddingANewRecord]);
+
+  const { openProfileSelection } = useProfileContext()!;
 
   const formatCardNumber = useCallback((text: string) => {
     // Remove any existing dashes
@@ -96,7 +98,7 @@ const AddCardModal = (props: Props) => {
     clearError('cardNumber');
     setCardInputs(prev => ({
       ...prev,
-      cardNumber: {...prev.cardNumber, value: formatted},
+      cardNumber: { ...prev.cardNumber, value: formatted },
     }));
     if (formatted.length === 19) {
       expiryRef.current!.focus();
@@ -121,7 +123,7 @@ const AddCardModal = (props: Props) => {
       if (field === 'expiry') {
         t = formatExpiry(text);
         if (text.length === 5) {
-          const {error, status} = isValidExpiryForCard(text);
+          const { error, status } = isValidExpiryForCard(text);
 
           if (!status) {
             setCardInputs(prev => ({
@@ -144,7 +146,10 @@ const AddCardModal = (props: Props) => {
         }
       }
 
-      setCardInputs(prev => ({...prev, [field]: {...prev[field], value: t}}));
+      setCardInputs(prev => ({
+        ...prev,
+        [field]: { ...prev[field], value: t },
+      }));
     },
     [clearError, formatExpiry],
   );
@@ -218,11 +223,12 @@ const AddCardModal = (props: Props) => {
     return Object.keys(cardInputs).map(key => {
       if (!cardInputs[key as keyof TCardInput].error) return null;
       return (
-        <View style={{marginBottom: 5}} key={key}>
+        <View style={{ marginBottom: 5 }} key={key}>
           <Typography
             style={{
               color: theme['warning-text-with-bg'],
-            }}>
+            }}
+          >
             {uCFirst(key)} : {cardInputs[key as keyof TCardInput].error}
           </Typography>
         </View>
@@ -240,22 +246,25 @@ const AddCardModal = (props: Props) => {
       width={'90%'}
       onClose={close}
       bg={theme['bg-main']}
-      visible={props.visible}>
+      visible={props.visible}
+    >
       <Container style={styles.cardContainer}>
         {anyErrors && <View style={styles.errorBox}>{renderErrors()}</View>}
         <View style={styles.profileSwitch}>
           <Typography>Card will be saved in : </Typography>
           <PressableWithFeedback
-            onPress={() => openProfileSelection({renderForNew: true})}
-            style={styles.switch}>
+            onPress={() => openProfileSelection({ renderForNew: true })}
+            style={styles.switch}
+          >
             <Typography
               style={{
                 color: theme['bg-main'],
-              }}>
+              }}
+            >
               {selectedProfileForNew?.name ?? ''}
             </Typography>
             <MaterialIcon
-              onPress={() => openProfileSelection({renderForNew: true})}
+              onPress={() => openProfileSelection({ renderForNew: true })}
               name="chevron-down"
               color={theme['bg-main']}
               size={25}

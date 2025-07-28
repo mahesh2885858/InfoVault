@@ -1,11 +1,11 @@
-import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
+import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
 import React from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Typography from '../../components/atoms/Typography';
-import {useProfileContext} from '../../context/ProfileContext';
-import {useCardStore} from '../../store/cardStore';
-import {useProfileStore} from '../../store/profileStore';
+import { useProfileContext } from '../../context/ProfileContext';
+import { useCardStore } from '../../store/cardStore';
+import { useProfileStore } from '../../store/profileStore';
 
 const CardHeaderRight = () => {
   const styles = useStyleSheet(themedStyles);
@@ -15,18 +15,17 @@ const CardHeaderRight = () => {
   const removeCards = useCardStore(state => state.removeCards);
   const togglePinCard = useCardStore(state => state.togglePinCard);
   const deSelectAll = useCardStore(state => state.deSelectAll);
-  const {openProfileSelection} = useProfileContext()!;
-  const {selectedProfile} = useProfileStore(state => ({
-    selectedProfile: state.getSelectedProfile(),
-  }));
+  const { openProfileSelection } = useProfileContext()!;
+  const selectedProfile = useProfileStore(state => state.getSelectedProfile);
 
   if (selectedCards.length === 0) {
     return (
       <PressableWithFeedback
         onPress={() => openProfileSelection()}
-        style={styles.switch}>
+        style={styles.switch}
+      >
         <Typography style={styles.text}>
-          {selectedProfile?.name ?? ''}
+          {selectedProfile()?.name ?? ''}
         </Typography>
         <MaterialIcon
           onPress={() => openProfileSelection()}
@@ -41,7 +40,8 @@ const CardHeaderRight = () => {
   return (
     <>
       <PressableWithFeedback
-        onPress={() => removeCards(selectedCards.map(c => c.cardNumber))}>
+        onPress={() => removeCards(selectedCards.map(c => c.cardNumber))}
+      >
         <MaterialIcon name="delete" size={24} color={theme['text-primary']} />
       </PressableWithFeedback>
       {selectedCards.length === 1 && (
@@ -49,7 +49,8 @@ const CardHeaderRight = () => {
           onPress={() => {
             togglePinCard();
             deSelectAll();
-          }}>
+          }}
+        >
           <MaterialIcon name="pin" size={24} color={theme['text-primary']} />
         </PressableWithFeedback>
       )}

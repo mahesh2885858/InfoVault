@@ -1,11 +1,11 @@
 import React from 'react';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
-import {usePasswordsStore} from '../../store/passwordStore';
+import { usePasswordsStore } from '../../store/passwordStore';
 import Typography from '../../components/atoms/Typography';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useProfileContext} from '../../context/ProfileContext';
-import {useProfileStore} from '../../store/profileStore';
-import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
+import { useProfileContext } from '../../context/ProfileContext';
+import { useProfileStore } from '../../store/profileStore';
+import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
 
 const PasswordHeaderRight = () => {
   const styles = useStyleSheet(themedStyles);
@@ -14,17 +14,16 @@ const PasswordHeaderRight = () => {
   const deletePasswords = usePasswordsStore(state => state.deletePasswords);
   const togglePinPassword = usePasswordsStore(state => state.togglePinPassword);
   const deSelectAll = usePasswordsStore(state => state.deSelectAll);
-  const {openProfileSelection} = useProfileContext()!;
-  const {selectedProfile} = useProfileStore(state => ({
-    selectedProfile: state.getSelectedProfile(),
-  }));
+  const { openProfileSelection } = useProfileContext()!;
+  const selectedProfile = useProfileStore(state => state.getSelectedProfile);
   if (selectedPasswords.length === 0) {
     return (
       <PressableWithFeedback
         onPress={() => openProfileSelection()}
-        style={styles.switch}>
+        style={styles.switch}
+      >
         <Typography style={styles.text}>
-          {selectedProfile?.name ?? 'Mahesh'}
+          {selectedProfile()?.name ?? 'Mahesh'}
         </Typography>
         <MaterialIcon
           onPress={() => openProfileSelection()}
@@ -41,7 +40,8 @@ const PasswordHeaderRight = () => {
       <PressableWithFeedback
         onPress={() => {
           deletePasswords();
-        }}>
+        }}
+      >
         <MaterialIcon name="delete" size={24} color={theme['text-primary']} />
       </PressableWithFeedback>
       <PressableWithFeedback
@@ -49,7 +49,8 @@ const PasswordHeaderRight = () => {
         onPress={() => {
           togglePinPassword();
           deSelectAll();
-        }}>
+        }}
+      >
         <MaterialIcon name="pin" size={24} color={theme['text-primary']} />
       </PressableWithFeedback>
     </>

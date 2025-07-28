@@ -1,22 +1,22 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {TextInput, View} from 'react-native';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { TextInput, View } from 'react-native';
 
-import {TPasswordInput} from '../../types';
-import {usePasswordsStore} from '../../store/passwordStore';
+import { TPasswordInput } from '../../types';
+import { usePasswordsStore } from '../../store/passwordStore';
 import ModalWrapper from '../../components/ModalWrapper';
 import Container from '../../components/atoms/Container';
 import Box from '../../components/atoms/Box';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ButtonsForForms from '../../components/Molecules/ButtonsForForms';
-import {useProfileStore} from '../../store/profileStore';
+import { useProfileStore } from '../../store/profileStore';
 import Typography from '../../components/atoms/Typography';
-import {HOME_PROFILE_ID, MAX_LENGTH_NAME} from '../../constants';
-import {useProfileContext} from '../../context/ProfileContext';
-import {TBaseInput} from '../../types';
+import { HOME_PROFILE_ID, MAX_LENGTH_NAME } from '../../constants';
+import { useProfileContext } from '../../context/ProfileContext';
+import { TBaseInput } from '../../types';
 import MTextInput from '../../components/Molecules/MTextInput';
-import {uCFirst} from 'commonutil-core';
-import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
+import { uCFirst } from 'commonutil-core';
+import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
 
 type Props = {
   visible: boolean;
@@ -38,10 +38,10 @@ const AddPasswordModal = (props: Props) => {
   const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
   const PlaceholderTextColor = theme['text-secondary'];
-  const {addPassword, setFocusedPassword} = usePasswordsStore(state => ({
-    addPassword: state.addPassword,
-    setFocusedPassword: state.setFocusedPassword,
-  }));
+  const addPassword = usePasswordsStore(state => state.addPassword);
+  const setFocusedPassword = usePasswordsStore(
+    state => state.setFocusedPassword,
+  );
   const [passwordInputs, setPasswordInputs] =
     useState<TPasswordInput>(initState);
   const userNameRef = useRef<TextInput>(null);
@@ -49,14 +49,15 @@ const AddPasswordModal = (props: Props) => {
   const websiteRef = useRef<TextInput>(null);
   const [showPassword, setShowPassword] = useState(false);
 
-  const {selectedProfileForNew} = useProfileStore(state => ({
-    selectedProfile: state.getSelectedProfile(),
-    selectedProfileForNew: state.profiles.find(
-      p => p.id === state.selectedProfileForAddingANewRecord,
-    ),
-  }));
+  const profiles = useProfileStore(state => state.profiles);
+  const selectedProfileForAddingANewRecord = useProfileStore(
+    state => state.selectedProfileForAddingANewRecord,
+  );
 
-  const {openProfileSelection} = useProfileContext()!;
+  const selectedProfileForNew = useMemo(() => {
+    return profiles.find(p => p.id === selectedProfileForAddingANewRecord);
+  }, [profiles, selectedProfileForAddingANewRecord]);
+  const { openProfileSelection } = useProfileContext()!;
 
   const togglePasswordVisibility = async () => {
     setShowPassword(p => !p);
@@ -68,7 +69,7 @@ const AddPasswordModal = (props: Props) => {
     }
     setPasswordInputs(prev => ({
       ...prev,
-      [field]: {...prev[field], value: text, error: ''},
+      [field]: { ...prev[field], value: text, error: '' },
     }));
   };
 
@@ -102,7 +103,7 @@ const AddPasswordModal = (props: Props) => {
 
   const AddAPassword = () => {
     if (!validateInputs(passwordInputs)) return;
-    const {password, username, website} = passwordInputs;
+    const { password, username, website } = passwordInputs;
     const id = String(Date.now());
     addPassword({
       password: password.value,
@@ -117,8 +118,8 @@ const AddPasswordModal = (props: Props) => {
     props.setVisible(false);
   };
 
-  const moveToNext = (nextRef: React.RefObject<TextInput>) => {
-    nextRef.current?.focus();
+  const moveToNext = (nextRef: React.RefObject<TextInput | null>) => {
+    nextRef?.current?.focus();
   };
 
   const anyErrors = useMemo(() => {
@@ -132,7 +133,7 @@ const AddPasswordModal = (props: Props) => {
       if (!passwordInputs[key as keyof TPasswordInput].error) return null;
       return (
         <View key={key}>
-          <Typography style={{color: theme['warning-text-with-bg']}}>
+          <Typography style={{ color: theme['warning-text-with-bg'] }}>
             {uCFirst(key)} : {passwordInputs[key as keyof TPasswordInput].error}
           </Typography>
         </View>
@@ -150,23 +151,26 @@ const AddPasswordModal = (props: Props) => {
       width={'90%'}
       onClose={() => closeModal()}
       bg={theme['bg-main']}
-      visible={props.visible}>
+      visible={props.visible}
+    >
       <Container style={styles.cardContainer}>
         {anyErrors && <View style={styles.errorBox}>{renderErrors()}</View>}
 
         <View style={styles.profileSwitch}>
           <Typography>Card will be saved in : </Typography>
           <PressableWithFeedback
-            onPress={() => openProfileSelection({renderForNew: true})}
-            style={styles.switch}>
+            onPress={() => openProfileSelection({ renderForNew: true })}
+            style={styles.switch}
+          >
             <Typography
               style={{
                 color: theme['bg-main'],
-              }}>
+              }}
+            >
               {selectedProfileForNew?.name ?? ''}
             </Typography>
             <MaterialIcon
-              onPress={() => openProfileSelection({renderForNew: true})}
+              onPress={() => openProfileSelection({ renderForNew: true })}
               name="chevron-down"
               color={theme['bg-main']}
               size={25}
@@ -205,12 +209,16 @@ const AddPasswordModal = (props: Props) => {
           </View>
 
           <View style={styles.passwordBox}>
-            <View style={{width: '100%'}}>
+            <View style={{ width: '100%' }}>
               <MTextInput
                 value={passwordInputs.password.value}
                 ref={passwordRef}
                 onChangeText={t => onChange(t, 'password')}
-                style={[styles.textInput, styles.cardText, {paddingRight: 50}]}
+                style={[
+                  styles.textInput,
+                  styles.cardText,
+                  { paddingRight: 50 },
+                ]}
                 placeholderTextColor={PlaceholderTextColor}
                 placeholder="Password"
                 returnKeyType="next"
@@ -220,7 +228,8 @@ const AddPasswordModal = (props: Props) => {
               />
               <PressableWithFeedback
                 onPress={() => togglePasswordVisibility()}
-                style={styles.eyeIcon}>
+                style={styles.eyeIcon}
+              >
                 <MaterialIcon
                   name={showPassword ? 'eye-off-outline' : 'eye-outline'}
                   size={20}
