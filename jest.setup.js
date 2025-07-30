@@ -21,7 +21,7 @@ jest.mock('@react-native-clipboard/clipboard', () => ({
 jest.mock('react-native-vector-icons/MaterialCommunityIcons', () => 'Icon');
 
 jest.mock('react-native-safe-area-context', () => ({
-  SafeAreaProvider: ({ children }: { children: React.ReactNode }) => children,
+  SafeAreaProvider: ({ children }) => children,
   useSafeAreaInsets: () => ({
     top: 0,
     bottom: 0,
