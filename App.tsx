@@ -14,6 +14,7 @@ import { default as appTheme } from './src/theme/appTheme.json';
 import { default as dark } from './src/theme/dark.json';
 import { default as light } from './src/theme/light.json';
 import './src/translations/i18n';
+import { CustomDark, CustomLight } from './theme';
 
 function App(): React.JSX.Element {
   const theme = useUiStore(state => state.theme);
@@ -34,7 +35,7 @@ function App(): React.JSX.Element {
         />
 
         <GestureHandlerRootView style={{ flex: 1 }}>
-          <PaperProvider>
+          <PaperProvider theme={theme === 'dark' ? CustomDark : CustomLight}>
             <AuthContextProvider>
               <ProfileContextProvider>
                 <ToastProvider>

@@ -1,11 +1,9 @@
 import React from 'react';
-import {useTheme} from '@ui-kitten/components';
-import {Text, type TextProps} from '@ui-kitten/components';
+import { Text } from 'react-native-paper';
 
-const Typography = (props: TextProps) => {
-  const theme = useTheme();
+const Typography = (props: any) => {
   return (
-    <Text {...props} style={[{color: theme['text-primary']}, props.style]}>
+    <Text {...props} style={[props.style]}>
       {props.children}
     </Text>
   );

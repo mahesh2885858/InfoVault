@@ -1,11 +1,12 @@
-import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
-import React, {useState} from 'react';
-import {View} from 'react-native';
+import { StyleService, useStyleSheet } from '@ui-kitten/components';
+import React, { useState } from 'react';
+import { View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SearchBox from '../../components/Molecules/SearchBox';
-import {useCardStore} from '../../store/cardStore';
+import { useCardStore } from '../../store/cardStore';
 import CardHeaderRight from './CardHeaderRight';
 import CardHeaderTitleWithBackButton from './CardHeaderTitleWithBackButton';
+import { useTheme } from 'react-native-paper';
 
 const CardHeaders = () => {
   const styles = useStyleSheet(themedStyles);
@@ -14,7 +15,9 @@ const CardHeaders = () => {
   const selectedCards = useCardStore(state => state.selectedCards);
 
   return (
-    <View style={[styles.container]}>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       {renderSearch ? (
         <SearchBox
           mode="cards"
@@ -29,8 +32,8 @@ const CardHeaders = () => {
               <MaterialIcon
                 onPress={() => setRenderSearch(true)}
                 name="magnify"
-                color={theme['text-primary']}
                 size={25}
+                color={theme.colors.onBackground}
               />
             )}
             <CardHeaderRight />
@@ -42,7 +45,6 @@ const CardHeaders = () => {
 };
 const themedStyles = StyleService.create({
   container: {
-    backgroundColor: 'bg-main',
     display: 'flex',
     flexDirection: 'row',
     height: 60,
@@ -51,7 +53,7 @@ const themedStyles = StyleService.create({
     paddingHorizontal: 20,
     paddingTop: 15,
   },
-  box: {flexDirection: 'row', alignItems: 'center'},
+  box: { flexDirection: 'row', alignItems: 'center' },
   gap: {
     gap: 10,
   },

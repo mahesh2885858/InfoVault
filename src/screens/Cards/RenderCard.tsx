@@ -22,10 +22,12 @@ import { CARD_HEIGHT } from '../../constants';
 import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
 import { getMaxText } from 'commonutil-core';
 import { runOnJS } from 'react-native-worklets';
+import { useTheme as usePaper } from 'react-native-paper';
 const RenderCard = (card: TCard) => {
   const opacity = useSharedValue(1);
   const theme = useTheme();
   const styles = useStyleSheet(themedStyles);
+  const paper = usePaper();
 
   const breath = useAnimatedStyle(() => ({
     opacity: opacity.value,
@@ -120,18 +122,29 @@ const RenderCard = (card: TCard) => {
               styles.cardContent,
               {
                 backgroundColor: card.isSelected
-                  ? theme['bg-card-selected']
-                  : theme['bg-card'],
+                  ? paper.colors.surfaceDisabled
+                  : paper.colors.surfaceVariant,
               },
               breath,
             ]}
           >
             <View style={styles.cardNameAndNuberBox}>
               <View style={styles.cardNameAndNumber}>
-                <Typography style={styles.title}>
+                <Typography
+                  style={[
+                    styles.title,
+                    { color: paper.colors.onSurfaceVariant },
+                  ]}
+                >
                   {getMaxText(card.cardName, 22)}
                 </Typography>
-                <Typography style={styles.cardNumberText}>
+                <Typography
+                  style={[
+                    styles.cardNumberText,
+
+                    { color: paper.colors.onSurface },
+                  ]}
+                >
                   {card.cardNumber}
                 </Typography>
               </View>
@@ -149,11 +162,29 @@ const RenderCard = (card: TCard) => {
             </View>
             <View style={styles.cardExpiryCvvButtonBox}>
               <View style={styles.expiryAndCvvBox}>
-                <Typography style={styles.title}>Valid Thru</Typography>
-                <Typography style={styles.cardText}> {card.expiry}</Typography>
+                <Typography
+                  style={[
+                    styles.title,
+                    { color: paper.colors.onSurfaceVariant },
+                  ]}
+                >
+                  Valid Thru
+                </Typography>
+                <Typography
+                  style={[styles.cardText, { color: paper.colors.onSurface }]}
+                >
+                  {card.expiry}
+                </Typography>
               </View>
               <View style={styles.expiryAndCvvBox}>
-                <Typography style={styles.title}>CVV</Typography>
+                <Typography
+                  style={[
+                    styles.title,
+                    { color: paper.colors.onSurfaceVariant },
+                  ]}
+                >
+                  CVV
+                </Typography>
                 <Typography style={styles.cardText}>
                   {showCVV ? card.CVV : '***'}
                 </Typography>
@@ -242,7 +273,6 @@ const themedStyles = StyleService.create({
     backgroundColor: 'text-primary',
   },
   title: {
-    color: 'text-secondary',
     fontSize: 16,
     fontWeight: '600',
     textTransform: 'uppercase',
