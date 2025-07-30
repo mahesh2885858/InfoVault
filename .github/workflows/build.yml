@@ -38,6 +38,10 @@ jobs:
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/my-upload-key.keystore
 
+      - name: Run Codegen
+        run: |
+          cd android && ./gradlew generateCodegenArtifactsFromSchema
+
       # Build Android Release
       - name: Build Android Release
         run: |
