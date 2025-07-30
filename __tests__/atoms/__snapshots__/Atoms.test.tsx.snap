@@ -7,9 +7,13 @@ exports[`renders Container correctly 1`] = `
   style={
     [
       {
-        "backgroundColor": "#1b0017",
+        "backgroundColor": undefined,
       },
       undefined,
+      {
+        "paddingBottom": 0,
+        "paddingTop": 0,
+      },
     ]
   }
 />
