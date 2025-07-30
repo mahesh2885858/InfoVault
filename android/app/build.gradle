@@ -84,8 +84,8 @@ android {
         applicationId "com.infoVault.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 16
-        versionName "1.0.15"
+        versionCode 20
+        versionName "1.4"
     }
     signingConfigs {
         debug {
