@@ -1,18 +1,24 @@
 import { DrawerActions, useNavigation } from '@react-navigation/native';
-import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Typography from '../../components/atoms/Typography';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 
 const ProfileHeader = () => {
-  const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
   const navigation = useNavigation();
 
   return (
-    <View style={[styles.container]}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: theme.colors.background,
+        },
+      ]}
+    >
       <View style={styles.box}>
         <View style={styles.header}>
           <PressableWithFeedback>
@@ -22,7 +28,7 @@ const ProfileHeader = () => {
               }}
               name="menu"
               size={24}
-              color={theme['text-primary']}
+              color={theme.colors.onBackground}
             />
           </PressableWithFeedback>
 
@@ -34,9 +40,8 @@ const ProfileHeader = () => {
 };
 export default ProfileHeader;
 
-const themedStyles = StyleService.create({
+const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'bg-main',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',

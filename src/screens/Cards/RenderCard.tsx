@@ -150,11 +150,16 @@ const RenderCard = (card: TCard) => {
               </View>
               <PressableWithFeedback
                 onPress={() => copyContent('cardNumber')}
-                style={[styles.Button]}
+                style={[
+                  styles.Button,
+                  {
+                    backgroundColor: paper.colors.inverseSurface,
+                  },
+                ]}
               >
                 <MaterialIcon
                   onPress={() => copyContent('cardNumber')}
-                  color={theme['bg-main']}
+                  color={paper.colors.inverseOnSurface}
                   name="content-copy"
                   size={15}
                 />
@@ -191,11 +196,16 @@ const RenderCard = (card: TCard) => {
               </View>
               <PressableWithFeedback
                 onPress={() => toggleCvv()}
-                style={[styles.cvvButton]}
+                style={[
+                  styles.cvvButton,
+                  {
+                    backgroundColor: paper.colors.inverseSurface,
+                  },
+                ]}
               >
                 <Typography
                   style={{
-                    color: theme['bg-main'],
+                    color: paper.colors.inverseOnSurface,
                   }}
                 >
                   {showCVV ? 'Hide CVV' : 'View CVV'}
@@ -275,18 +285,15 @@ const themedStyles = StyleService.create({
   title: {
     fontSize: 16,
     fontWeight: '600',
-    textTransform: 'uppercase',
   },
   cardNumberText: {
     fontSize: 17,
     fontWeight: '700',
-    textTransform: 'uppercase',
   },
 
   cardText: {
     fontSize: 17,
     fontWeight: '500',
-    textTransform: 'uppercase',
   },
   swipeableChild: {
     alignItems: 'center',

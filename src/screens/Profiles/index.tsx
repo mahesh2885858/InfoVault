@@ -1,16 +1,16 @@
-import { StyleService, useStyleSheet } from '@ui-kitten/components';
 import React, { useState } from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Fab from '../../components/Fab';
 import { useProfileStore } from '../../store/profileStore';
 import AddProfileModal from './AddProfileModal';
-import RenderProfile from './RenderProfile';
 import ProfileHeader from './ProfileHeader';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import RenderProfile from './RenderProfile';
 
 const Profiles = () => {
+  const theme = useTheme();
   const { top, bottom } = useSafeAreaInsets();
-  const styles = useStyleSheet(themedStyles);
   const [renderAddModal, setRenderAddModal] = useState(false);
   const [mode, setMode] = useState<'new' | 'edit'>('new');
   const profiles = useProfileStore(state => state.profiles);
@@ -33,7 +33,11 @@ const Profiles = () => {
     <View
       style={[
         styles.container,
-        { paddingTop: top + 20, paddingBottom: bottom },
+        {
+          paddingTop: top + 20,
+          paddingBottom: bottom,
+          backgroundColor: theme.colors.background,
+        },
       ]}
     >
       <ProfileHeader />
@@ -61,10 +65,9 @@ const Profiles = () => {
   );
 };
 export default Profiles;
-const themedStyles = StyleService.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'bg-main',
   },
   fab: {
     position: 'absolute',

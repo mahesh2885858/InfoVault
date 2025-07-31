@@ -1,15 +1,14 @@
-import { StyleService, useStyleSheet } from '@ui-kitten/components';
 import React from 'react';
+import { StyleSheet } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Typography from '../../components/atoms/Typography';
 import { useProfileContext } from '../../context/ProfileContext';
 import { useCardStore } from '../../store/cardStore';
 import { useProfileStore } from '../../store/profileStore';
-import { useTheme } from 'react-native-paper';
 
 const CardHeaderRight = () => {
-  const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
 
   const selectedCards = useCardStore(state => state.selectedCards);
@@ -23,7 +22,12 @@ const CardHeaderRight = () => {
     return (
       <PressableWithFeedback
         onPress={() => openProfileSelection()}
-        style={styles.switch}
+        style={[
+          styles.switch,
+          {
+            backgroundColor: theme.colors.surfaceVariant,
+          },
+        ]}
       >
         <Typography style={{ color: theme.colors.onBackground }}>
           {selectedProfile()?.name ?? ''}
@@ -69,7 +73,7 @@ const CardHeaderRight = () => {
 
 export default CardHeaderRight;
 
-const themedStyles = StyleService.create({
+const styles = StyleSheet.create({
   switch: {
     flexDirection: 'row',
     paddingHorizontal: 5,
