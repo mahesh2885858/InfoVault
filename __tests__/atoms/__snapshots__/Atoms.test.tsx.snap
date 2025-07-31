@@ -7,7 +7,7 @@ exports[`renders Container correctly 1`] = `
   style={
     [
       {
-        "backgroundColor": undefined,
+        "backgroundColor": "rgba(255, 251, 254, 1)",
       },
       undefined,
       {

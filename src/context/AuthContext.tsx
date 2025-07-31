@@ -1,12 +1,15 @@
-import React, {useContext, useState, useEffect, useCallback} from 'react';
-import {createContext} from 'react';
-import {BackHandler, Modal} from 'react-native';
-import {View} from 'react-native';
-import {StyleSheet, AppState} from 'react-native';
-import Typography from '../components/atoms/Typography';
-import {authenticateLocal} from '../utils/authenticateLocal';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import { AppState, BackHandler, Modal, StyleSheet, View } from 'react-native';
 import Button from '../components/atoms/Button';
-import {StyleService, useStyleSheet} from '@ui-kitten/components';
+import Typography from '../components/atoms/Typography';
+import { authenticateLocal } from '../utils/authenticateLocal';
+import { useTheme } from 'react-native-paper';
 
 export const AuthContext = createContext<{
   setIsAuthenticated: (choice: boolean) => void;
@@ -22,9 +25,9 @@ export const AuthContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const theme = useTheme();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
-  const styles = useStyleSheet(themedStyles);
 
   const authenticate = useCallback(async () => {
     setIsAuthenticating(true);
@@ -47,11 +50,24 @@ export const AuthContextProvider = ({
     <AuthContext.Provider
       value={{
         setIsAuthenticated: choice => setIsAuthenticated(choice),
-      }}>
+      }}
+    >
       {(!isAuthenticated || AppState.currentState === 'background') && (
         <Modal visible={!isAuthenticated} transparent>
-          <View style={[StyleSheet.absoluteFill, styles.container]}>
-            <Typography>
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              styles.container,
+              {
+                backgroundColor: theme.colors.background,
+              },
+            ]}
+          >
+            <Typography
+              style={{
+                color: theme.colors.onBackground,
+              }}
+            >
               {isAuthenticating
                 ? 'Authenticating user'
                 : 'Not authenticated please authenticate your self.'}
@@ -70,9 +86,8 @@ export const AuthContextProvider = ({
   );
 };
 
-const themedStyles = StyleService.create({
+const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'bg-main',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 20,
