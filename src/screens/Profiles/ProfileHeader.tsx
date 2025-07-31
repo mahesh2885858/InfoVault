@@ -32,7 +32,16 @@ const ProfileHeader = () => {
             />
           </PressableWithFeedback>
 
-          <Typography style={styles.text}>Profiles</Typography>
+          <Typography
+            style={[
+              styles.text,
+              {
+                color: theme.colors.onBackground,
+              },
+            ]}
+          >
+            Profiles
+          </Typography>
         </View>
       </View>
     </View>

@@ -3,14 +3,13 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Typography from '../atoms/Typography';
 import PressableWithFeedback from '../PressableWithFeedback';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
-import { StyleService } from '@ui-kitten/components';
-import { useTheme } from 'react-native-paper';
 
 const CustomDrawer = (props: DrawerContentComponentProps) => {
   const navigation = useNavigation();
@@ -43,7 +42,7 @@ const CustomDrawer = (props: DrawerContentComponentProps) => {
     </DrawerContentScrollView>
   );
 };
-const styles = StyleService.create({
+const styles = StyleSheet.create({
   container: {
     paddingLeft: 20,
     paddingTop: 30,

@@ -1,14 +1,8 @@
 import Clipboard from '@react-native-clipboard/clipboard';
+import { getMaxText } from 'commonutil-core';
 import React, { useEffect, useState } from 'react';
-import { GestureResponderEvent, View } from 'react-native';
-import { useToast } from 'react-native-toast-notifications';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import PressableWithFeedback from '../../components/PressableWithFeedback';
-import Typography from '../../components/atoms/Typography';
-import { useCardStore } from '../../store/cardStore';
-import { TCard } from '../../types/card';
-import { authenticateLocal } from '../../utils/authenticateLocal';
-import SwipeContainer from '../../components/Molecules/SwipeContainer';
+import { GestureResponderEvent, StyleSheet, View } from 'react-native';
+import { useTheme as usePaper } from 'react-native-paper';
 import Animated, {
   Easing,
   FadeIn,
@@ -18,15 +12,18 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
-import { CARD_HEIGHT } from '../../constants';
-import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
-import { getMaxText } from 'commonutil-core';
+import { useToast } from 'react-native-toast-notifications';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { runOnJS } from 'react-native-worklets';
-import { useTheme as usePaper } from 'react-native-paper';
+import SwipeContainer from '../../components/Molecules/SwipeContainer';
+import PressableWithFeedback from '../../components/PressableWithFeedback';
+import Typography from '../../components/atoms/Typography';
+import { CARD_HEIGHT } from '../../constants';
+import { useCardStore } from '../../store/cardStore';
+import { TCard } from '../../types/card';
+import { authenticateLocal } from '../../utils/authenticateLocal';
 const RenderCard = (card: TCard) => {
   const opacity = useSharedValue(1);
-  const theme = useTheme();
-  const styles = useStyleSheet(themedStyles);
   const paper = usePaper();
 
   const breath = useAnimatedStyle(() => ({
@@ -220,7 +217,7 @@ const RenderCard = (card: TCard) => {
                 <MaterialIcon
                   name="pin"
                   size={20}
-                  color={theme['text-secondary']}
+                  color={paper.colors.onSurfaceVariant}
                   onPress={() => {
                     unPinCard(card.cardNumber);
                   }}
@@ -234,7 +231,7 @@ const RenderCard = (card: TCard) => {
   );
 };
 
-const themedStyles = StyleService.create({
+const styles = StyleSheet.create({
   card: {
     width: '100%',
     alignItems: 'center',
