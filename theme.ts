@@ -8,6 +8,13 @@ export const spacing = {
   lg: 24,
 };
 
+export const textSize = {
+  xs: 12,
+  sm: 14,
+  md: 16,
+  lg: 20,
+}
+
 const CustomLight: MD3Theme = {
   ...MD3LightTheme,
   version: 3,

@@ -502,7 +502,6 @@ const styles = StyleSheet.create({
   cardText: {
     fontSize: 15,
     fontWeight: '500',
-    textTransform: 'uppercase',
     color: 'text-primary',
   },
   switch: {

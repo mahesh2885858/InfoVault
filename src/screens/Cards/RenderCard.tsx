@@ -22,6 +22,7 @@ import { CARD_HEIGHT } from '../../constants';
 import { useCardStore } from '../../store/cardStore';
 import { TCard } from '../../types/card';
 import { authenticateLocal } from '../../utils/authenticateLocal';
+import { textSize } from '../../../theme';
 const RenderCard = (card: TCard) => {
   const opacity = useSharedValue(1);
   const paper = usePaper();
@@ -125,7 +126,7 @@ const RenderCard = (card: TCard) => {
               breath,
             ]}
           >
-            <View style={styles.cardNameAndNuberBox}>
+            <View style={styles.cardNameAndNumberBox}>
               <View style={styles.cardNameAndNumber}>
                 <Typography
                   style={[
@@ -185,7 +186,7 @@ const RenderCard = (card: TCard) => {
                     { color: paper.colors.onSurfaceVariant },
                   ]}
                 >
-                  CVV
+                  cvv
                 </Typography>
                 <Typography style={styles.cardText}>
                   {showCVV ? card.CVV : '***'}
@@ -248,7 +249,7 @@ const styles = StyleSheet.create({
     gap: 20,
     flexDirection: 'column',
   },
-  cardNameAndNuberBox: {
+  cardNameAndNumberBox: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -261,7 +262,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 7,
     borderRadius: 5,
-    backgroundColor: 'text-primary',
   },
   cardExpiryCvvButtonBox: {
     display: 'flex',
@@ -274,38 +274,22 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   cvvButton: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     paddingVertical: 7,
     borderRadius: 5,
     backgroundColor: 'text-primary',
   },
   title: {
-    fontSize: 16,
+    fontSize: textSize.sm,
     fontWeight: '600',
   },
   cardNumberText: {
-    fontSize: 17,
+    fontSize: textSize.md,
     fontWeight: '700',
   },
-
   cardText: {
-    fontSize: 17,
+    fontSize: textSize.md,
     fontWeight: '500',
-  },
-  swipeableChild: {
-    alignItems: 'center',
-  },
-  rightPanel: {
-    width: 50,
-    backgroundColor: '#AA3939',
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  deleteIcon: {
-    flex: 1,
-    justifyContent: 'center',
   },
   nameOnCard: {
     flexDirection: 'row',
