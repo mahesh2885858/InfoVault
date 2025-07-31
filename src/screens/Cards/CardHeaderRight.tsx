@@ -31,7 +31,7 @@ const CardHeaderRight = () => {
         <MaterialIcon
           onPress={() => openProfileSelection()}
           name="chevron-down"
-          color={theme.colors.background}
+          color={theme.colors.onBackground}
           size={25}
         />
       </PressableWithFeedback>
