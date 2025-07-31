@@ -1,23 +1,23 @@
+import { isValidExpiryForCard, uCFirst } from 'commonutil-core';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { TextInput, View } from 'react-native';
+import { StyleSheet, TextInput, View } from 'react-native';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { HOME_PROFILE_ID, MAX_LENGTH_NAME } from '../../constants';
+import { useProfileContext } from '../../context/ProfileContext';
 import { useCardStore } from '../../store/cardStore';
-import ModalWrapper from '../ModalWrapper';
+import { useProfileStore } from '../../store/profileStore';
 import Box from '../atoms/Box';
 import Container from '../atoms/Container';
 import Typography from '../atoms/Typography';
+import ModalWrapper from '../ModalWrapper';
 import ButtonsForForms from '../Molecules/ButtonsForForms';
-import { useProfileStore } from '../../store/profileStore';
-import { useProfileContext } from '../../context/ProfileContext';
 import PressableWithFeedback from '../PressableWithFeedback';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { HOME_PROFILE_ID, MAX_LENGTH_NAME } from '../../constants';
-import { uCFirst, isValidExpiryForCard } from 'commonutil-core';
 
-import MTextInput from '../Molecules/MTextInput';
 import { TCardInput } from '../../types';
+import MTextInput from '../Molecules/MTextInput';
 
 import { Keyboard } from 'react-native';
-import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
+import { useTheme } from 'react-native-paper';
 
 type Props = {
   visible: boolean;
@@ -55,11 +55,9 @@ const errorMessages: Record<keyof TCardInput, string> = {
   expiry: '',
 };
 
-const PlaceholderTextColor = 'grey';
-
 const AddCardModal = (props: Props) => {
-  const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
+  const PlaceholderTextColor = theme.colors.onSurfaceDisabled;
   const { addCard, setFocusedCard } = useCardStore();
   const [cardInputs, setCardInputs] = useState<TCardInput>(initialCardInput);
   const cardNameRef = useRef<TextInput>(null);
@@ -226,7 +224,7 @@ const AddCardModal = (props: Props) => {
         <View style={{ marginBottom: 5 }} key={key}>
           <Typography
             style={{
-              color: theme['warning-text-with-bg'],
+              color: theme.colors.onError,
             }}
           >
             {uCFirst(key)} : {cardInputs[key as keyof TCardInput].error}
@@ -245,20 +243,32 @@ const AddCardModal = (props: Props) => {
     <ModalWrapper
       width={'90%'}
       onClose={close}
-      bg={theme['bg-main']}
+      bg={theme.colors.background}
       visible={props.visible}
     >
-      <Container style={styles.cardContainer}>
+      <Container
+        style={[
+          styles.cardContainer,
+          {
+            backgroundColor: theme.colors.background,
+          },
+        ]}
+      >
         {anyErrors && <View style={styles.errorBox}>{renderErrors()}</View>}
         <View style={styles.profileSwitch}>
           <Typography>Card will be saved in : </Typography>
           <PressableWithFeedback
             onPress={() => openProfileSelection({ renderForNew: true })}
-            style={styles.switch}
+            style={[
+              styles.switch,
+              {
+                backgroundColor: theme.colors.inverseSurface,
+              },
+            ]}
           >
             <Typography
               style={{
-                color: theme['bg-main'],
+                color: theme.colors.inverseOnSurface,
               }}
             >
               {selectedProfileForNew?.name ?? ''}
@@ -266,12 +276,19 @@ const AddCardModal = (props: Props) => {
             <MaterialIcon
               onPress={() => openProfileSelection({ renderForNew: true })}
               name="chevron-down"
-              color={theme['bg-main']}
+              color={theme.colors.surfaceVariant}
               size={25}
             />
           </PressableWithFeedback>
         </View>
-        <Box style={[styles.cardContent]}>
+        <Box
+          style={[
+            styles.cardContent,
+            {
+              backgroundColor: theme.colors.surfaceVariant,
+            },
+          ]}
+        >
           <View style={styles.cardNameAndNumber}>
             <MTextInput
               value={cardInputs.cardName.value}
@@ -279,7 +296,13 @@ const AddCardModal = (props: Props) => {
               maxLength={MAX_LENGTH_NAME}
               ref={cardNameRef}
               onChangeText={t => onChange(t, 'cardName')}
-              style={[styles.textInput, styles.title]}
+              style={[
+                styles.textInput,
+                styles.title,
+                {
+                  color: theme.colors.onSurfaceVariant,
+                },
+              ]}
               placeholderTextColor={PlaceholderTextColor}
               placeholder="Card name"
               returnKeyType="next"
@@ -293,7 +316,14 @@ const AddCardModal = (props: Props) => {
               onChangeText={handleCardNumber}
               keyboardType="number-pad"
               maxLength={19}
-              style={[styles.textInput, styles.number, styles.cardText]}
+              style={[
+                styles.textInput,
+                styles.number,
+                styles.cardText,
+                {
+                  color: theme.colors.onSurfaceVariant,
+                },
+              ]}
               placeholderTextColor={PlaceholderTextColor}
               placeholder="Number"
               error={cardInputs.cardNumber.error}
@@ -302,14 +332,29 @@ const AddCardModal = (props: Props) => {
           </View>
           <View style={styles.cardExpiryCvvButtonBox}>
             <View style={styles.expiryAndCvvBox}>
-              <Typography style={styles.title}>Valid Thru</Typography>
+              <Typography
+                style={[
+                  styles.title,
+                  {
+                    color: theme.colors.onSurfaceDisabled,
+                  },
+                ]}
+              >
+                Valid Thru
+              </Typography>
               <MTextInput
                 ref={expiryRef}
                 value={cardInputs.expiry.value}
                 onChangeText={text => onChange(text, 'expiry')}
                 maxLength={5}
                 keyboardType="phone-pad"
-                style={[styles.textInput, styles.cardText]}
+                style={[
+                  styles.textInput,
+                  styles.cardText,
+                  {
+                    color: theme.colors.onSurfaceVariant,
+                  },
+                ]}
                 placeholderTextColor={PlaceholderTextColor}
                 placeholder="MM/YY"
                 error={cardInputs.expiry.error}
@@ -317,14 +362,29 @@ const AddCardModal = (props: Props) => {
               />
             </View>
             <View style={styles.expiryAndCvvBox}>
-              <Typography style={styles.title}>CVV</Typography>
+              <Typography
+                style={[
+                  styles.title,
+                  {
+                    color: theme.colors.onSurfaceDisabled,
+                  },
+                ]}
+              >
+                CVV
+              </Typography>
               <MTextInput
                 value={cardInputs.CVV.value}
                 maxLength={3}
                 ref={cvvRef}
                 keyboardType="number-pad"
                 onChangeText={t => onChange(t, 'CVV')}
-                style={[styles.textInput, styles.cardText]}
+                style={[
+                  styles.textInput,
+                  styles.cardText,
+                  {
+                    color: theme.colors.onSurfaceVariant,
+                  },
+                ]}
                 placeholderTextColor={PlaceholderTextColor}
                 placeholder="CVV"
                 error={cardInputs.CVV.error}
@@ -336,7 +396,13 @@ const AddCardModal = (props: Props) => {
             <MTextInput
               value={cardInputs.NameOnCard.value}
               onChangeText={t => onChange(t, 'NameOnCard')}
-              style={[styles.textInput, styles.cardText]}
+              style={[
+                styles.textInput,
+                styles.cardText,
+                {
+                  color: theme.colors.onSurfaceVariant,
+                },
+              ]}
               maxLength={MAX_LENGTH_NAME}
               ref={nameOnCardRef}
               placeholderTextColor={PlaceholderTextColor}
@@ -352,7 +418,7 @@ const AddCardModal = (props: Props) => {
   );
 };
 
-const themedStyles = StyleService.create({
+const styles = StyleSheet.create({
   content: {
     width: '85%',
     padding: 20,
@@ -427,12 +493,10 @@ const themedStyles = StyleService.create({
     color: 'text-primary',
     fontSize: 15,
     fontWeight: '600',
-    textTransform: 'uppercase',
   },
   cardNumberText: {
     fontSize: 15,
     fontWeight: '700',
-    textTransform: 'uppercase',
   },
 
   cardText: {

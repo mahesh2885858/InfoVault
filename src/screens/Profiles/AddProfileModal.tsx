@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import ModalWrapper from '../../components/ModalWrapper';
-import { TextInput } from 'react-native';
+import { StyleSheet, TextInput, View } from 'react-native';
 import Button from '../../components/atoms/Button';
-import { View } from 'react-native';
+import ModalWrapper from '../../components/ModalWrapper';
 
+import { useTheme } from 'react-native-paper';
 import { useProfileStore } from '../../store/profileStore';
-import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
 
 type TProps = {
   onClose: () => void;
@@ -15,7 +14,6 @@ type TProps = {
 
 const AddProfileModal = (props: TProps) => {
   const { mode = 'new' } = props;
-  const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
 
   const selectedId = useProfileStore(state => state.selectedProfileId);
@@ -50,9 +48,15 @@ const AddProfileModal = (props: TProps) => {
         <TextInput
           value={input}
           onChangeText={setInput}
-          style={styles.input}
-          placeholder="Add profile"
-          placeholderTextColor={theme['text-secondary']}
+          style={[
+            styles.input,
+            {
+              color: theme.colors.onSurface,
+              backgroundColor: theme.colors.surface,
+            },
+          ]}
+          placeholder="Click here to enter profile name"
+          placeholderTextColor={theme.colors.onSurfaceVariant}
         />
         <Button
           label={mode === 'new' ? 'Add' : 'Update'}
@@ -64,7 +68,7 @@ const AddProfileModal = (props: TProps) => {
 };
 export default AddProfileModal;
 
-const themedStyles = StyleService.create({
+const styles = StyleSheet.create({
   container: {
     width: '100%',
     alignItems: 'center',
@@ -72,11 +76,9 @@ const themedStyles = StyleService.create({
   },
   input: {
     width: '70%',
-    padding: 10,
+    paddingVertical: 15,
     paddingHorizontal: 20,
-    fontSize: 20,
-    backgroundColor: 'bg-main',
+    fontSize: 14,
     borderRadius: 10,
-    color: 'text-primary',
   },
 });

@@ -1,22 +1,21 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { TextInput, View } from 'react-native';
+import { StyleSheet, TextInput, View } from 'react-native';
 
-import { TPasswordInput } from '../../types';
-import { usePasswordsStore } from '../../store/passwordStore';
-import ModalWrapper from '../../components/ModalWrapper';
-import Container from '../../components/atoms/Container';
-import Box from '../../components/atoms/Box';
-import PressableWithFeedback from '../../components/PressableWithFeedback';
+import { uCFirst } from 'commonutil-core';
+import { useTheme } from 'react-native-paper';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import ButtonsForForms from '../../components/Molecules/ButtonsForForms';
-import { useProfileStore } from '../../store/profileStore';
+import Box from '../../components/atoms/Box';
+import Container from '../../components/atoms/Container';
 import Typography from '../../components/atoms/Typography';
+import ModalWrapper from '../../components/ModalWrapper';
+import ButtonsForForms from '../../components/Molecules/ButtonsForForms';
+import MTextInput from '../../components/Molecules/MTextInput';
+import PressableWithFeedback from '../../components/PressableWithFeedback';
 import { HOME_PROFILE_ID, MAX_LENGTH_NAME } from '../../constants';
 import { useProfileContext } from '../../context/ProfileContext';
-import { TBaseInput } from '../../types';
-import MTextInput from '../../components/Molecules/MTextInput';
-import { uCFirst } from 'commonutil-core';
-import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
+import { usePasswordsStore } from '../../store/passwordStore';
+import { useProfileStore } from '../../store/profileStore';
+import { TBaseInput, TPasswordInput } from '../../types';
 
 type Props = {
   visible: boolean;
@@ -35,9 +34,8 @@ const initState: TPasswordInput = {
 };
 
 const AddPasswordModal = (props: Props) => {
-  const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
-  const PlaceholderTextColor = theme['text-secondary'];
+  const PlaceholderTextColor = theme.colors.onSurfaceDisabled;
   const addPassword = usePasswordsStore(state => state.addPassword);
   const setFocusedPassword = usePasswordsStore(
     state => state.setFocusedPassword,
@@ -133,7 +131,7 @@ const AddPasswordModal = (props: Props) => {
       if (!passwordInputs[key as keyof TPasswordInput].error) return null;
       return (
         <View key={key}>
-          <Typography style={{ color: theme['warning-text-with-bg'] }}>
+          <Typography style={{ color: theme.colors.onError }}>
             {uCFirst(key)} : {passwordInputs[key as keyof TPasswordInput].error}
           </Typography>
         </View>
@@ -150,21 +148,26 @@ const AddPasswordModal = (props: Props) => {
     <ModalWrapper
       width={'90%'}
       onClose={() => closeModal()}
-      bg={theme['bg-main']}
+      bg={theme.colors.background}
       visible={props.visible}
     >
       <Container style={styles.cardContainer}>
         {anyErrors && <View style={styles.errorBox}>{renderErrors()}</View>}
 
         <View style={styles.profileSwitch}>
-          <Typography>Card will be saved in : </Typography>
+          <Typography>Password will be saved in : </Typography>
           <PressableWithFeedback
             onPress={() => openProfileSelection({ renderForNew: true })}
-            style={styles.switch}
+            style={[
+              styles.switch,
+              {
+                backgroundColor: theme.colors.inverseSurface,
+              },
+            ]}
           >
             <Typography
               style={{
-                color: theme['bg-main'],
+                color: theme.colors.inverseOnSurface,
               }}
             >
               {selectedProfileForNew?.name ?? ''}
@@ -172,19 +175,33 @@ const AddPasswordModal = (props: Props) => {
             <MaterialIcon
               onPress={() => openProfileSelection({ renderForNew: true })}
               name="chevron-down"
-              color={theme['bg-main']}
+              color={theme.colors.background}
               size={25}
             />
           </PressableWithFeedback>
         </View>
-        <Box style={[styles.cardContent]}>
+        <Box
+          style={[
+            styles.cardContent,
+            {
+              backgroundColor: theme.colors.surfaceVariant,
+            },
+          ]}
+        >
           <View style={styles.cardNameAndNumber}>
             <MTextInput
               value={passwordInputs.website.value}
               autoFocus
               ref={websiteRef}
               onChangeText={t => onChange(t, 'website')}
-              style={[styles.textInput, styles.cardText]}
+              style={[
+                styles.textInput,
+                styles.cardText,
+                {
+                  color: theme.colors.onSurfaceVariant,
+                  borderColor: theme.colors.outline,
+                },
+              ]}
               placeholderTextColor={PlaceholderTextColor}
               placeholder="Web site"
               returnKeyType="next"
@@ -198,7 +215,14 @@ const AddPasswordModal = (props: Props) => {
               value={passwordInputs.username.value}
               ref={userNameRef}
               onChangeText={t => onChange(t, 'username')}
-              style={[styles.textInput, styles.cardText]}
+              style={[
+                styles.textInput,
+                styles.cardText,
+                {
+                  color: theme.colors.onSurfaceVariant,
+                  borderColor: theme.colors.outline,
+                },
+              ]}
               placeholderTextColor={PlaceholderTextColor}
               placeholder="Username"
               returnKeyType="next"
@@ -218,6 +242,10 @@ const AddPasswordModal = (props: Props) => {
                   styles.textInput,
                   styles.cardText,
                   { paddingRight: 50 },
+                  {
+                    color: theme.colors.onSurfaceVariant,
+                    borderColor: theme.colors.outline,
+                  },
                 ]}
                 placeholderTextColor={PlaceholderTextColor}
                 placeholder="Password"
@@ -233,7 +261,7 @@ const AddPasswordModal = (props: Props) => {
                 <MaterialIcon
                   name={showPassword ? 'eye-off-outline' : 'eye-outline'}
                   size={20}
-                  color={theme['text-primary']}
+                  color={theme.colors.onSurfaceVariant}
                 />
               </PressableWithFeedback>
             </View>
@@ -246,7 +274,7 @@ const AddPasswordModal = (props: Props) => {
   );
 };
 
-const themedStyles = StyleService.create({
+const styles = StyleSheet.create({
   content: {
     width: '85%',
     padding: 20,

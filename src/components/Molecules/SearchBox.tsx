@@ -1,15 +1,14 @@
-import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
 import React from 'react';
-import {TextInput, View} from 'react-native';
+import { StyleSheet, TextInput, View } from 'react-native';
 import BackButton from './BackButton';
-import {useMiscStore} from '../../store/miscStore';
+import { useMiscStore } from '../../store/miscStore';
+import { useTheme } from 'react-native-paper';
 type TProps = {
   visible?: boolean;
   onClose: () => void;
   mode: 'cards' | 'passwords' | 'profiles';
 };
 const SearchBox = (props: TProps) => {
-  const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
   const search = useMiscStore(state => state.search);
   const setSearch = useMiscStore(state => state.setSearch);
@@ -26,7 +25,7 @@ const SearchBox = (props: TProps) => {
         value={search}
         onChangeText={text => setSearch(text)}
         placeholder="Search..."
-        placeholderTextColor={theme['text-secondary']}
+        placeholderTextColor={theme.colors.onSurfaceDisabled}
         style={styles.textInput}
       />
     </View>
@@ -34,11 +33,10 @@ const SearchBox = (props: TProps) => {
 };
 
 export default SearchBox;
-const themedStyles = StyleService.create({
-  container: {flexDirection: 'row', alignItems: 'center'},
+const styles = StyleSheet.create({
+  container: { flexDirection: 'row', alignItems: 'center' },
   textInput: {
     fontSize: 20,
-    color: 'text-primary',
     flex: 1,
   },
 });

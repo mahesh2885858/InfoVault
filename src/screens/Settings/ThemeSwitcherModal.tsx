@@ -1,18 +1,16 @@
 import React from 'react';
-import ModalWrapper from '../../components/ModalWrapper';
-import Typography from '../../components/atoms/Typography';
-import { TCommonModalProps } from '../../types';
-import { RadioButton } from 'react-native-paper';
-import { View } from 'react-native';
-import { StyleService, useStyleSheet } from '@ui-kitten/components';
-import PressableWithFeedback from '../../components/PressableWithFeedback';
 import { useTranslation } from 'react-i18next';
+import { ColorSchemeName, StyleSheet, View } from 'react-native';
+import { RadioButton, useTheme } from 'react-native-paper';
+import ModalWrapper from '../../components/ModalWrapper';
+import PressableWithFeedback from '../../components/PressableWithFeedback';
+import Typography from '../../components/atoms/Typography';
 import { useUiStore } from '../../store/UiStore';
-import { ColorSchemeName } from 'react-native';
+import { TCommonModalProps } from '../../types';
 
 const ThemeSwitcherModal = (props: TCommonModalProps) => {
-  const styles = useStyleSheet(themedStyles);
   const { t } = useTranslation();
+  const paper = useTheme();
 
   const theme = useUiStore(state => state.theme);
   const setTheme = useUiStore(state => state.setTheme);
@@ -24,7 +22,14 @@ const ThemeSwitcherModal = (props: TCommonModalProps) => {
 
   return (
     <ModalWrapper onClose={props.onClose} visible={props.visible}>
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: paper.colors.background,
+          },
+        ]}
+      >
         <PressableWithFeedback
           onPress={() => switchTheme('light')}
           style={styles.option}
@@ -53,10 +58,9 @@ const ThemeSwitcherModal = (props: TCommonModalProps) => {
 };
 
 export default ThemeSwitcherModal;
-const themedStyles = StyleService.create({
+const styles = StyleSheet.create({
   container: {
     width: '75%',
-    backgroundColor: 'bg-main',
     margin: 'auto',
     borderRadius: 10,
     paddingVertical: 10,
