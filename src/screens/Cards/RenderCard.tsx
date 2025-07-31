@@ -1,14 +1,8 @@
 import Clipboard from '@react-native-clipboard/clipboard';
+import { getMaxText } from 'commonutil-core';
 import React, { useEffect, useState } from 'react';
-import { GestureResponderEvent, View } from 'react-native';
-import { useToast } from 'react-native-toast-notifications';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import PressableWithFeedback from '../../components/PressableWithFeedback';
-import Typography from '../../components/atoms/Typography';
-import { useCardStore } from '../../store/cardStore';
-import { TCard } from '../../types/card';
-import { authenticateLocal } from '../../utils/authenticateLocal';
-import SwipeContainer from '../../components/Molecules/SwipeContainer';
+import { GestureResponderEvent, StyleSheet, View } from 'react-native';
+import { useTheme as usePaper } from 'react-native-paper';
 import Animated, {
   Easing,
   FadeIn,
@@ -18,14 +12,20 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
-import { CARD_HEIGHT } from '../../constants';
-import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
-import { getMaxText } from 'commonutil-core';
+import { useToast } from 'react-native-toast-notifications';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { runOnJS } from 'react-native-worklets';
+import SwipeContainer from '../../components/Molecules/SwipeContainer';
+import PressableWithFeedback from '../../components/PressableWithFeedback';
+import Typography from '../../components/atoms/Typography';
+import { CARD_HEIGHT } from '../../constants';
+import { useCardStore } from '../../store/cardStore';
+import { TCard } from '../../types/card';
+import { authenticateLocal } from '../../utils/authenticateLocal';
+import { textSize } from '../../../theme';
 const RenderCard = (card: TCard) => {
   const opacity = useSharedValue(1);
-  const theme = useTheme();
-  const styles = useStyleSheet(themedStyles);
+  const paper = usePaper();
 
   const breath = useAnimatedStyle(() => ({
     opacity: opacity.value,
@@ -120,28 +120,44 @@ const RenderCard = (card: TCard) => {
               styles.cardContent,
               {
                 backgroundColor: card.isSelected
-                  ? theme['bg-card-selected']
-                  : theme['bg-card'],
+                  ? paper.colors.surfaceDisabled
+                  : paper.colors.surfaceVariant,
               },
               breath,
             ]}
           >
-            <View style={styles.cardNameAndNuberBox}>
+            <View style={styles.cardNameAndNumberBox}>
               <View style={styles.cardNameAndNumber}>
-                <Typography style={styles.title}>
+                <Typography
+                  style={[
+                    styles.title,
+                    { color: paper.colors.onSurfaceVariant },
+                  ]}
+                >
                   {getMaxText(card.cardName, 22)}
                 </Typography>
-                <Typography style={styles.cardNumberText}>
+                <Typography
+                  style={[
+                    styles.cardNumberText,
+
+                    { color: paper.colors.onSurface },
+                  ]}
+                >
                   {card.cardNumber}
                 </Typography>
               </View>
               <PressableWithFeedback
                 onPress={() => copyContent('cardNumber')}
-                style={[styles.Button]}
+                style={[
+                  styles.Button,
+                  {
+                    backgroundColor: paper.colors.inverseSurface,
+                  },
+                ]}
               >
                 <MaterialIcon
                   onPress={() => copyContent('cardNumber')}
-                  color={theme['bg-main']}
+                  color={paper.colors.inverseOnSurface}
                   name="content-copy"
                   size={15}
                 />
@@ -149,22 +165,45 @@ const RenderCard = (card: TCard) => {
             </View>
             <View style={styles.cardExpiryCvvButtonBox}>
               <View style={styles.expiryAndCvvBox}>
-                <Typography style={styles.title}>Valid Thru</Typography>
-                <Typography style={styles.cardText}> {card.expiry}</Typography>
+                <Typography
+                  style={[
+                    styles.title,
+                    { color: paper.colors.onSurfaceVariant },
+                  ]}
+                >
+                  Valid Thru
+                </Typography>
+                <Typography
+                  style={[styles.cardText, { color: paper.colors.onSurface }]}
+                >
+                  {card.expiry}
+                </Typography>
               </View>
               <View style={styles.expiryAndCvvBox}>
-                <Typography style={styles.title}>CVV</Typography>
+                <Typography
+                  style={[
+                    styles.title,
+                    { color: paper.colors.onSurfaceVariant },
+                  ]}
+                >
+                  cvv
+                </Typography>
                 <Typography style={styles.cardText}>
                   {showCVV ? card.CVV : '***'}
                 </Typography>
               </View>
               <PressableWithFeedback
                 onPress={() => toggleCvv()}
-                style={[styles.cvvButton]}
+                style={[
+                  styles.cvvButton,
+                  {
+                    backgroundColor: paper.colors.inverseSurface,
+                  },
+                ]}
               >
                 <Typography
                   style={{
-                    color: theme['bg-main'],
+                    color: paper.colors.inverseOnSurface,
                   }}
                 >
                   {showCVV ? 'Hide CVV' : 'View CVV'}
@@ -179,7 +218,7 @@ const RenderCard = (card: TCard) => {
                 <MaterialIcon
                   name="pin"
                   size={20}
-                  color={theme['text-secondary']}
+                  color={paper.colors.onSurfaceVariant}
                   onPress={() => {
                     unPinCard(card.cardNumber);
                   }}
@@ -193,7 +232,7 @@ const RenderCard = (card: TCard) => {
   );
 };
 
-const themedStyles = StyleService.create({
+const styles = StyleSheet.create({
   card: {
     width: '100%',
     alignItems: 'center',
@@ -210,7 +249,7 @@ const themedStyles = StyleService.create({
     gap: 20,
     flexDirection: 'column',
   },
-  cardNameAndNuberBox: {
+  cardNameAndNumberBox: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -223,7 +262,6 @@ const themedStyles = StyleService.create({
     paddingHorizontal: 15,
     paddingVertical: 7,
     borderRadius: 5,
-    backgroundColor: 'text-primary',
   },
   cardExpiryCvvButtonBox: {
     display: 'flex',
@@ -236,42 +274,22 @@ const themedStyles = StyleService.create({
     gap: 2,
   },
   cvvButton: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     paddingVertical: 7,
     borderRadius: 5,
     backgroundColor: 'text-primary',
   },
   title: {
-    color: 'text-secondary',
-    fontSize: 16,
+    fontSize: textSize.sm,
     fontWeight: '600',
-    textTransform: 'uppercase',
   },
   cardNumberText: {
-    fontSize: 17,
+    fontSize: textSize.md,
     fontWeight: '700',
-    textTransform: 'uppercase',
   },
-
   cardText: {
-    fontSize: 17,
+    fontSize: textSize.md,
     fontWeight: '500',
-    textTransform: 'uppercase',
-  },
-  swipeableChild: {
-    alignItems: 'center',
-  },
-  rightPanel: {
-    width: 50,
-    backgroundColor: '#AA3939',
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  deleteIcon: {
-    flex: 1,
-    justifyContent: 'center',
   },
   nameOnCard: {
     flexDirection: 'row',

@@ -1,5 +1,4 @@
 import { useFocusEffect } from '@react-navigation/native';
-import { useTheme } from '@ui-kitten/components';
 import React, { useCallback, useRef, useState } from 'react';
 import {
   BackHandler,
@@ -21,6 +20,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMiscStore } from '../../store/miscStore';
 import { TCard } from '../../types';
 import CardHeaders from './CardHeaders';
+import { useTheme } from 'react-native-paper';
 
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
@@ -91,7 +91,7 @@ const Cards = () => {
       }}
       style={[styles.container, { paddingBottom: bottom }]}
     >
-      <StatusBar backgroundColor={theme['bg-main']} />
+      <StatusBar backgroundColor={theme.colors.background} />
       <CardHeaders />
       <Animated.FlatList
         extraData={focusedId}

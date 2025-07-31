@@ -1,5 +1,4 @@
 import { useFocusEffect } from '@react-navigation/native';
-import { useTheme } from '@ui-kitten/components';
 import React, { useCallback, useRef, useState } from 'react';
 import {
   BackHandler,
@@ -19,6 +18,7 @@ import RenderPassword from './RenderPassword';
 import PasswordHeader from './PasswordHeader';
 import { useMiscStore } from '../../store/miscStore';
 import { TPassword } from '../../types';
+import { useTheme } from 'react-native-paper';
 
 const Passwords = () => {
   const [visible, setVisibility] = useState(false);
@@ -82,7 +82,7 @@ const Passwords = () => {
 
   return (
     <Container style={[styles.container]}>
-      <StatusBar backgroundColor={theme['bg-main']} />
+      <StatusBar backgroundColor={theme.colors.background} />
       <View style={styles.header}>
         <PasswordHeader />
       </View>
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     gap: 13,
     paddingBottom: 100,
-    paddingTop: 20,
+    paddingTop: 25,
     minHeight: '100%', // should be added to fix an issue refer:https://github.com/software-mansion/react-native-reanimated/issues/5728#issuecomment-2551570107
   },
 

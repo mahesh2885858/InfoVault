@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StyleService, useStyleSheet } from '@ui-kitten/components';
 import { uCFirst } from 'commonutil-core';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,14 +14,16 @@ import { TCard, TPassword, TProfile } from '../../types';
 import { validateImportedData } from '../../utils/validateImportedData';
 import SettingsHeader from './Header';
 import ThemeSwitcherModal from './ThemeSwitcherModal';
+import { StyleSheet } from 'react-native';
+import { useTheme } from 'react-native-paper';
 const FILE_NAME = 'data.json';
 const DIR_PATH = 'exportPath';
 
 const Settings = () => {
-  const styles = useStyleSheet(themedStyles);
   const { t } = useTranslation();
   const cData = useCardStore(state => state.cards);
   const setCards = useCardStore(state => state.setCards);
+  const paper = useTheme();
 
   const pData = usePasswordsStore(state => state.passwords);
   const setPasswords = usePasswordsStore(state => state.setPasswords);
@@ -150,7 +151,16 @@ const Settings = () => {
         style={styles.setting}
       >
         <Typography style={styles.text}>{t('common.theme')}</Typography>
-        <Typography style={styles.subText}>{uCFirst(theme ?? '')}</Typography>
+        <Typography
+          style={[
+            styles.subText,
+            {
+              color: paper.colors.onSurfaceDisabled,
+            },
+          ]}
+        >
+          {uCFirst(theme ?? '')}
+        </Typography>
       </PressableWithFeedback>
       {openThemeSwitcher && (
         <ThemeSwitcherModal
@@ -164,7 +174,7 @@ const Settings = () => {
 
 export default Settings;
 
-const themedStyles = StyleService.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: 20,
@@ -181,6 +191,5 @@ const themedStyles = StyleService.create({
   },
   subText: {
     fontSize: 13,
-    color: 'text-secondary',
   },
 });

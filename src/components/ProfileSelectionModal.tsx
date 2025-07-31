@@ -1,7 +1,6 @@
-import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
 import React, { useCallback } from 'react';
-import { View } from 'react-native';
-import { RadioButton } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
+import { RadioButton, useTheme } from 'react-native-paper';
 import { DEFAULT_PROFILE_ID } from '../constants';
 import { useProfileStore } from '../store/profileStore';
 import ModalWrapper from './ModalWrapper';
@@ -14,7 +13,6 @@ type TProps = {
   renderingForNewItemAdd?: boolean;
 };
 const ProfileSelectionModal = (props: TProps) => {
-  const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
   const profiles = useProfileStore(state => state.profiles);
   const selectedId = useProfileStore(state => state.selectedProfileId);
@@ -46,7 +44,14 @@ const ProfileSelectionModal = (props: TProps) => {
   return (
     <ModalWrapper onClose={props.onClose} visible={props.visible}>
       <View style={styles.rootView}>
-        <View style={styles.container}>
+        <View
+          style={[
+            styles.container,
+            {
+              backgroundColor: theme.colors.background,
+            },
+          ]}
+        >
           {profiles.map(item => {
             if (props.renderingForNewItemAdd && item.id === DEFAULT_PROFILE_ID)
               return null;
@@ -60,7 +65,7 @@ const ProfileSelectionModal = (props: TProps) => {
                   value={item.name}
                   status={idToCompare === item.id ? 'checked' : 'unchecked'}
                   onPress={() => selectItem(item.id)}
-                  color={theme['button-primary-bg']}
+                  color={theme.colors.onBackground}
                 />
                 <Typography style={styles.text}>{item.name}</Typography>
               </PressableWithFeedback>
@@ -75,7 +80,7 @@ const ProfileSelectionModal = (props: TProps) => {
 
 export default ProfileSelectionModal;
 
-const themedStyles = StyleService.create({
+const styles = StyleSheet.create({
   rootView: {
     width: '100%',
     justifyContent: 'center',
@@ -86,7 +91,6 @@ const themedStyles = StyleService.create({
     gap: 15,
     width: '80%',
     alignItems: 'flex-start',
-    backgroundColor: 'bg-main',
     padding: 10,
     borderRadius: 5,
   },

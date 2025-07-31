@@ -1,15 +1,7 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import React, { useEffect, useState } from 'react';
-import { GestureResponderEvent, View } from 'react-native';
-import { useToast } from 'react-native-toast-notifications';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Box from '../../components/atoms/Box';
-import Typography from '../../components/atoms/Typography';
-import PressableWithFeedback from '../../components/PressableWithFeedback';
-import { usePasswordsStore } from '../../store/passwordStore';
-import { TPassword } from '../../types/passwords';
-import { authenticateLocal } from '../../utils/authenticateLocal';
-import SwipeContainer from '../../components/Molecules/SwipeContainer';
+import { GestureResponderEvent, StyleSheet, View } from 'react-native';
+import { useTheme as usePaper } from 'react-native-paper';
 import Animated, {
   Easing,
   FadeIn,
@@ -18,14 +10,21 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
-  withTiming,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
+import { useToast } from 'react-native-toast-notifications';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Box from '../../components/atoms/Box';
+import Typography from '../../components/atoms/Typography';
+import SwipeContainer from '../../components/Molecules/SwipeContainer';
+import PressableWithFeedback from '../../components/PressableWithFeedback';
 import { PASSWORD_HEIGHT } from '../../constants';
-import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
+import { usePasswordsStore } from '../../store/passwordStore';
+import { TPassword } from '../../types/passwords';
+import { authenticateLocal } from '../../utils/authenticateLocal';
 const RenderPassword = (password: TPassword) => {
-  const styles = useStyleSheet(themedStyles);
-  const theme = useTheme();
+  const theme = usePaper();
   const [showPassword, setShowPassword] = useState(false);
   const [isSwiped, setIsSwiped] = useState(false);
 
@@ -139,20 +138,27 @@ const RenderPassword = (password: TPassword) => {
               styles.cardContent,
               {
                 backgroundColor: password.isSelected
-                  ? theme['bg-card-selected']
-                  : theme['bg-card'],
+                  ? theme.colors.surfaceDisabled
+                  : theme.colors.surfaceVariant,
               },
             ]}
           >
             <View style={styles.webSiteBox}>
-              <Typography style={styles.cardNumberText}>
+              <Typography
+                style={[
+                  styles.cardNumberText,
+                  {
+                    color: theme.colors.onSurfaceVariant,
+                  },
+                ]}
+              >
                 {password.website}
               </Typography>
               {password.isPinned && (
                 <MaterialIcon
                   name="pin"
                   size={20}
-                  color={theme['text-secondary']}
+                  color={theme.colors.onSurfaceVariant}
                   onPress={() => {
                     unpinPassword(password.id);
                   }}
@@ -161,18 +167,39 @@ const RenderPassword = (password: TPassword) => {
             </View>
             <View style={styles.usernameBox}>
               <View style={styles.username}>
-                <Typography style={styles.title}>User name</Typography>
-                <Typography style={styles.cardText}>
+                <Typography
+                  style={[
+                    styles.title,
+                    {
+                      color: theme.colors.onSurfaceVariant,
+                    },
+                  ]}
+                >
+                  User name
+                </Typography>
+                <Typography
+                  style={[
+                    styles.cardText,
+                    {
+                      color: theme.colors.onSurface,
+                    },
+                  ]}
+                >
                   {password.username}
                 </Typography>
               </View>
 
               <PressableWithFeedback
                 onPress={() => copyContent('username')}
-                style={styles.Button}
+                style={[
+                  styles.Button,
+                  {
+                    backgroundColor: theme.colors.inverseSurface,
+                  },
+                ]}
               >
                 <MaterialIcon
-                  color={theme['bg-main']}
+                  color={theme.colors.inverseOnSurface}
                   name="content-copy"
                   size={15}
                 />
@@ -180,8 +207,24 @@ const RenderPassword = (password: TPassword) => {
             </View>
             <View style={styles.passwordBox}>
               <View>
-                <Typography style={styles.title}>Password</Typography>
-                <Typography style={styles.cardText}>
+                <Typography
+                  style={[
+                    styles.title,
+                    {
+                      color: theme.colors.onSurfaceVariant,
+                    },
+                  ]}
+                >
+                  Password
+                </Typography>
+                <Typography
+                  style={[
+                    styles.cardText,
+                    {
+                      color: theme.colors.onSurface,
+                    },
+                  ]}
+                >
                   {showPassword ? password.password : '*********'}
                 </Typography>
               </View>
@@ -189,19 +232,24 @@ const RenderPassword = (password: TPassword) => {
                 <Animated.View style={slidingStyle}>
                   <PressableWithFeedback
                     onPress={() => togglePasswordVisibility()}
-                    style={[styles.Button]}
+                    style={[
+                      styles.Button,
+                      {
+                        backgroundColor: theme.colors.inverseSurface,
+                      },
+                    ]}
                   >
                     {showPassword ? (
                       <MaterialIcon
                         onPress={() => togglePasswordVisibility()}
-                        color={theme['bg-main']}
+                        color={theme.colors.inverseOnSurface}
                         name="eye-off-outline"
                         size={15}
                       />
                     ) : (
                       <MaterialIcon
                         onPress={() => togglePasswordVisibility()}
-                        color={theme['bg-main']}
+                        color={theme.colors.inverseOnSurface}
                         name="eye-outline"
                         size={15}
                       />
@@ -212,11 +260,16 @@ const RenderPassword = (password: TPassword) => {
                   <Animated.View style={animatedStyle}>
                     <PressableWithFeedback
                       onPress={() => copyContent('password')}
-                      style={styles.Button}
+                      style={[
+                        styles.Button,
+                        {
+                          backgroundColor: theme.colors.inverseSurface,
+                        },
+                      ]}
                     >
                       <MaterialIcon
                         onPress={() => copyContent('password')}
-                        color={theme['bg-main']}
+                        color={theme.colors.inverseOnSurface}
                         name="content-copy"
                         size={15}
                       />
@@ -232,7 +285,7 @@ const RenderPassword = (password: TPassword) => {
   );
 };
 
-const themedStyles = StyleService.create({
+const styles = StyleSheet.create({
   card: {
     width: '100%',
     alignItems: 'center',
@@ -273,15 +326,12 @@ const themedStyles = StyleService.create({
     backgroundColor: 'text-primary',
   },
   title: {
-    color: 'text-secondary',
     fontSize: 14,
     fontWeight: '600',
-    textTransform: 'uppercase',
   },
   cardNumberText: {
     fontSize: 15,
     fontWeight: '700',
-    textTransform: 'uppercase',
   },
 
   cardText: {

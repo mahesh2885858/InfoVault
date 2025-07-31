@@ -1,14 +1,14 @@
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {useTheme} from '@ui-kitten/components';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import CustomDrawer from './components/Navigation/CustomDrawer';
 import Cards from './screens/Cards/Cards';
 import Passwords from './screens/Passwords';
 import Profiles from './screens/Profiles';
 import Settings from './screens/Settings';
-import {DrawerParamsList, RootStackParamList} from './types';
+import { DrawerParamsList, RootStackParamList } from './types';
+import { useTheme } from 'react-native-paper';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator<DrawerParamsList>();
@@ -18,14 +18,15 @@ function DrawerNavigator() {
   return (
     <Drawer.Navigator
       screenOptions={{
-        drawerActiveBackgroundColor: theme['bg-card'],
+        drawerActiveBackgroundColor: theme.colors.surfaceVariant,
         drawerLabelStyle: {
-          color: theme['text-primary'],
+          color: theme.colors.onBackground,
         },
         swipeEdgeWidth: 50,
       }}
       drawerContent={CustomDrawer}
-      initialRouteName="Cards">
+      initialRouteName="Cards"
+    >
       <Drawer.Screen
         name="Cards"
         component={Cards}
@@ -58,7 +59,7 @@ function AppNavigator(): React.JSX.Element {
         <Stack.Screen
           name="Drawer"
           component={DrawerNavigator}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Settings"

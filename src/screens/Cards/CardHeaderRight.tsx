@@ -1,5 +1,6 @@
-import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
 import React from 'react';
+import { StyleSheet } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Typography from '../../components/atoms/Typography';
@@ -8,7 +9,6 @@ import { useCardStore } from '../../store/cardStore';
 import { useProfileStore } from '../../store/profileStore';
 
 const CardHeaderRight = () => {
-  const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
 
   const selectedCards = useCardStore(state => state.selectedCards);
@@ -22,15 +22,20 @@ const CardHeaderRight = () => {
     return (
       <PressableWithFeedback
         onPress={() => openProfileSelection()}
-        style={styles.switch}
+        style={[
+          styles.switch,
+          {
+            backgroundColor: theme.colors.surfaceVariant,
+          },
+        ]}
       >
-        <Typography style={styles.text}>
+        <Typography style={{ color: theme.colors.onBackground }}>
           {selectedProfile()?.name ?? ''}
         </Typography>
         <MaterialIcon
           onPress={() => openProfileSelection()}
           name="chevron-down"
-          color={theme['bg-main']}
+          color={theme.colors.onBackground}
           size={25}
         />
       </PressableWithFeedback>
@@ -42,7 +47,11 @@ const CardHeaderRight = () => {
       <PressableWithFeedback
         onPress={() => removeCards(selectedCards.map(c => c.cardNumber))}
       >
-        <MaterialIcon name="delete" size={24} color={theme['text-primary']} />
+        <MaterialIcon
+          name="delete"
+          size={24}
+          color={theme.colors.onBackground}
+        />
       </PressableWithFeedback>
       {selectedCards.length === 1 && (
         <PressableWithFeedback
@@ -51,7 +60,11 @@ const CardHeaderRight = () => {
             deSelectAll();
           }}
         >
-          <MaterialIcon name="pin" size={24} color={theme['text-primary']} />
+          <MaterialIcon
+            name="pin"
+            size={24}
+            color={theme.colors.onBackground}
+          />
         </PressableWithFeedback>
       )}
     </>
@@ -60,16 +73,12 @@ const CardHeaderRight = () => {
 
 export default CardHeaderRight;
 
-const themedStyles = StyleService.create({
+const styles = StyleSheet.create({
   switch: {
     flexDirection: 'row',
     paddingHorizontal: 5,
-    backgroundColor: 'button-primary-bg',
     alignItems: 'center',
     gap: 10,
     borderRadius: 5,
-  },
-  text: {
-    color: 'bg-main',
   },
 });

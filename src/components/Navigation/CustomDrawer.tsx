@@ -3,13 +3,13 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import {View} from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Typography from '../atoms/Typography';
 import PressableWithFeedback from '../PressableWithFeedback';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useNavigation} from '@react-navigation/native';
-import {StyleService, useTheme} from '@ui-kitten/components';
 
 const CustomDrawer = (props: DrawerContentComponentProps) => {
   const navigation = useNavigation();
@@ -17,9 +17,10 @@ const CustomDrawer = (props: DrawerContentComponentProps) => {
   return (
     <DrawerContentScrollView
       style={{
-        backgroundColor: theme['bg-main'],
+        backgroundColor: theme.colors.background,
       }}
-      {...props}>
+      {...props}
+    >
       <View style={styles.container}>
         <Typography style={styles.largeText}>Hi,</Typography>
         <Typography style={styles.subTitleText}>User</Typography>
@@ -28,15 +29,20 @@ const CustomDrawer = (props: DrawerContentComponentProps) => {
             props.navigation.closeDrawer();
             navigation.navigate('Settings');
           }}
-          style={styles.icon}>
-          <MaterialIcon name="cog" size={24} color={theme['text-primary']} />
+          style={styles.icon}
+        >
+          <MaterialIcon
+            name="cog"
+            size={24}
+            color={theme.colors.onBackground}
+          />
         </PressableWithFeedback>
       </View>
       <DrawerItemList {...props} />
     </DrawerContentScrollView>
   );
 };
-const styles = StyleService.create({
+const styles = StyleSheet.create({
   container: {
     paddingLeft: 20,
     paddingTop: 30,
