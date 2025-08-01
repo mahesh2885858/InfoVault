@@ -23,10 +23,16 @@ import { useCardStore } from '../../store/cardStore';
 import { TCard } from '../../types/card';
 import { authenticateLocal } from '../../utils/authenticateLocal';
 import { textSize } from '../../../theme';
-const RenderCard = (card: TCard) => {
+import AddCardModal from '../../components/Card/AddCardModal';
+type TProps = {
+  card: TCard;
+};
+const RenderCard = (props: TProps) => {
   const opacity = useSharedValue(1);
+  const ttt = useCardStore();
   const paper = usePaper();
-
+  const { card } = props;
+  console.log({ card, ttt });
   const breath = useAnimatedStyle(() => ({
     opacity: opacity.value,
   }));
@@ -40,6 +46,9 @@ const RenderCard = (card: TCard) => {
 
   const [showCVV, setShowCVV] = useState(false);
   const [isSwiped, setIsSwiped] = useState(false);
+  const [renderEditModalFor, setRenderEditModalFor] = useState<TCard | null>(
+    null,
+  );
   const toast = useToast();
 
   const toggleCvv = async () => {
@@ -60,7 +69,7 @@ const RenderCard = (card: TCard) => {
   const handlePress = (_event: GestureResponderEvent) => {
     if (isSwiped) return;
     if (selectedCards.length >= 1) {
-      toggleCardSelection(card.cardNumber);
+      toggleCardSelection(card.id);
     }
   };
 
@@ -68,7 +77,7 @@ const RenderCard = (card: TCard) => {
     if (isSwiped) return;
 
     if (selectedCards.length === 0) {
-      toggleCardSelection(card.cardNumber);
+      toggleCardSelection(card.id);
     }
   };
 
@@ -78,7 +87,7 @@ const RenderCard = (card: TCard) => {
   };
 
   useEffect(() => {
-    if (focusedId === card.cardNumber) {
+    if (focusedId === card.id) {
       opacity.value = withRepeat(
         withTiming(0.5, {
           duration: 1000,
@@ -95,140 +104,153 @@ const RenderCard = (card: TCard) => {
     return () => {
       opacity.value = 1;
     };
-  }, [card.cardNumber, focusedId, opacity, setFocusedCard]);
+  }, [card.id, focusedId, opacity, setFocusedCard]);
 
   return (
-    <Animated.View
-      entering={FadeIn}
-      style={[styles.card, breath]}
-      exiting={ZoomOut}
-    >
-      <PressableWithFeedback
-        onLongPress={handleLongPress}
-        onPress={handlePress}
-        delayLongPress={1000}
-        style={[styles.cardContainer]}
+    <>
+      <Animated.View
+        entering={FadeIn}
+        style={[styles.card, breath]}
+        exiting={ZoomOut}
       >
-        <SwipeContainer
-          getSwipedValue={value => {
-            setIsSwiped(value);
-          }}
-          onRightActionPress={() => removeCards([card.cardNumber])}
+        <PressableWithFeedback
+          onLongPress={handleLongPress}
+          onPress={handlePress}
+          delayLongPress={1000}
+          style={[styles.cardContainer]}
         >
-          <Animated.View
-            style={[
-              styles.cardContent,
-              {
-                backgroundColor: card.isSelected
-                  ? paper.colors.surfaceDisabled
-                  : paper.colors.surfaceVariant,
-              },
-              breath,
-            ]}
+          <SwipeContainer
+            getSwipedValue={value => {
+              setIsSwiped(value);
+            }}
+            onDelete={() => removeCards([card.id])}
+            onEdit={() => {
+              setRenderEditModalFor(card);
+            }}
           >
-            <View style={styles.cardNameAndNumberBox}>
-              <View style={styles.cardNameAndNumber}>
-                <Typography
-                  style={[
-                    styles.title,
-                    { color: paper.colors.onSurfaceVariant },
-                  ]}
-                >
-                  {getMaxText(card.cardName, 22)}
-                </Typography>
-                <Typography
-                  style={[
-                    styles.cardNumberText,
+            <Animated.View
+              style={[
+                styles.cardContent,
+                {
+                  backgroundColor: card.isSelected
+                    ? paper.colors.surfaceDisabled
+                    : paper.colors.surfaceVariant,
+                },
+                breath,
+              ]}
+            >
+              <View style={styles.cardNameAndNumberBox}>
+                <View style={styles.cardNameAndNumber}>
+                  <Typography
+                    style={[
+                      styles.title,
+                      { color: paper.colors.onSurfaceVariant },
+                    ]}
+                  >
+                    {getMaxText(card.cardName, 22)}
+                  </Typography>
+                  <Typography
+                    style={[
+                      styles.cardNumberText,
 
-                    { color: paper.colors.onSurface },
-                  ]}
-                >
-                  {card.cardNumber}
-                </Typography>
-              </View>
-              <PressableWithFeedback
-                onPress={() => copyContent('cardNumber')}
-                style={[
-                  styles.Button,
-                  {
-                    backgroundColor: paper.colors.inverseSurface,
-                  },
-                ]}
-              >
-                <MaterialIcon
+                      { color: paper.colors.onSurface },
+                    ]}
+                  >
+                    {card.cardNumber}
+                  </Typography>
+                </View>
+                <PressableWithFeedback
                   onPress={() => copyContent('cardNumber')}
-                  color={paper.colors.inverseOnSurface}
-                  name="content-copy"
-                  size={15}
-                />
-              </PressableWithFeedback>
-            </View>
-            <View style={styles.cardExpiryCvvButtonBox}>
-              <View style={styles.expiryAndCvvBox}>
-                <Typography
                   style={[
-                    styles.title,
-                    { color: paper.colors.onSurfaceVariant },
+                    styles.Button,
+                    {
+                      backgroundColor: paper.colors.inverseSurface,
+                    },
                   ]}
                 >
-                  Valid Thru
-                </Typography>
-                <Typography
-                  style={[styles.cardText, { color: paper.colors.onSurface }]}
-                >
-                  {card.expiry}
-                </Typography>
+                  <MaterialIcon
+                    onPress={() => copyContent('cardNumber')}
+                    color={paper.colors.inverseOnSurface}
+                    name="content-copy"
+                    size={15}
+                  />
+                </PressableWithFeedback>
               </View>
-              <View style={styles.expiryAndCvvBox}>
-                <Typography
+              <View style={styles.cardExpiryCvvButtonBox}>
+                <View style={styles.expiryAndCvvBox}>
+                  <Typography
+                    style={[
+                      styles.title,
+                      { color: paper.colors.onSurfaceVariant },
+                    ]}
+                  >
+                    Valid Thru
+                  </Typography>
+                  <Typography
+                    style={[styles.cardText, { color: paper.colors.onSurface }]}
+                  >
+                    {card.expiry}
+                  </Typography>
+                </View>
+                <View style={styles.expiryAndCvvBox}>
+                  <Typography
+                    style={[
+                      styles.title,
+                      { color: paper.colors.onSurfaceVariant },
+                    ]}
+                  >
+                    cvv
+                  </Typography>
+                  <Typography style={styles.cardText}>
+                    {showCVV ? card.CVV : '***'}
+                  </Typography>
+                </View>
+                <PressableWithFeedback
+                  onPress={() => toggleCvv()}
                   style={[
-                    styles.title,
-                    { color: paper.colors.onSurfaceVariant },
+                    styles.cvvButton,
+                    {
+                      backgroundColor: paper.colors.inverseSurface,
+                    },
                   ]}
                 >
-                  cvv
-                </Typography>
+                  <Typography
+                    style={{
+                      color: paper.colors.inverseOnSurface,
+                    }}
+                  >
+                    {showCVV ? 'Hide CVV' : 'View CVV'}
+                  </Typography>
+                </PressableWithFeedback>
+              </View>
+              <View style={styles.nameOnCard}>
                 <Typography style={styles.cardText}>
-                  {showCVV ? card.CVV : '***'}
+                  {getMaxText(card.NameOnCard, 25)}
                 </Typography>
+                {card.isPinned && (
+                  <MaterialIcon
+                    name="pin"
+                    size={20}
+                    color={paper.colors.onSurfaceVariant}
+                    onPress={() => {
+                      unPinCard(card.id);
+                    }}
+                  />
+                )}
               </View>
-              <PressableWithFeedback
-                onPress={() => toggleCvv()}
-                style={[
-                  styles.cvvButton,
-                  {
-                    backgroundColor: paper.colors.inverseSurface,
-                  },
-                ]}
-              >
-                <Typography
-                  style={{
-                    color: paper.colors.inverseOnSurface,
-                  }}
-                >
-                  {showCVV ? 'Hide CVV' : 'View CVV'}
-                </Typography>
-              </PressableWithFeedback>
-            </View>
-            <View style={styles.nameOnCard}>
-              <Typography style={styles.cardText}>
-                {getMaxText(card.NameOnCard, 25)}
-              </Typography>
-              {card.isPinned && (
-                <MaterialIcon
-                  name="pin"
-                  size={20}
-                  color={paper.colors.onSurfaceVariant}
-                  onPress={() => {
-                    unPinCard(card.cardNumber);
-                  }}
-                />
-              )}
-            </View>
-          </Animated.View>
-        </SwipeContainer>
-      </PressableWithFeedback>
-    </Animated.View>
+            </Animated.View>
+          </SwipeContainer>
+        </PressableWithFeedback>
+      </Animated.View>
+      {renderEditModalFor && (
+        <AddCardModal
+          visible={renderEditModalFor !== null}
+          setVisible={() => setRenderEditModalFor(null)}
+          editCard={renderEditModalFor}
+          mode="edit"
+        />
+      )}
+    </>
   );
 };
 
@@ -255,7 +277,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   cardNameAndNumber: {
-    paddingTop: 10,
     gap: 2,
   },
   Button: {

@@ -98,11 +98,11 @@ const Cards = () => {
         data={cardsToRender}
         contentContainerStyle={styles.cardConatiner}
         renderItem={item => {
-          return <RenderCard {...item.item} />;
+          return <RenderCard card={item.item} />;
         }}
         ref={listRef}
         itemLayoutAnimation={LinearTransition}
-        keyExtractor={item => item.cardNumber}
+        keyExtractor={item => item.id || item.cardNumber}
         getItemLayout={(_, index) => ({
           length: CARD_HEIGHT,
           index,
@@ -126,9 +126,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cardConatiner: {
-    gap: 13,
+    gap: 5,
     paddingBottom: 100,
-    paddingTop: 20,
+    // paddingTop: 0,
     minHeight: '100%', // should be added to fix an issue refer:https://github.com/software-mansion/react-native-reanimated/issues/5728#issuecomment-2551570107
   },
 });
