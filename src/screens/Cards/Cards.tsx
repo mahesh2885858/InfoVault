@@ -98,7 +98,7 @@ const Cards = () => {
         data={cardsToRender}
         contentContainerStyle={styles.cardConatiner}
         renderItem={item => {
-          return <RenderCard {...item.item} />;
+          return <RenderCard card={item.item} />;
         }}
         ref={listRef}
         itemLayoutAnimation={LinearTransition}

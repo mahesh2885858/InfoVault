@@ -102,7 +102,7 @@ const AddPasswordModal = (props: Props) => {
   const AddAPassword = () => {
     if (!validateInputs(passwordInputs)) return;
     const { password, username, website } = passwordInputs;
-    const id = String(Date.now());
+    const id = crypto.randomUUID();
     addPassword({
       password: password.value,
       username: username.value,

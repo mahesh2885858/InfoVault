@@ -13,7 +13,7 @@ import ModalWrapper from '../ModalWrapper';
 import ButtonsForForms from '../Molecules/ButtonsForForms';
 import PressableWithFeedback from '../PressableWithFeedback';
 
-import { TCardInput } from '../../types';
+import { TCard, TCardInput } from '../../types';
 import MTextInput from '../Molecules/MTextInput';
 
 import { Keyboard } from 'react-native';
@@ -22,6 +22,8 @@ import { useTheme } from 'react-native-paper';
 type Props = {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  mode?: 'edit' | 'add';
+  editCard?: TCard | null;
 };
 
 const initialCardInput: TCardInput = {
@@ -56,10 +58,22 @@ const errorMessages: Record<keyof TCardInput, string> = {
 };
 
 const AddCardModal = (props: Props) => {
+  console.log({ props });
   const theme = useTheme();
   const PlaceholderTextColor = theme.colors.onSurfaceDisabled;
-  const { addCard, setFocusedCard } = useCardStore();
-  const [cardInputs, setCardInputs] = useState<TCardInput>(initialCardInput);
+  const { addCard, setFocusedCard, editCard } = useCardStore();
+
+  const [cardInputs, setCardInputs] = useState<TCardInput>(
+    props.mode === 'edit'
+      ? {
+          cardName: { value: props.editCard?.cardName ?? '', error: '' },
+          cardNumber: { value: props.editCard?.cardNumber ?? '', error: '' },
+          CVV: { value: props.editCard?.CVV ?? '', error: '' },
+          expiry: { value: props.editCard?.expiry ?? '', error: '' },
+          NameOnCard: { value: props.editCard?.NameOnCard ?? '', error: '' },
+        }
+      : initialCardInput,
+  );
   const cardNameRef = useRef<TextInput>(null);
   const expiryRef = useRef<TextInput>(null);
   const cardNumberRef = useRef<TextInput>(null);
@@ -196,14 +210,29 @@ const AddCardModal = (props: Props) => {
     if (!validateInputs(cardInputs)) return;
     const profileId = selectedProfileForNew?.id ?? HOME_PROFILE_ID;
     Keyboard.dismiss();
-    addCard({
-      CVV: cardInputs.CVV.value,
-      NameOnCard: cardInputs.NameOnCard.value,
-      cardName: cardInputs.cardName.value,
-      cardNumber: cardInputs.cardNumber.value,
-      expiry: cardInputs.expiry.value,
-      profileId,
-    });
+    if (props.mode === 'edit') {
+      console.log({ props, cardInputs });
+      editCard({
+        id: props.editCard!.id,
+        CVV: cardInputs.CVV.value,
+        NameOnCard: cardInputs.NameOnCard.value,
+        cardName: cardInputs.cardName.value,
+        cardNumber: cardInputs.cardNumber.value,
+        expiry: cardInputs.expiry.value,
+        profileId,
+        isSelected: false,
+      });
+    } else {
+      addCard({
+        id: crypto.randomUUID(),
+        CVV: cardInputs.CVV.value,
+        NameOnCard: cardInputs.NameOnCard.value,
+        cardName: cardInputs.cardName.value,
+        cardNumber: cardInputs.cardNumber.value,
+        expiry: cardInputs.expiry.value,
+        profileId,
+      });
+    }
     const id = cardInputs.cardNumber.value;
 
     setFocusedCard(id);

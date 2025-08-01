@@ -131,7 +131,8 @@ const RenderPassword = (password: TPassword) => {
       >
         <SwipeContainer
           getSwipedValue={value => setIsSwiped(value)}
-          onRightActionPress={() => removeItem(password.id)}
+          onDelete={() => removeItem(password.id)}
+          onEdit={() => {}}
         >
           <Box
             style={[
