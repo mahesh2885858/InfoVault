@@ -277,7 +277,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   cardNameAndNumber: {
-    paddingTop: 10,
     gap: 2,
   },
   Button: {
