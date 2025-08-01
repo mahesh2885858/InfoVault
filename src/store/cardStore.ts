@@ -104,7 +104,7 @@ export const useCardStore = create(
     {
       name: 'cardStore',
       storage: createJSONStorage(() => AsyncStorage),
-      version: 3,
+      version: 4,
       migrate: (persistedState: any, version) => {
         switch (version) {
           case 1:

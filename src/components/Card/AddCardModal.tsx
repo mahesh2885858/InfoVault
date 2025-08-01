@@ -12,6 +12,7 @@ import Typography from '../atoms/Typography';
 import ModalWrapper from '../ModalWrapper';
 import ButtonsForForms from '../Molecules/ButtonsForForms';
 import PressableWithFeedback from '../PressableWithFeedback';
+import { v4 as uuidv4 } from 'uuid';
 
 import { TCard, TCardInput } from '../../types';
 import MTextInput from '../Molecules/MTextInput';
@@ -224,7 +225,7 @@ const AddCardModal = (props: Props) => {
       });
     } else {
       addCard({
-        id: crypto.randomUUID(),
+        id: uuidv4(),
         CVV: cardInputs.CVV.value,
         NameOnCard: cardInputs.NameOnCard.value,
         cardName: cardInputs.cardName.value,
