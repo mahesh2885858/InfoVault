@@ -16,19 +16,19 @@ import { useToast } from 'react-native-toast-notifications';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { runOnJS } from 'react-native-worklets';
 import { textSize } from '../../../theme';
-import AddCardModal from '../../components/Card/AddCardModal';
+import AddOtherCardModal from '../../components/Card/AddOtherCardModal';
 import SwipeContainer from '../../components/Molecules/SwipeContainer';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Typography from '../../components/atoms/Typography';
-import { CARD_HEIGHT } from '../../constants';
+import { OTHER_CARD_HEIGHT } from '../../constants';
 import { useCardStore } from '../../store/cardStore';
-import { TCard, TCardCreditDebit } from '../../types/card';
+import { TCard, TCardOther } from '../../types/card';
 import { FlashListRef } from '@shopify/flash-list';
 type TProps = {
-  card: TCardCreditDebit;
+  card: TCardOther;
   listRef: RefObject<FlashListRef<TCard> | null>;
 };
-const RenderCard = (props: TProps) => {
+const RenderOtherCard = (props: TProps) => {
   const opacity = useSharedValue(1);
   const paper = usePaper();
   const { card } = props;
@@ -42,24 +42,10 @@ const RenderCard = (props: TProps) => {
   const setFocusedCard = useCardStore(state => state.setFocusedCard);
   const unPinCard = useCardStore(state => state.unPinCard);
   const removeCards = useCardStore(state => state.removeCards);
-
-  const [showCVV, setShowCVV] = useState(false);
   const [isSwiped, setIsSwiped] = useState(false);
   const [renderEditModalFor, setRenderEditModalFor] =
-    useState<TCardCreditDebit | null>(null);
+    useState<TCardOther | null>(null);
   const toast = useToast();
-
-  const toggleCvv = async () => {
-    try {
-      if (!showCVV) {
-        setShowCVV(true);
-      } else {
-        setShowCVV(false);
-      }
-    } catch (e) {
-      console.log({ e });
-    }
-  };
 
   const handlePress = (_event: GestureResponderEvent) => {
     if (isSwiped) return;
@@ -76,7 +62,7 @@ const RenderCard = (props: TProps) => {
     }
   };
 
-  const copyContent = async (whatToCopy: 'NameOnCard' | 'cardNumber') => {
+  const copyContent = async (whatToCopy: 'cardName' | 'cardNumber') => {
     Clipboard.setString(card[whatToCopy].replaceAll('-', ''));
     toast.show(`${whatToCopy} is copied.`, { duration: 1500 });
   };
@@ -138,22 +124,20 @@ const RenderCard = (props: TProps) => {
                 <View style={styles.cardNameAndNumber}>
                   <Typography
                     style={[
-                      styles.title,
-                      { color: paper.colors.onSurfaceVariant },
-                    ]}
-                  >
-                    {getMaxText(card.cardName, 22)}
-                  </Typography>
-                  <Typography
-                    style={[
                       styles.cardNumberText,
 
                       { color: paper.colors.onSurface },
                     ]}
                   >
-                    {card.cardNumber}
+                    {getMaxText(card.cardName, 22)}
                   </Typography>
                 </View>
+              </View>
+
+              <View style={styles.nameOnCard}>
+                <Typography style={styles.cardText}>
+                  {getMaxText(card.cardNumber, 25)}
+                </Typography>
                 <PressableWithFeedback
                   onPress={() => copyContent('cardNumber')}
                   style={[
@@ -171,56 +155,9 @@ const RenderCard = (props: TProps) => {
                   />
                 </PressableWithFeedback>
               </View>
-              <View style={styles.cardExpiryCvvButtonBox}>
-                <View style={styles.expiryAndCvvBox}>
-                  <Typography
-                    style={[
-                      styles.title,
-                      { color: paper.colors.onSurfaceVariant },
-                    ]}
-                  >
-                    Valid Thru
-                  </Typography>
-                  <Typography
-                    style={[styles.cardText, { color: paper.colors.onSurface }]}
-                  >
-                    {card.expiry}
-                  </Typography>
-                </View>
-                <View style={styles.expiryAndCvvBox}>
-                  <Typography
-                    style={[
-                      styles.title,
-                      { color: paper.colors.onSurfaceVariant },
-                    ]}
-                  >
-                    cvv
-                  </Typography>
-                  <Typography style={styles.cardText}>
-                    {showCVV ? card.CVV : '***'}
-                  </Typography>
-                </View>
-                <PressableWithFeedback
-                  onPress={() => toggleCvv()}
-                  style={[
-                    styles.cvvButton,
-                    {
-                      backgroundColor: paper.colors.inverseSurface,
-                    },
-                  ]}
-                >
-                  <Typography
-                    style={{
-                      color: paper.colors.inverseOnSurface,
-                    }}
-                  >
-                    {showCVV ? 'Hide CVV' : 'View CVV'}
-                  </Typography>
-                </PressableWithFeedback>
-              </View>
               <View style={styles.nameOnCard}>
                 <Typography style={styles.cardText}>
-                  {getMaxText(card.NameOnCard, 25)}
+                  {getMaxText(card.otherDetails, 25)}
                 </Typography>
                 {card.isPinned && (
                   <MaterialIcon
@@ -239,7 +176,7 @@ const RenderCard = (props: TProps) => {
         </PressableWithFeedback>
       </Animated.View>
       {renderEditModalFor && (
-        <AddCardModal
+        <AddOtherCardModal
           visible={renderEditModalFor !== null}
           setVisible={() => setRenderEditModalFor(null)}
           editCard={renderEditModalFor}
@@ -254,7 +191,7 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     alignItems: 'center',
-    height: CARD_HEIGHT,
+    height: OTHER_CARD_HEIGHT,
   },
   cardContainer: {
     width: '100%',
@@ -314,4 +251,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-export default RenderCard;
+export default RenderOtherCard;
