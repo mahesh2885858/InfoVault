@@ -1,4 +1,4 @@
-\*\*\*\*# InfoVault
+# InfoVault
 
 A secure and user-friendly Android application for storing your sensitive information like card details and passwords, built with React Native.
 
