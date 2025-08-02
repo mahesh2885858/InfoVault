@@ -109,7 +109,6 @@ const styles = StyleSheet.create({
   cardContainer: {
     gap: 13,
     paddingBottom: 100,
-    minHeight: '100%', // should be added to fix an issue refer:https://github.com/software-mansion/react-native-reanimated/issues/5728#issuecomment-2551570107
   },
 
   header: {

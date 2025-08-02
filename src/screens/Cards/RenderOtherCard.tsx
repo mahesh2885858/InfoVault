@@ -1,4 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard';
+import { FlashListRef } from '@shopify/flash-list';
 import { getMaxText } from 'commonutil-core';
 import React, { RefObject, useEffect, useState } from 'react';
 import { GestureResponderEvent, StyleSheet, View } from 'react-native';
@@ -20,10 +21,8 @@ import AddOtherCardModal from '../../components/Card/AddOtherCardModal';
 import SwipeContainer from '../../components/Molecules/SwipeContainer';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Typography from '../../components/atoms/Typography';
-import { OTHER_CARD_HEIGHT } from '../../constants';
 import { useCardStore } from '../../store/cardStore';
 import { TCard, TCardOther } from '../../types/card';
-import { FlashListRef } from '@shopify/flash-list';
 type TProps = {
   card: TCardOther;
   listRef: RefObject<FlashListRef<TCard> | null>;
@@ -155,22 +154,24 @@ const RenderOtherCard = (props: TProps) => {
                   />
                 </PressableWithFeedback>
               </View>
-              <View style={styles.nameOnCard}>
-                <Typography style={styles.cardText}>
-                  {card.otherDetails}
-                </Typography>
-                {card.isPinned && (
-                  <MaterialIcon
-                    name="pin"
-                    size={20}
-                    color={paper.colors.onSurfaceVariant}
-                    onPress={() => {
-                      props.listRef?.current?.prepareForLayoutAnimationRender();
-                      unPinCard(card.id);
-                    }}
-                  />
-                )}
-              </View>
+              {card.otherDetails.trim().length > 0 && (
+                <View style={styles.nameOnCard}>
+                  <Typography style={styles.cardText}>
+                    {card.otherDetails}
+                  </Typography>
+                  {card.isPinned && (
+                    <MaterialIcon
+                      name="pin"
+                      size={20}
+                      color={paper.colors.onSurfaceVariant}
+                      onPress={() => {
+                        props.listRef?.current?.prepareForLayoutAnimationRender();
+                        unPinCard(card.id);
+                      }}
+                    />
+                  )}
+                </View>
+              )}
             </Animated.View>
           </SwipeContainer>
         </PressableWithFeedback>
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     alignItems: 'center',
-    height: OTHER_CARD_HEIGHT,
+    marginBottom: 15,
   },
   cardContainer: {
     width: '100%',
