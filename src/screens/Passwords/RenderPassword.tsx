@@ -19,7 +19,6 @@ import Box from '../../components/atoms/Box';
 import Typography from '../../components/atoms/Typography';
 import SwipeContainer from '../../components/Molecules/SwipeContainer';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
-import { PASSWORD_HEIGHT } from '../../constants';
 import { usePasswordsStore } from '../../store/passwordStore';
 import { TPassword } from '../../types/passwords';
 import AddPasswordModal from './AddPasswordModal';
@@ -299,7 +298,7 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     alignItems: 'center',
-    height: PASSWORD_HEIGHT,
+    marginBottom: 15,
   },
   cardContainer: {
     width: '100%',

@@ -114,6 +114,7 @@ const AddOtherCardModal = (props: Props) => {
     let r = true;
     Object.keys(inputs).forEach(key => {
       const field = key as keyof TCardOtherInput;
+      if (field === 'otherDetails') return true;
 
       if (inputs[field].value.trim().length < 2) {
         r = false;

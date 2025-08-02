@@ -1,4 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard';
+import { FlashListRef } from '@shopify/flash-list';
 import { getMaxText } from 'commonutil-core';
 import React, { RefObject, useEffect, useState } from 'react';
 import { GestureResponderEvent, StyleSheet, View } from 'react-native';
@@ -20,10 +21,8 @@ import AddCardModal from '../../components/Card/AddCardModal';
 import SwipeContainer from '../../components/Molecules/SwipeContainer';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Typography from '../../components/atoms/Typography';
-import { CARD_HEIGHT } from '../../constants';
 import { useCardStore } from '../../store/cardStore';
 import { TCard, TCardCreditDebit } from '../../types/card';
-import { FlashListRef } from '@shopify/flash-list';
 type TProps = {
   card: TCardCreditDebit;
   listRef: RefObject<FlashListRef<TCard> | null>;
@@ -254,7 +253,7 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     alignItems: 'center',
-    height: CARD_HEIGHT,
+    marginBottom: 15,
   },
   cardContainer: {
     width: '100%',
