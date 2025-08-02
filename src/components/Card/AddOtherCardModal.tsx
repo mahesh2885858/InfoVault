@@ -277,7 +277,7 @@ const AddOtherCardModal = (props: Props) => {
                 },
               ]}
               placeholderTextColor={PlaceholderTextColor}
-              placeholder="Card name"
+              placeholder="What kind of card is it?"
               returnKeyType="next"
               onSubmitEditing={moveToNext}
               error={cardInputs.cardName.error}
@@ -313,8 +313,8 @@ const AddOtherCardModal = (props: Props) => {
                   color: theme.colors.onSurfaceVariant,
                 },
               ]}
-              maxLength={MAX_LENGTH_NAME}
               ref={nameOnCardRef}
+              multiline
               placeholderTextColor={PlaceholderTextColor}
               placeholder="Additional details"
               error={cardInputs.otherDetails.error}

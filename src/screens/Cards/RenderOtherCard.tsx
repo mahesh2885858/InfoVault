@@ -157,7 +157,7 @@ const RenderOtherCard = (props: TProps) => {
               </View>
               <View style={styles.nameOnCard}>
                 <Typography style={styles.cardText}>
-                  {getMaxText(card.otherDetails, 25)}
+                  {card.otherDetails}
                 </Typography>
                 {card.isPinned && (
                   <MaterialIcon
