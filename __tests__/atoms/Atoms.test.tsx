@@ -2,7 +2,6 @@ import 'react-native';
 import Typography from '../../src/components/atoms/Typography';
 import { it } from '@jest/globals';
 import React from 'react';
-import DarkText from '../../src/components/atoms/DarkText';
 import Box from '../../src/components/atoms/Box';
 import Button from '../../src/components/atoms/Button';
 import Container from '../../src/components/atoms/Container';
@@ -29,10 +28,6 @@ it('renders Light Text correctly', () => {
       <Typography />
     </TestWrapper>,
   );
-});
-
-it('renders Dark Text correctly', () => {
-  render(<DarkText />);
 });
 
 it('renders Box correctly', () => {
