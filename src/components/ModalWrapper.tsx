@@ -1,15 +1,19 @@
 import React from 'react';
-import {ColorValue} from 'react-native';
-import {StyleProp} from 'react-native';
-import {Pressable} from 'react-native';
-import {Modal, StatusBar, StyleSheet} from 'react-native';
+import {
+  ColorValue,
+  Modal,
+  Pressable,
+  StatusBar,
+  StyleSheet,
+} from 'react-native';
 
 type TProps = {
   visible: boolean;
   onClose: () => void;
   children: React.ReactNode;
   width?: null | '90%';
-  bg?: StyleProp<ColorValue>;
+  bg?: ColorValue | undefined;
+  shouldCloseOnBackgroundPress?: boolean;
 };
 
 const ModalWrapper = (props: TProps) => {
@@ -18,23 +22,27 @@ const ModalWrapper = (props: TProps) => {
       visible={props.visible}
       animationType="fade"
       transparent
-      onRequestClose={props.onClose}>
+      onRequestClose={props.onClose}
+    >
       <StatusBar backgroundColor={'#00000099'} />
       <Pressable
         style={[
           styles.container,
           {
-            backgroundColor: props.bg ? props.bg : '#00000099',
+            backgroundColor: props.bg || '#00000099',
           },
         ]}
-        onPress={e => {
+        onPress={() => {
+          if (!props.shouldCloseOnBackgroundPress) return;
           props.onClose();
-        }}>
+        }}
+      >
         <Pressable
           style={styles.child}
           onPress={e => {
             e.stopPropagation(); // This prevents the background press from triggering
-          }}>
+          }}
+        >
           {props.children}
         </Pressable>
       </Pressable>

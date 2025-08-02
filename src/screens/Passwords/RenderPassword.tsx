@@ -6,7 +6,6 @@ import Animated, {
   Easing,
   FadeIn,
   ZoomOut,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -23,10 +22,13 @@ import { PASSWORD_HEIGHT } from '../../constants';
 import { usePasswordsStore } from '../../store/passwordStore';
 import { TPassword } from '../../types/passwords';
 import { authenticateLocal } from '../../utils/authenticateLocal';
+import { runOnJS } from 'react-native-worklets';
+import AddPasswordModal from './AddPasswordModal';
 const RenderPassword = (password: TPassword) => {
   const theme = usePaper();
   const [showPassword, setShowPassword] = useState(false);
   const [isSwiped, setIsSwiped] = useState(false);
+  const [renderEditModal, setRenderEditModal] = useState(false);
 
   const opacityForNewItem = useSharedValue(1);
 
@@ -119,148 +121,123 @@ const RenderPassword = (password: TPassword) => {
   }, [password.id, focusedId, opacityForNewItem, setFocusedId]);
 
   return (
-    <Animated.View
-      style={[styles.card, breath]}
-      entering={FadeIn}
-      exiting={ZoomOut}
-    >
-      <PressableWithFeedback
-        onLongPress={handleLongPress}
-        onPress={handlePress}
-        style={styles.cardContainer}
+    <>
+      <Animated.View
+        style={[styles.card, breath]}
+        entering={FadeIn}
+        exiting={ZoomOut}
       >
-        <SwipeContainer
-          getSwipedValue={value => setIsSwiped(value)}
-          onDelete={() => removeItem(password.id)}
-          onEdit={() => {}}
+        <PressableWithFeedback
+          onLongPress={handleLongPress}
+          onPress={handlePress}
+          style={styles.cardContainer}
         >
-          <Box
-            style={[
-              styles.cardContent,
-              {
-                backgroundColor: password.isSelected
-                  ? theme.colors.surfaceDisabled
-                  : theme.colors.surfaceVariant,
-              },
-            ]}
+          <SwipeContainer
+            getSwipedValue={value => setIsSwiped(value)}
+            onDelete={() => removeItem(password.id)}
+            onEdit={() => {
+              setRenderEditModal(true);
+            }}
           >
-            <View style={styles.webSiteBox}>
-              <Typography
-                style={[
-                  styles.cardNumberText,
-                  {
-                    color: theme.colors.onSurfaceVariant,
-                  },
-                ]}
-              >
-                {password.website}
-              </Typography>
-              {password.isPinned && (
-                <MaterialIcon
-                  name="pin"
-                  size={20}
-                  color={theme.colors.onSurfaceVariant}
-                  onPress={() => {
-                    unpinPassword(password.id);
-                  }}
-                />
-              )}
-            </View>
-            <View style={styles.usernameBox}>
-              <View style={styles.username}>
+            <Box
+              style={[
+                styles.cardContent,
+                {
+                  backgroundColor: password.isSelected
+                    ? theme.colors.surfaceDisabled
+                    : theme.colors.surfaceVariant,
+                },
+              ]}
+            >
+              <View style={styles.webSiteBox}>
                 <Typography
                   style={[
-                    styles.title,
+                    styles.cardNumberText,
                     {
                       color: theme.colors.onSurfaceVariant,
                     },
                   ]}
                 >
-                  User name
+                  {password.website}
                 </Typography>
-                <Typography
-                  style={[
-                    styles.cardText,
-                    {
-                      color: theme.colors.onSurface,
-                    },
-                  ]}
-                >
-                  {password.username}
-                </Typography>
+                {password.isPinned && (
+                  <MaterialIcon
+                    name="pin"
+                    size={20}
+                    color={theme.colors.onSurfaceVariant}
+                    onPress={() => {
+                      unpinPassword(password.id);
+                    }}
+                  />
+                )}
               </View>
-
-              <PressableWithFeedback
-                onPress={() => copyContent('username')}
-                style={[
-                  styles.Button,
-                  {
-                    backgroundColor: theme.colors.inverseSurface,
-                  },
-                ]}
-              >
-                <MaterialIcon
-                  color={theme.colors.inverseOnSurface}
-                  name="content-copy"
-                  size={15}
-                />
-              </PressableWithFeedback>
-            </View>
-            <View style={styles.passwordBox}>
-              <View>
-                <Typography
-                  style={[
-                    styles.title,
-                    {
-                      color: theme.colors.onSurfaceVariant,
-                    },
-                  ]}
-                >
-                  Password
-                </Typography>
-                <Typography
-                  style={[
-                    styles.cardText,
-                    {
-                      color: theme.colors.onSurface,
-                    },
-                  ]}
-                >
-                  {showPassword ? password.password : '*********'}
-                </Typography>
-              </View>
-              <View style={{ flexDirection: 'row', gap: 10 }}>
-                <Animated.View style={slidingStyle}>
-                  <PressableWithFeedback
-                    onPress={() => togglePasswordVisibility()}
+              <View style={styles.usernameBox}>
+                <View style={styles.username}>
+                  <Typography
                     style={[
-                      styles.Button,
+                      styles.title,
                       {
-                        backgroundColor: theme.colors.inverseSurface,
+                        color: theme.colors.onSurfaceVariant,
                       },
                     ]}
                   >
-                    {showPassword ? (
-                      <MaterialIcon
-                        onPress={() => togglePasswordVisibility()}
-                        color={theme.colors.inverseOnSurface}
-                        name="eye-off-outline"
-                        size={15}
-                      />
-                    ) : (
-                      <MaterialIcon
-                        onPress={() => togglePasswordVisibility()}
-                        color={theme.colors.inverseOnSurface}
-                        name="eye-outline"
-                        size={15}
-                      />
-                    )}
-                  </PressableWithFeedback>
-                </Animated.View>
-                {showPassword && (
-                  <Animated.View style={animatedStyle}>
+                    User name
+                  </Typography>
+                  <Typography
+                    style={[
+                      styles.cardText,
+                      {
+                        color: theme.colors.onSurface,
+                      },
+                    ]}
+                  >
+                    {password.username}
+                  </Typography>
+                </View>
+
+                <PressableWithFeedback
+                  onPress={() => copyContent('username')}
+                  style={[
+                    styles.Button,
+                    {
+                      backgroundColor: theme.colors.inverseSurface,
+                    },
+                  ]}
+                >
+                  <MaterialIcon
+                    color={theme.colors.inverseOnSurface}
+                    name="content-copy"
+                    size={15}
+                  />
+                </PressableWithFeedback>
+              </View>
+              <View style={styles.passwordBox}>
+                <View>
+                  <Typography
+                    style={[
+                      styles.title,
+                      {
+                        color: theme.colors.onSurfaceVariant,
+                      },
+                    ]}
+                  >
+                    Password
+                  </Typography>
+                  <Typography
+                    style={[
+                      styles.cardText,
+                      {
+                        color: theme.colors.onSurface,
+                      },
+                    ]}
+                  >
+                    {showPassword ? password.password : '*********'}
+                  </Typography>
+                </View>
+                <View style={{ flexDirection: 'row', gap: 10 }}>
+                  <Animated.View style={slidingStyle}>
                     <PressableWithFeedback
-                      onPress={() => copyContent('password')}
+                      onPress={() => togglePasswordVisibility()}
                       style={[
                         styles.Button,
                         {
@@ -268,21 +245,57 @@ const RenderPassword = (password: TPassword) => {
                         },
                       ]}
                     >
-                      <MaterialIcon
-                        onPress={() => copyContent('password')}
-                        color={theme.colors.inverseOnSurface}
-                        name="content-copy"
-                        size={15}
-                      />
+                      {showPassword ? (
+                        <MaterialIcon
+                          onPress={() => togglePasswordVisibility()}
+                          color={theme.colors.inverseOnSurface}
+                          name="eye-off-outline"
+                          size={15}
+                        />
+                      ) : (
+                        <MaterialIcon
+                          onPress={() => togglePasswordVisibility()}
+                          color={theme.colors.inverseOnSurface}
+                          name="eye-outline"
+                          size={15}
+                        />
+                      )}
                     </PressableWithFeedback>
                   </Animated.View>
-                )}
+                  {showPassword && (
+                    <Animated.View style={animatedStyle}>
+                      <PressableWithFeedback
+                        onPress={() => copyContent('password')}
+                        style={[
+                          styles.Button,
+                          {
+                            backgroundColor: theme.colors.inverseSurface,
+                          },
+                        ]}
+                      >
+                        <MaterialIcon
+                          onPress={() => copyContent('password')}
+                          color={theme.colors.inverseOnSurface}
+                          name="content-copy"
+                          size={15}
+                        />
+                      </PressableWithFeedback>
+                    </Animated.View>
+                  )}
+                </View>
               </View>
-            </View>
-          </Box>
-        </SwipeContainer>
-      </PressableWithFeedback>
-    </Animated.View>
+            </Box>
+          </SwipeContainer>
+        </PressableWithFeedback>
+      </Animated.View>
+      {renderEditModal && (
+        <AddPasswordModal
+          passwordToEdit={password}
+          setVisible={setRenderEditModal}
+          visible={renderEditModal}
+        />
+      )}
+    </>
   );
 };
 

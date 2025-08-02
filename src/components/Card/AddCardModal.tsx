@@ -275,6 +275,7 @@ const AddCardModal = (props: Props) => {
       onClose={close}
       bg={theme.colors.background}
       visible={props.visible}
+      shouldCloseOnBackgroundPress={false}
     >
       <Container
         style={[

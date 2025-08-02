@@ -1,13 +1,14 @@
-import {create} from 'zustand';
+import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {persist, createJSONStorage} from 'zustand/middleware';
-import {TPassword} from '../types/passwords';
-import {DEFAULT_PROFILE_ID} from '../constants';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { TPassword } from '../types/passwords';
+import { DEFAULT_PROFILE_ID } from '../constants';
 
 type TPasswordsStore = {
   passwords: TPassword[];
   selectedPasswords: TPassword[];
   addPassword: (password: TPassword) => void;
+  editPassword: (password: TPassword) => void;
   deletePasswords: () => void;
   togglePasswordSelection: (id: string) => void;
   deSelectAll: () => void;
@@ -29,7 +30,7 @@ export const usePasswordsStore = create(
           set(state => {
             const updatedPasswords = state.passwords.map(p => {
               if (p.id === id) {
-                return {...p, isSelected: !p.isSelected};
+                return { ...p, isSelected: !p.isSelected };
               } else return p;
             });
             return {
@@ -43,15 +44,28 @@ export const usePasswordsStore = create(
             return {
               ...state,
               selectedPasswords: [],
-              passwords: state.passwords.map(p => ({...p, isSelected: false})),
+              passwords: state.passwords.map(p => ({
+                ...p,
+                isSelected: false,
+              })),
             };
           });
         },
         addPassword: password => {
           set(state => {
             return {
-              passwords: [...state.passwords, {...password}],
+              passwords: [...state.passwords, { ...password }],
             };
+          });
+        },
+        editPassword: password => {
+          set(state => {
+            const updatedPasswords = state.passwords.map(p => {
+              if (p.id === password.id) {
+                return { ...p, ...password };
+              } else return p;
+            });
+            return { passwords: updatedPasswords };
           });
         },
         deletePasswords: () => {
@@ -63,35 +77,35 @@ export const usePasswordsStore = create(
           });
         },
         setPasswords(passwords) {
-          set({passwords});
+          set({ passwords });
         },
         removePassword(id) {
           const filteredPasswords = get().passwords.filter(p => p.id !== id);
-          set({passwords: filteredPasswords});
+          set({ passwords: filteredPasswords });
         },
         focusedPassword: '',
         setFocusedPassword(cardNumber) {
-          set({focusedPassword: cardNumber});
+          set({ focusedPassword: cardNumber });
         },
         togglePinPassword() {
           set(state => {
             const id = state.selectedPasswords[0]?.id;
             const updatedPasswords = state.passwords.map(p => {
               if (p.id === id) {
-                return {...p, isPinned: !p.isPinned};
+                return { ...p, isPinned: !p.isPinned };
               } else return p;
             });
-            return {passwords: updatedPasswords};
+            return { passwords: updatedPasswords };
           });
         },
         unPinPassword: id => {
           set(state => {
             const updatedPasswords = state.passwords.map(p => {
               if (p.id === id) {
-                return {...p, isPinned: false};
+                return { ...p, isPinned: false };
               } else return p;
             });
-            return {passwords: updatedPasswords};
+            return { passwords: updatedPasswords };
           });
         },
       };
