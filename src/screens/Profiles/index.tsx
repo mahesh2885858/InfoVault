@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Fab from '../../components/Fab';
@@ -7,6 +7,7 @@ import { useProfileStore } from '../../store/profileStore';
 import AddProfileModal from './AddProfileModal';
 import ProfileHeader from './ProfileHeader';
 import RenderProfile from './RenderProfile';
+import { FlashList } from '@shopify/flash-list';
 
 const Profiles = () => {
   const theme = useTheme();
@@ -41,7 +42,7 @@ const Profiles = () => {
       ]}
     >
       <ProfileHeader />
-      <FlatList
+      <FlashList
         data={profiles}
         contentContainerStyle={styles.listContainer}
         keyExtractor={item => item.id}
