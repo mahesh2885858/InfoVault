@@ -85,7 +85,7 @@ InfoVault/
 ├── src/                 # Source code
 ├── android/             # Android-specific code
 ├── ios/                 # iOS-specific code (if applicable)
-├── App.js              # Main app component
+├── App.tsx              # Main app component
 ├── index.js            # App entry point
 └── package.json        # Dependencies and scripts
 ```
