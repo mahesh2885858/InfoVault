@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 type TCardStore = {
   cards: TCard[];
   selectedCards: TCard[];
-  addCard: (card: Omit<TCard, 'isSelected'>) => void;
+  addCard: (card: TCard) => void;
   editCard: (card: TCard) => void;
   removeCards: (ids: string[]) => void;
   toggleCardSelection: (id: string) => void;
@@ -37,7 +37,7 @@ export const useCardStore = create(
           });
         },
 
-        addCard: (card: Omit<TCard, 'isSelected'>) => {
+        addCard: card => {
           set(state => {
             return { cards: [...state.cards, { ...card, isSelected: false }] };
           });
@@ -104,7 +104,7 @@ export const useCardStore = create(
     {
       name: 'cardStore',
       storage: createJSONStorage(() => AsyncStorage),
-      version: 4,
+      version: 5,
       migrate: (persistedState: any, version) => {
         switch (version) {
           case 1:
@@ -118,14 +118,17 @@ export const useCardStore = create(
             };
           case 3:
           case 4:
+          case 5:
             // add id field to each card if not present
             return {
               ...persistedState,
               cards: persistedState.cards.map((card: TCard) => ({
                 ...card,
                 id: uuidv4(), // ensure each card has a unique id
+                type: card.type ? card.type : 'creditDebit', // default type for existing cards
               })),
             };
+
           default:
             return persistedState;
         }

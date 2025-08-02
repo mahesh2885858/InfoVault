@@ -18,4 +18,5 @@ export const MONTHS = [
 
 export const EXPIRY_REGEX = /^(0[1-9]|1[0-2])\/([0-9]{2})$/;
 export const CARD_HEIGHT = 182;
+export const OTHER_CARD_HEIGHT = 158;
 export const PASSWORD_HEIGHT = 164;

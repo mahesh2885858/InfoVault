@@ -6,7 +6,7 @@ import BootSplash from 'react-native-bootsplash';
 import { useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AddCardModal from '../../components/Card/AddCardModal';
-import Fab from '../../components/Fab';
+import ExpandableFab from '../../components/ExpandableFab';
 import Container from '../../components/atoms/Container';
 import { DEFAULT_PROFILE_ID } from '../../constants';
 import { useCardStore } from '../../store/cardStore';
@@ -15,9 +15,12 @@ import { useProfileStore } from '../../store/profileStore';
 import { TCard } from '../../types';
 import CardHeaders from './CardHeaders';
 import RenderCard from './RenderCard';
+import AddOtherCardModal from '../../components/Card/AddOtherCardModal';
+import RenderOtherCard from './RenderOtherCard';
 
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
+  const [renderOtherModal, setRenderOtherModal] = useState(false);
   const theme = useTheme();
   const { bottom } = useSafeAreaInsets();
   const selectedCards = useCardStore(state => state.selectedCards);
@@ -93,19 +96,36 @@ const Cards = () => {
         contentContainerStyle={styles.cardConatiner}
         renderItem={item => {
           listRef.current?.prepareForLayoutAnimationRender();
-          return <RenderCard card={item.item} />;
+          return item.item.type === 'other' ? (
+            <RenderOtherCard card={item.item} listRef={listRef} />
+          ) : (
+            <RenderCard listRef={listRef} card={item.item} />
+          );
         }}
         ref={listRef}
         keyExtractor={item => item.id || item.cardNumber}
       />
 
-      <Fab
-        callBack={() => {
+      <ExpandableFab
+        onFirstAction={() => {
           setVisibility(true);
         }}
+        onSecondAction={() => {
+          setRenderOtherModal(true);
+        }}
+        firstIcon="credit-card"
+        secondIcon="card"
       />
       <View>
-        <AddCardModal setVisible={setVisibility} visible={visible} />
+        {visible && (
+          <AddCardModal setVisible={setVisibility} visible={visible} />
+        )}
+        {renderOtherModal && (
+          <AddOtherCardModal
+            setVisible={setRenderOtherModal}
+            visible={renderOtherModal}
+          />
+        )}
       </View>
     </Container>
   );
