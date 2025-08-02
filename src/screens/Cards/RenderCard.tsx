@@ -15,15 +15,14 @@ import Animated, {
 import { useToast } from 'react-native-toast-notifications';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { runOnJS } from 'react-native-worklets';
+import { textSize } from '../../../theme';
+import AddCardModal from '../../components/Card/AddCardModal';
 import SwipeContainer from '../../components/Molecules/SwipeContainer';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Typography from '../../components/atoms/Typography';
 import { CARD_HEIGHT } from '../../constants';
 import { useCardStore } from '../../store/cardStore';
 import { TCard } from '../../types/card';
-import { authenticateLocal } from '../../utils/authenticateLocal';
-import { textSize } from '../../../theme';
-import AddCardModal from '../../components/Card/AddCardModal';
 type TProps = {
   card: TCard;
 };
@@ -54,10 +53,7 @@ const RenderCard = (props: TProps) => {
   const toggleCvv = async () => {
     try {
       if (!showCVV) {
-        const result = await authenticateLocal();
-        if (result) {
-          setShowCVV(true);
-        }
+        setShowCVV(true);
       } else {
         setShowCVV(false);
       }

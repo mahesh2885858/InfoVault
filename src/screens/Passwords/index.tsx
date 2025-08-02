@@ -1,29 +1,23 @@
 import { useFocusEffect } from '@react-navigation/native';
+import { FlashList, FlashListRef } from '@shopify/flash-list';
 import React, { useCallback, useRef, useState } from 'react';
-import {
-  BackHandler,
-  FlatList,
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
-import Animated, { LinearTransition } from 'react-native-reanimated';
+import { BackHandler, StatusBar, StyleSheet, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import Fab from '../../components/Fab';
 import Container from '../../components/atoms/Container';
-import { DEFAULT_PROFILE_ID, PASSWORD_HEIGHT } from '../../constants';
+import { DEFAULT_PROFILE_ID } from '../../constants';
+import { useMiscStore } from '../../store/miscStore';
 import { usePasswordsStore } from '../../store/passwordStore';
 import { useProfileStore } from '../../store/profileStore';
-import AddPasswordModal from './AddPasswordModal';
-import RenderPassword from './RenderPassword';
-import PasswordHeader from './PasswordHeader';
-import { useMiscStore } from '../../store/miscStore';
 import { TPassword } from '../../types';
-import { useTheme } from 'react-native-paper';
+import AddPasswordModal from './AddPasswordModal';
+import PasswordHeader from './PasswordHeader';
+import RenderPassword from './RenderPassword';
 
 const Passwords = () => {
   const [visible, setVisibility] = useState(false);
   const theme = useTheme();
-  const listRef = useRef<FlatList>(null);
+  const listRef = useRef<FlashListRef<TPassword>>(null);
   const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
   const deSelectAll = usePasswordsStore(state => state.deSelectAll);
   const passwords = usePasswordsStore(state => state.passwords);
@@ -86,20 +80,15 @@ const Passwords = () => {
       <View style={styles.header}>
         <PasswordHeader />
       </View>
-      <Animated.FlatList
+      <FlashList
         ref={listRef}
         data={passwordsToRender}
         contentContainerStyle={styles.cardContainer}
         renderItem={item => {
+          listRef.current?.prepareForLayoutAnimationRender();
           return <RenderPassword {...item.item} />;
         }}
-        itemLayoutAnimation={LinearTransition}
         keyExtractor={item => item.id}
-        getItemLayout={(_, index) => ({
-          length: PASSWORD_HEIGHT,
-          index,
-          offset: PASSWORD_HEIGHT * index,
-        })}
       />
 
       <Fab
@@ -120,7 +109,6 @@ const styles = StyleSheet.create({
   cardContainer: {
     gap: 13,
     paddingBottom: 100,
-    paddingTop: 25,
     minHeight: '100%', // should be added to fix an issue refer:https://github.com/software-mansion/react-native-reanimated/issues/5728#issuecomment-2551570107
   },
 

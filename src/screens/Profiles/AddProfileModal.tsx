@@ -43,7 +43,11 @@ const AddProfileModal = (props: TProps) => {
   };
 
   return (
-    <ModalWrapper visible={props.visible} onClose={props.onClose}>
+    <ModalWrapper
+      visible={props.visible}
+      shouldCloseOnBackgroundPress
+      onClose={props.onClose}
+    >
       <View style={styles.container}>
         <TextInput
           value={input}

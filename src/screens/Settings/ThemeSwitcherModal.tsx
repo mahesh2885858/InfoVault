@@ -21,7 +21,11 @@ const ThemeSwitcherModal = (props: TCommonModalProps) => {
   };
 
   return (
-    <ModalWrapper onClose={props.onClose} visible={props.visible}>
+    <ModalWrapper
+      shouldCloseOnBackgroundPress
+      onClose={props.onClose}
+      visible={props.visible}
+    >
       <View
         style={[
           styles.container,

@@ -1,26 +1,20 @@
 import { useFocusEffect } from '@react-navigation/native';
+import { FlashList, FlashListRef } from '@shopify/flash-list';
 import React, { useCallback, useRef, useState } from 'react';
-import {
-  BackHandler,
-  FlatList,
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { BackHandler, StatusBar, StyleSheet, View } from 'react-native';
 import BootSplash from 'react-native-bootsplash';
-import Animated, { LinearTransition } from 'react-native-reanimated';
+import { useTheme } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AddCardModal from '../../components/Card/AddCardModal';
 import Fab from '../../components/Fab';
 import Container from '../../components/atoms/Container';
-import { CARD_HEIGHT, DEFAULT_PROFILE_ID } from '../../constants';
+import { DEFAULT_PROFILE_ID } from '../../constants';
 import { useCardStore } from '../../store/cardStore';
-import { useProfileStore } from '../../store/profileStore';
-import RenderCard from './RenderCard';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMiscStore } from '../../store/miscStore';
+import { useProfileStore } from '../../store/profileStore';
 import { TCard } from '../../types';
 import CardHeaders from './CardHeaders';
-import { useTheme } from 'react-native-paper';
+import RenderCard from './RenderCard';
 
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
@@ -31,7 +25,7 @@ const Cards = () => {
   const deSelectAll = useCardStore(state => state.deSelectAll);
   const focusedId = useCardStore(state => state.focusedCard);
 
-  const listRef = useRef<FlatList>(null);
+  const listRef = useRef<FlashListRef<TCard>>(null);
   const selectedProfile = useProfileStore(state => state.selectedProfileId);
   const search = useMiscStore(state => state.search);
   const cardsToRender = cards
@@ -93,21 +87,16 @@ const Cards = () => {
     >
       <StatusBar backgroundColor={theme.colors.background} />
       <CardHeaders />
-      <Animated.FlatList
+      <FlashList
         extraData={focusedId}
         data={cardsToRender}
         contentContainerStyle={styles.cardConatiner}
         renderItem={item => {
+          listRef.current?.prepareForLayoutAnimationRender();
           return <RenderCard card={item.item} />;
         }}
         ref={listRef}
-        itemLayoutAnimation={LinearTransition}
         keyExtractor={item => item.id || item.cardNumber}
-        getItemLayout={(_, index) => ({
-          length: CARD_HEIGHT,
-          index,
-          offset: CARD_HEIGHT * index,
-        })}
       />
 
       <Fab

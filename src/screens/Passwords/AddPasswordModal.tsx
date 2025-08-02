@@ -15,11 +15,12 @@ import { HOME_PROFILE_ID, MAX_LENGTH_NAME } from '../../constants';
 import { useProfileContext } from '../../context/ProfileContext';
 import { usePasswordsStore } from '../../store/passwordStore';
 import { useProfileStore } from '../../store/profileStore';
-import { TBaseInput, TPasswordInput } from '../../types';
-
+import { TBaseInput, TPassword, TPasswordInput } from '../../types';
+import { v4 as uuidv4 } from 'uuid';
 type Props = {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  passwordToEdit?: TPassword | null;
 };
 
 const baseInput: TBaseInput = {
@@ -40,8 +41,25 @@ const AddPasswordModal = (props: Props) => {
   const setFocusedPassword = usePasswordsStore(
     state => state.setFocusedPassword,
   );
-  const [passwordInputs, setPasswordInputs] =
-    useState<TPasswordInput>(initState);
+  const editPassword = usePasswordsStore(state => state.editPassword);
+  const [passwordInputs, setPasswordInputs] = useState<TPasswordInput>(
+    props.passwordToEdit
+      ? {
+          password: {
+            value: props.passwordToEdit.password,
+            error: '',
+          },
+          username: {
+            value: props.passwordToEdit.username,
+            error: '',
+          },
+          website: {
+            value: props.passwordToEdit.website,
+            error: '',
+          },
+        }
+      : initState,
+  );
   const userNameRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
   const websiteRef = useRef<TextInput>(null);
@@ -102,15 +120,30 @@ const AddPasswordModal = (props: Props) => {
   const AddAPassword = () => {
     if (!validateInputs(passwordInputs)) return;
     const { password, username, website } = passwordInputs;
-    const id = crypto.randomUUID();
-    addPassword({
-      password: password.value,
-      username: username.value,
-      website: website.value,
-      id,
-      isSelected: false,
-      profileId: selectedProfileForNew?.id ?? HOME_PROFILE_ID,
-    });
+    let id = uuidv4();
+    if (props.passwordToEdit) {
+      id = props.passwordToEdit.id;
+      editPassword({
+        password: password.value,
+        username: username.value,
+        website: website.value,
+        id,
+        isSelected: false,
+        profileId:
+          props.passwordToEdit.profileId ??
+          selectedProfileForNew?.id ??
+          HOME_PROFILE_ID,
+      });
+    } else {
+      addPassword({
+        password: password.value,
+        username: username.value,
+        website: website.value,
+        id,
+        isSelected: false,
+        profileId: selectedProfileForNew?.id ?? HOME_PROFILE_ID,
+      });
+    }
     setFocusedPassword(id);
     setPasswordInputs(initState);
     props.setVisible(false);
