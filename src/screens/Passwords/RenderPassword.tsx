@@ -14,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useToast } from 'react-native-toast-notifications';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { runOnJS } from 'react-native-worklets';
 import Box from '../../components/atoms/Box';
 import Typography from '../../components/atoms/Typography';
 import SwipeContainer from '../../components/Molecules/SwipeContainer';
@@ -21,8 +22,6 @@ import PressableWithFeedback from '../../components/PressableWithFeedback';
 import { PASSWORD_HEIGHT } from '../../constants';
 import { usePasswordsStore } from '../../store/passwordStore';
 import { TPassword } from '../../types/passwords';
-import { authenticateLocal } from '../../utils/authenticateLocal';
-import { runOnJS } from 'react-native-worklets';
 import AddPasswordModal from './AddPasswordModal';
 const RenderPassword = (password: TPassword) => {
   const theme = usePaper();
@@ -64,12 +63,9 @@ const RenderPassword = (password: TPassword) => {
   const togglePasswordVisibility = async () => {
     try {
       if (!showPassword) {
-        const result = await authenticateLocal();
-        if (result) {
-          setShowPassword(true);
-          opacity.value = 1;
-          translateX.value = -20;
-        }
+        setShowPassword(true);
+        opacity.value = 1;
+        translateX.value = -20;
       } else {
         setShowPassword(false);
         translateX.value = 0;
