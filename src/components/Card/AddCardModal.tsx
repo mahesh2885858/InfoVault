@@ -211,10 +211,12 @@ const AddCardModal = (props: Props) => {
     if (!validateInputs(cardInputs)) return;
     const profileId = selectedProfileForNew?.id ?? HOME_PROFILE_ID;
     Keyboard.dismiss();
-    if (props.mode === 'edit') {
+    let id = uuidv4();
+    if (props.mode === 'edit' && props.editCard) {
       console.log({ props, cardInputs });
+      id = props.editCard.id;
       editCard({
-        id: props.editCard!.id,
+        id,
         CVV: cardInputs.CVV.value,
         NameOnCard: cardInputs.NameOnCard.value,
         cardName: cardInputs.cardName.value,
@@ -225,7 +227,7 @@ const AddCardModal = (props: Props) => {
       });
     } else {
       addCard({
-        id: uuidv4(),
+        id,
         CVV: cardInputs.CVV.value,
         NameOnCard: cardInputs.NameOnCard.value,
         cardName: cardInputs.cardName.value,
@@ -234,7 +236,6 @@ const AddCardModal = (props: Props) => {
         profileId,
       });
     }
-    const id = cardInputs.cardNumber.value;
 
     setFocusedCard(id);
     setCardInputs(initialCardInput);
