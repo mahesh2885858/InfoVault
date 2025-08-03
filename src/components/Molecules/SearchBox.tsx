@@ -26,7 +26,12 @@ const SearchBox = (props: TProps) => {
         onChangeText={text => setSearch(text)}
         placeholder="Search..."
         placeholderTextColor={theme.colors.onSurfaceDisabled}
-        style={styles.textInput}
+        style={[
+          styles.textInput,
+          {
+            color: theme.colors.onSurface,
+          },
+        ]}
       />
     </View>
   );

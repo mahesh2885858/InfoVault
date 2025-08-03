@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { RadioButton, useTheme } from 'react-native-paper';
-import { DEFAULT_PROFILE_ID } from '../constants';
 import { useProfileStore } from '../store/profileStore';
 import ModalWrapper from './ModalWrapper';
 import PressableWithFeedback from './PressableWithFeedback';
@@ -53,8 +52,8 @@ const ProfileSelectionModal = (props: TProps) => {
           ]}
         >
           {profiles.map(item => {
-            if (props.renderingForNewItemAdd && item.id === DEFAULT_PROFILE_ID)
-              return null;
+            // if (props.renderingForNewItemAdd && item.id === DEFAULT_PROFILE_ID)
+            //   return null;
             return (
               <PressableWithFeedback
                 key={item.id}

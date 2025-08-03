@@ -1,15 +1,15 @@
-import {create} from 'zustand';
+import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {persist, createJSONStorage} from 'zustand/middleware';
-import {TProfile} from '../types';
-import {DEFAULT_PROFILE_ID, HOME_PROFILE_ID} from '../constants';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { TProfile } from '../types';
+import { DEFAULT_PROFILE_ID, HOME_PROFILE_ID } from '../constants';
 
 type TProfileStore = {
   profiles: TProfile[];
   selectedProfileId: string;
   selectedProfileForAddingANewRecord: string; //This will be used in modal where we can add more items
   addProfile: (profile: TProfile) => void;
-  removeProfile: (id?: string) => void;
+  removeProfile: (id: string) => void;
   setProfiles: (cards: TProfile[]) => void;
   getSelectedProfile: () => TProfile | undefined;
   updateProfile: (profile: TProfile) => void;
@@ -36,19 +36,19 @@ export const useProfileStore = create(
         selectedProfileForAddingANewRecord: DEFAULT_PROFILE_ID,
         addProfile: profile => {
           set(state => {
-            return {profiles: [...state.profiles, profile]};
+            return { profiles: [...state.profiles, profile] };
           });
         },
 
         removeProfile: id => {
           set(state => {
             const d = state.profiles.filter(p => p.id !== id);
-            return {profiles: d};
+            return { profiles: d };
           });
         },
 
         setProfiles(profiles) {
-          set({profiles});
+          set({ profiles });
         },
         getSelectedProfile() {
           const state = get();

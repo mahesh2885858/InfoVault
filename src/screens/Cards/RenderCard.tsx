@@ -23,6 +23,7 @@ import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Typography from '../../components/atoms/Typography';
 import { useCardStore } from '../../store/cardStore';
 import { TCard, TCardCreditDebit } from '../../types/card';
+import { useProfileStore } from '../../store/profileStore';
 type TProps = {
   card: TCardCreditDebit;
   listRef: RefObject<FlashListRef<TCard> | null>;
@@ -41,6 +42,9 @@ const RenderCard = (props: TProps) => {
   const setFocusedCard = useCardStore(state => state.setFocusedCard);
   const unPinCard = useCardStore(state => state.unPinCard);
   const removeCards = useCardStore(state => state.removeCards);
+  const selectProfileForAddingANewRecord = useProfileStore(
+    state => state.selectProfileForAddingANewRecord,
+  );
 
   const [showCVV, setShowCVV] = useState(false);
   const [isSwiped, setIsSwiped] = useState(false);
@@ -120,6 +124,8 @@ const RenderCard = (props: TProps) => {
             onDelete={() => removeCards([card.id])}
             onEdit={() => {
               setRenderEditModalFor(card);
+              console.log({ card });
+              selectProfileForAddingANewRecord(card.profileId);
             }}
           >
             <Animated.View

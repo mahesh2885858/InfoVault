@@ -1,46 +1,125 @@
-import React from 'react';
-import {View} from 'react-native';
-import Typography from '../../components/atoms/Typography';
+import React, { useState } from 'react';
+import { StyleSheet } from 'react-native';
+import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+import { useTheme } from 'react-native-paper';
+import Reanimated, {
+  SharedValue,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {TProfile} from '../../types';
-import {StyleService, useStyleSheet, useTheme} from '@ui-kitten/components';
-import {DEFAULT_PROFILE_ID} from '../../constants';
+import Typography from '../../components/atoms/Typography';
+import { TProfile } from '../../types';
+import RenderDeleteProfileModal from './RenderDeleteProfileModal';
+import { DEFAULT_PROFILE_ID } from '../../constants';
 
 type TProps = {
   item: TProfile;
   onEditPress: (id: string) => void;
 };
+function RightAction(
+  prog: SharedValue<number>,
+  drag: SharedValue<number>,
+  onDelete: () => void,
+  onEdit: () => void,
+) {
+  console.log({ prog, drag });
+  const styleAnimation = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: 100 + drag.value }],
+    };
+  });
+  const theme = useTheme();
+
+  return (
+    <Reanimated.View style={[styleAnimation, styles.rightPanel]}>
+      <MaterialIcon
+        onPress={() => onDelete()}
+        name="delete"
+        size={24}
+        color={theme.colors.onTertiary}
+        style={[
+          styles.icon,
+          {
+            backgroundColor: theme.colors.tertiary,
+          },
+        ]}
+      />
+
+      <MaterialIcon
+        onPress={() => onEdit()}
+        name="pencil"
+        size={24}
+        color={theme.colors.onTertiary}
+        style={[
+          styles.icon,
+          {
+            backgroundColor: theme.colors.tertiary,
+          },
+        ]}
+      />
+    </Reanimated.View>
+  );
+}
 
 const RenderProfile = (props: TProps) => {
-  const {item} = props;
-  const styles = useStyleSheet(themedStyles);
-  const theme = useTheme();
+  const { item } = props;
+  const [renderDeleteProfileModal, setRenderDeleteProfileModal] =
+    useState(false);
   if (!item) return null;
   return (
-    <View style={styles.item}>
-      <Typography style={styles.text}>{item.name}</Typography>
-      {item.id !== DEFAULT_PROFILE_ID && (
-        <MaterialIcon
-          name="pencil"
-          onPress={() => props.onEditPress(item.id)}
-          size={20}
-          color={theme['text-primary']}
+    <>
+      <Swipeable
+        renderRightActions={(pr, trs) =>
+          props.item.id === DEFAULT_PROFILE_ID
+            ? null
+            : RightAction(
+                pr,
+                trs,
+                () => {
+                  setRenderDeleteProfileModal(true);
+                },
+                () => props.onEditPress(item.id),
+              )
+        }
+        containerStyle={styles.container}
+      >
+        <Typography style={styles.text}>{item.name}</Typography>
+      </Swipeable>
+      {renderDeleteProfileModal && (
+        <RenderDeleteProfileModal
+          profile={item}
+          visible={renderDeleteProfileModal}
+          onClose={() => setRenderDeleteProfileModal(false)}
         />
       )}
-    </View>
+    </>
   );
 };
 
 export default RenderProfile;
 
-const themedStyles = StyleService.create({
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'column',
+    gap: 10,
+    paddingVertical: 5,
+    marginBottom: 10,
+    paddingHorizontal: 20,
   },
+
   text: {
     flex: 1,
     fontSize: 20,
+  },
+  rightPanel: {
+    width: 100,
+
+    alignItems: 'center',
+    gap: 2,
+    flexDirection: 'row',
+  },
+  icon: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
 });

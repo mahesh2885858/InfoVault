@@ -4,6 +4,7 @@ import { StyleSheet, TextInput, View } from 'react-native';
 import { uCFirst } from 'commonutil-core';
 import { useTheme } from 'react-native-paper';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { v4 as uuidv4 } from 'uuid';
 import Box from '../../components/atoms/Box';
 import Container from '../../components/atoms/Container';
 import Typography from '../../components/atoms/Typography';
@@ -11,12 +12,11 @@ import ModalWrapper from '../../components/ModalWrapper';
 import ButtonsForForms from '../../components/Molecules/ButtonsForForms';
 import MTextInput from '../../components/Molecules/MTextInput';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
-import { HOME_PROFILE_ID, MAX_LENGTH_NAME } from '../../constants';
+import { DEFAULT_PROFILE_ID, MAX_LENGTH_NAME } from '../../constants';
 import { useProfileContext } from '../../context/ProfileContext';
 import { usePasswordsStore } from '../../store/passwordStore';
 import { useProfileStore } from '../../store/profileStore';
 import { TBaseInput, TPassword, TPasswordInput } from '../../types';
-import { v4 as uuidv4 } from 'uuid';
 type Props = {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -129,10 +129,7 @@ const AddPasswordModal = (props: Props) => {
         website: website.value,
         id,
         isSelected: false,
-        profileId:
-          props.passwordToEdit.profileId ??
-          selectedProfileForNew?.id ??
-          HOME_PROFILE_ID,
+        profileId: selectedProfileForNew?.id ?? DEFAULT_PROFILE_ID,
       });
     } else {
       addPassword({
@@ -141,7 +138,7 @@ const AddPasswordModal = (props: Props) => {
         website: website.value,
         id,
         isSelected: false,
-        profileId: selectedProfileForNew?.id ?? HOME_PROFILE_ID,
+        profileId: selectedProfileForNew?.id ?? DEFAULT_PROFILE_ID,
       });
     }
     setFocusedPassword(id);

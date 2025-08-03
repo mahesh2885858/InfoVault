@@ -18,6 +18,7 @@ type TPasswordsStore = {
   setFocusedPassword: (cardNumber: string) => void;
   togglePinPassword: () => void;
   unPinPassword: (id: string) => void;
+  movePasswordsToDefaultProfile: (passwords: TPassword[]) => void;
 };
 
 export const usePasswordsStore = create(
@@ -106,6 +107,21 @@ export const usePasswordsStore = create(
               } else return p;
             });
             return { passwords: updatedPasswords };
+          });
+        },
+        movePasswordsToDefaultProfile: passwords => {
+          set(state => {
+            const updatedPasswords = passwords.map(p => ({
+              ...p,
+              profileId: DEFAULT_PROFILE_ID,
+            }));
+            return {
+              // This will remove the passwords that are being moved from the current store
+              // and add the updated passwords with the default profile ID.
+              passwords: state.passwords
+                .filter(p => !passwords.some(np => np.id === p.id))
+                .concat(updatedPasswords),
+            };
           });
         },
       };

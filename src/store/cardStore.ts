@@ -18,6 +18,7 @@ type TCardStore = {
   setFocusedCard: (cardNumber: string) => void;
   togglePinCard: () => void;
   unPinCard: (id: string) => void;
+  moveCardsToDefaultProfile: (cards: TCard[]) => void;
 };
 
 export const useCardStore = create(
@@ -94,6 +95,16 @@ export const useCardStore = create(
             const updatedCards = state.cards.map(c => {
               if (c.id === id) {
                 return { ...c, isPinned: false };
+              } else return c;
+            });
+            return { cards: updatedCards };
+          });
+        },
+        moveCardsToDefaultProfile: (cards: TCard[]) => {
+          set(state => {
+            const updatedCards = state.cards.map(c => {
+              if (cards.some(card => card.id === c.id)) {
+                return { ...c, profileId: DEFAULT_PROFILE_ID };
               } else return c;
             });
             return { cards: updatedCards };
