@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { v4 as uuidv4 } from 'uuid';
-import { HOME_PROFILE_ID, MAX_LENGTH_NAME } from '../../constants';
+import { DEFAULT_PROFILE_ID, MAX_LENGTH_NAME } from '../../constants';
 import { useProfileContext } from '../../context/ProfileContext';
 import { useCardStore } from '../../store/cardStore';
 import { useProfileStore } from '../../store/profileStore';
@@ -212,7 +212,7 @@ const AddCardModal = (props: Props) => {
 
   const AddACard = () => {
     if (!validateInputs(cardInputs)) return;
-    const profileId = selectedProfileForNew?.id ?? HOME_PROFILE_ID;
+    const profileId = selectedProfileForNew?.id ?? DEFAULT_PROFILE_ID;
     Keyboard.dismiss();
     let id = uuidv4();
     if (props.editCard) {
@@ -277,7 +277,7 @@ const AddCardModal = (props: Props) => {
     setCardInputs(initialCardInput);
     props.setVisible(false);
   }, [props]);
-
+  console.log({ selectedProfileForNew, selectedProfileForAddingANewRecord });
   return (
     <ModalWrapper
       width={'90%'}

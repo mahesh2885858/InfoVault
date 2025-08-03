@@ -22,6 +22,7 @@ import PressableWithFeedback from '../../components/PressableWithFeedback';
 import { usePasswordsStore } from '../../store/passwordStore';
 import { TPassword } from '../../types/passwords';
 import AddPasswordModal from './AddPasswordModal';
+import { useProfileStore } from '../../store/profileStore';
 const RenderPassword = (password: TPassword) => {
   const theme = usePaper();
   const [showPassword, setShowPassword] = useState(false);
@@ -44,6 +45,9 @@ const RenderPassword = (password: TPassword) => {
   const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
 
   const removeItem = usePasswordsStore(state => state.removePassword);
+  const selectProfileForAddingANewRecord = useProfileStore(
+    state => state.selectProfileForAddingANewRecord,
+  );
 
   const opacity = useSharedValue(0);
   const translateX = useSharedValue(0);
@@ -131,6 +135,7 @@ const RenderPassword = (password: TPassword) => {
             getSwipedValue={value => setIsSwiped(value)}
             onDelete={() => removeItem(password.id)}
             onEdit={() => {
+              selectProfileForAddingANewRecord(password.profileId);
               setRenderEditModal(true);
             }}
           >

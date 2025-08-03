@@ -23,6 +23,7 @@ import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Typography from '../../components/atoms/Typography';
 import { useCardStore } from '../../store/cardStore';
 import { TCard, TCardOther } from '../../types/card';
+import { useProfileStore } from '../../store/profileStore';
 type TProps = {
   card: TCardOther;
   listRef: RefObject<FlashListRef<TCard> | null>;
@@ -41,6 +42,9 @@ const RenderOtherCard = (props: TProps) => {
   const setFocusedCard = useCardStore(state => state.setFocusedCard);
   const unPinCard = useCardStore(state => state.unPinCard);
   const removeCards = useCardStore(state => state.removeCards);
+  const selectProfileForAddingANewRecord = useProfileStore(
+    state => state.selectProfileForAddingANewRecord,
+  );
   const [isSwiped, setIsSwiped] = useState(false);
   const [renderEditModalFor, setRenderEditModalFor] =
     useState<TCardOther | null>(null);
@@ -105,6 +109,7 @@ const RenderOtherCard = (props: TProps) => {
             }}
             onDelete={() => removeCards([card.id])}
             onEdit={() => {
+              selectProfileForAddingANewRecord(card.profileId);
               setRenderEditModalFor(card);
             }}
           >
