@@ -1,4 +1,4 @@
-import {TCard, TPassword, TProfile} from '../types';
+import { TCard, TPassword, TProfile } from '../types';
 type TProps = {
   cards: TCard[];
   passwords: TPassword[];
@@ -13,15 +13,22 @@ export const validateImportedData = (data: TProps): boolean => {
   // check the cards data
   if (data.cards && data.cards.length > 0) {
     data.cards.forEach(card => {
-      if (
-        !card.NameOnCard ||
-        !card.cardNumber ||
-        !card.CVV ||
-        !card.expiry ||
-        !card.cardName
-      ) {
-        console.log('invalid card data');
-        r = false;
+      if (card.type === 'other') {
+        if (!card.cardName || !card.cardNumber || !card.otherDetails) {
+          console.log('invalid other card data');
+          r = false;
+        }
+      } else {
+        if (
+          !card.NameOnCard ||
+          !card.cardNumber ||
+          !card.CVV ||
+          !card.expiry ||
+          !card.cardName
+        ) {
+          console.log('invalid card data');
+          r = false;
+        }
       }
     });
   }

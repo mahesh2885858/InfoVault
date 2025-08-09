@@ -15,7 +15,8 @@ import { validateImportedData } from '../../utils/validateImportedData';
 import SettingsHeader from './Header';
 import ThemeSwitcherModal from './ThemeSwitcherModal';
 import { StyleSheet } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { ActivityIndicator, useTheme } from 'react-native-paper';
+import { useToast } from 'react-native-toast-notifications';
 const FILE_NAME = 'data.json';
 const DIR_PATH = 'exportPath';
 
@@ -24,6 +25,8 @@ const Settings = () => {
   const cData = useCardStore(state => state.cards);
   const setCards = useCardStore(state => state.setCards);
   const paper = useTheme();
+
+  const toast = useToast();
 
   const pData = usePasswordsStore(state => state.passwords);
   const setPasswords = usePasswordsStore(state => state.setPasswords);
@@ -34,6 +37,7 @@ const Settings = () => {
   const theme = useUiStore(state => state.theme);
 
   const [isExporting, setIsExporting] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
   const [openThemeSwitcher, setOpenThemeSwitcher] = useState(false);
 
   const pickTheDirectory = async () => {
@@ -105,6 +109,7 @@ const Settings = () => {
 
   const importData = async () => {
     try {
+      setIsImporting(true);
       let dir = await ScopedStorage.openDocument(true);
       if (dir && dir.data) {
         const response = JSON.parse(dir.data);
@@ -130,25 +135,38 @@ const Settings = () => {
             const uniqueData = getUniqueData(data, 'id');
             setProfiles(uniqueData);
           }
+          toast.show('Import success', {});
         }
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      setIsImporting(false);
     }
   };
 
   return (
     <Container style={styles.container}>
       <SettingsHeader />
-      <PressableWithFeedback onPress={importData} style={[styles.setting]}>
+      <PressableWithFeedback
+        disabled={isImporting}
+        onPress={importData}
+        style={[styles.setting]}
+      >
         <Typography style={styles.text}>{t('common.import')}</Typography>
+        {isImporting && <ActivityIndicator size="small" />}
       </PressableWithFeedback>
-      <PressableWithFeedback onPress={exportData} style={styles.setting}>
+      <PressableWithFeedback
+        disabled={isExporting}
+        onPress={exportData}
+        style={styles.setting}
+      >
         <Typography style={styles.text}>{t('common.export')}</Typography>
+        {isExporting && <ActivityIndicator size="small" />}
       </PressableWithFeedback>
       <PressableWithFeedback
         onPress={() => setOpenThemeSwitcher(true)}
-        style={styles.setting}
+        style={[styles.setting, styles.themeSetting]}
       >
         <Typography style={styles.text}>{t('common.theme')}</Typography>
         <Typography
@@ -177,7 +195,7 @@ export default Settings;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 20,
+    gap: 15,
   },
   button: {},
   setting: {
@@ -185,6 +203,17 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ffffff10',
     borderBottomWidth: 1,
     paddingLeft: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+
+    paddingRight: 10,
+  },
+  themeSetting: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    paddingRight: 0,
   },
   text: {
     fontSize: 18,
