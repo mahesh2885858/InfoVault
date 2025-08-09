@@ -5,7 +5,6 @@ import { StatusBar } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { ToastProvider } from 'react-native-toast-notifications';
 import AppNavigator from './src/app';
 import { AuthContextProvider } from './src/context/AuthContext';
 import { ProfileContextProvider } from './src/context/ProfileContext';
@@ -15,6 +14,7 @@ import { default as dark } from './src/theme/dark.json';
 import { default as light } from './src/theme/light.json';
 import './src/translations/i18n';
 import { CustomDark, CustomLight } from './theme';
+import { ToastProvider } from './src/context/ToastContext';
 
 function App(): React.JSX.Element {
   const theme = useUiStore(state => state.theme);
