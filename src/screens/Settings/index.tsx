@@ -16,6 +16,7 @@ import SettingsHeader from './Header';
 import ThemeSwitcherModal from './ThemeSwitcherModal';
 import { StyleSheet } from 'react-native';
 import { useTheme } from 'react-native-paper';
+import { useToast } from 'react-native-toast-notifications';
 const FILE_NAME = 'data.json';
 const DIR_PATH = 'exportPath';
 
@@ -24,6 +25,8 @@ const Settings = () => {
   const cData = useCardStore(state => state.cards);
   const setCards = useCardStore(state => state.setCards);
   const paper = useTheme();
+
+  const toast = useToast();
 
   const pData = usePasswordsStore(state => state.passwords);
   const setPasswords = usePasswordsStore(state => state.setPasswords);
@@ -130,6 +133,7 @@ const Settings = () => {
             const uniqueData = getUniqueData(data, 'id');
             setProfiles(uniqueData);
           }
+          toast.show('Import success', {});
         }
       }
     } catch (e) {
