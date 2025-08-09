@@ -45,7 +45,7 @@ const CardHeaderRight = () => {
   return (
     <>
       <PressableWithFeedback
-        onPress={() => removeCards(selectedCards.map(c => c.cardNumber))}
+        onPress={() => removeCards(selectedCards.map(c => c.id))}
       >
         <MaterialIcon
           name="delete"
