@@ -13,7 +13,6 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
-import { useToast } from 'react-native-toast-notifications';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { runOnJS } from 'react-native-worklets';
 import { textSize } from '../../../theme';
@@ -21,9 +20,10 @@ import AddCardModal from '../../components/Card/AddCardModal';
 import SwipeContainer from '../../components/Molecules/SwipeContainer';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Typography from '../../components/atoms/Typography';
+import { useToastContext } from '../../context/ToastContext';
 import { useCardStore } from '../../store/cardStore';
-import { TCard, TCardCreditDebit } from '../../types/card';
 import { useProfileStore } from '../../store/profileStore';
+import { TCard, TCardCreditDebit } from '../../types/card';
 type TProps = {
   card: TCardCreditDebit;
   listRef: RefObject<FlashListRef<TCard> | null>;
@@ -50,7 +50,7 @@ const RenderCard = (props: TProps) => {
   const [isSwiped, setIsSwiped] = useState(false);
   const [renderEditModalFor, setRenderEditModalFor] =
     useState<TCardCreditDebit | null>(null);
-  const toast = useToast();
+  const toast = useToastContext();
 
   const toggleCvv = async () => {
     try {
@@ -81,7 +81,7 @@ const RenderCard = (props: TProps) => {
 
   const copyContent = async (whatToCopy: 'NameOnCard' | 'cardNumber') => {
     Clipboard.setString(card[whatToCopy].replaceAll('-', ''));
-    toast.show(`${whatToCopy} is copied.`, { duration: 1500 });
+    toast.show(`${whatToCopy} is copied.`);
   };
 
   useEffect(() => {

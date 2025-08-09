@@ -2,10 +2,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { uCFirst } from 'commonutil-core';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { StyleSheet } from 'react-native';
+import { ActivityIndicator, useTheme } from 'react-native-paper';
 import * as ScopedStorage from 'react-native-scoped-storage';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Container from '../../components/atoms/Container';
 import Typography from '../../components/atoms/Typography';
+import { useToastContext } from '../../context/ToastContext';
 import { useUiStore } from '../../store/UiStore';
 import { useCardStore } from '../../store/cardStore';
 import { usePasswordsStore } from '../../store/passwordStore';
@@ -14,9 +17,6 @@ import { TCard, TPassword, TProfile } from '../../types';
 import { validateImportedData } from '../../utils/validateImportedData';
 import SettingsHeader from './Header';
 import ThemeSwitcherModal from './ThemeSwitcherModal';
-import { StyleSheet } from 'react-native';
-import { ActivityIndicator, useTheme } from 'react-native-paper';
-import { useToast } from 'react-native-toast-notifications';
 const FILE_NAME = 'data.json';
 const DIR_PATH = 'exportPath';
 
@@ -26,7 +26,7 @@ const Settings = () => {
   const setCards = useCardStore(state => state.setCards);
   const paper = useTheme();
 
-  const toast = useToast();
+  const { show: showToast } = useToastContext();
 
   const pData = usePasswordsStore(state => state.passwords);
   const setPasswords = usePasswordsStore(state => state.setPasswords);
@@ -135,7 +135,7 @@ const Settings = () => {
             const uniqueData = getUniqueData(data, 'id');
             setProfiles(uniqueData);
           }
-          toast.show('Import success', {});
+          showToast('Import success');
         }
       }
     } catch (e) {

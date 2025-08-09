@@ -12,17 +12,17 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { useToast } from 'react-native-toast-notifications';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { runOnJS } from 'react-native-worklets';
 import Box from '../../components/atoms/Box';
 import Typography from '../../components/atoms/Typography';
 import SwipeContainer from '../../components/Molecules/SwipeContainer';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
+import { useToastContext } from '../../context/ToastContext';
 import { usePasswordsStore } from '../../store/passwordStore';
+import { useProfileStore } from '../../store/profileStore';
 import { TPassword } from '../../types/passwords';
 import AddPasswordModal from './AddPasswordModal';
-import { useProfileStore } from '../../store/profileStore';
 const RenderPassword = (password: TPassword) => {
   const theme = usePaper();
   const [showPassword, setShowPassword] = useState(false);
@@ -41,7 +41,7 @@ const RenderPassword = (password: TPassword) => {
   const focusedId = usePasswordsStore(state => state.focusedPassword);
   const setFocusedId = usePasswordsStore(state => state.setFocusedPassword);
   const unpinPassword = usePasswordsStore(state => state.unPinPassword);
-  const toast = useToast();
+  const toast = useToastContext();
   const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
 
   const removeItem = usePasswordsStore(state => state.removePassword);
@@ -96,7 +96,7 @@ const RenderPassword = (password: TPassword) => {
 
   const copyContent = async (whatToCopy: 'username' | 'password') => {
     Clipboard.setString(password[whatToCopy]);
-    toast.show(`${whatToCopy} is copied.`, { duration: 1500 });
+    toast.show(`${whatToCopy} is copied.`);
   };
 
   useEffect(() => {
