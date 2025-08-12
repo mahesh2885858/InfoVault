@@ -32,6 +32,7 @@ const RenderCard = (props: TProps) => {
   const opacity = useSharedValue(1);
   const paper = usePaper();
   const { card } = props;
+
   const breath = useAnimatedStyle(() => ({
     opacity: opacity.value,
   }));

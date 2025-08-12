@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+import Swipeable, {
+  SwipeableMethods,
+} from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { useTheme } from 'react-native-paper';
 import Reanimated, {
   SharedValue,
@@ -11,6 +13,7 @@ import Typography from '../../components/atoms/Typography';
 import { TProfile } from '../../types';
 import RenderDeleteProfileModal from './RenderDeleteProfileModal';
 import { DEFAULT_PROFILE_ID } from '../../constants';
+import { useFocusEffect } from '@react-navigation/native';
 
 type TProps = {
   item: TProfile;
@@ -63,12 +66,24 @@ function RightAction(
 
 const RenderProfile = (props: TProps) => {
   const { item } = props;
+  const swipeRef = useRef<SwipeableMethods | null>(null);
+
   const [renderDeleteProfileModal, setRenderDeleteProfileModal] =
     useState(false);
+  useFocusEffect(
+    useCallback(() => {
+      const swipe = swipeRef.current;
+      return () => {
+        swipe?.close();
+      };
+    }, []),
+  );
   if (!item) return null;
+
   return (
     <>
       <Swipeable
+        ref={swipeRef}
         renderRightActions={(pr, trs) =>
           props.item.id === DEFAULT_PROFILE_ID
             ? null
@@ -77,8 +92,12 @@ const RenderProfile = (props: TProps) => {
                 trs,
                 () => {
                   setRenderDeleteProfileModal(true);
+                  swipeRef.current?.close();
                 },
-                () => props.onEditPress(item.id),
+                () => {
+                  swipeRef.current?.close();
+                  props.onEditPress(item.id);
+                },
               )
         }
         containerStyle={styles.container}
