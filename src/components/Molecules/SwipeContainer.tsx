@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import { StyleSheet } from 'react-native';
-import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+import Swipeable, {
+  SwipeableMethods,
+} from 'react-native-gesture-handler/ReanimatedSwipeable';
 import Reanimated, {
   SharedValue,
   useAnimatedStyle,
@@ -8,12 +10,14 @@ import Reanimated, {
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PressableWithFeedback from '../PressableWithFeedback';
 import { useTheme } from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/native';
 
 type TProps = {
   children: React.ReactNode;
   onDelete: () => void;
   onEdit: () => void;
   getSwipedValue: (value: boolean) => void;
+  ref?: React.RefObject<SwipeableMethods | null>;
 };
 
 function RightAction(
@@ -68,10 +72,31 @@ function RightAction(
 }
 
 const SwipeContainer = (props: TProps) => {
+  const swipeRef = useRef<SwipeableMethods | null>(null);
+  useFocusEffect(
+    useCallback(() => {
+      const swipe = swipeRef.current;
+      return () => {
+        swipe?.close();
+      };
+    }, []),
+  );
   return (
     <Swipeable
+      ref={swipeRef}
       renderRightActions={(prog, drag) =>
-        RightAction(prog, drag, props.onDelete, props.onEdit)
+        RightAction(
+          prog,
+          drag,
+          () => {
+            props.onDelete();
+            swipeRef.current?.close();
+          },
+          () => {
+            props.onEdit();
+            swipeRef.current?.close();
+          },
+        )
       }
       onSwipeableOpen={() => {
         props.getSwipedValue(true);
