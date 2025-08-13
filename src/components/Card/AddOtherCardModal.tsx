@@ -267,7 +267,6 @@ const AddOtherCardModal = (props: Props) => {
             <MTextInput
               value={cardInputs.cardName.value}
               autoFocus
-              maxLength={MAX_LENGTH_NAME}
               ref={cardNameRef}
               onChangeText={t => onChange(t, 'cardName')}
               style={[
