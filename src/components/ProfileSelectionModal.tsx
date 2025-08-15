@@ -6,6 +6,7 @@ import ModalWrapper from './ModalWrapper';
 import PressableWithFeedback from './PressableWithFeedback';
 import Button from './atoms/Button';
 import Typography from './atoms/Typography';
+import { DEFAULT_PROFILE_ID } from '../constants';
 type TProps = {
   visible: boolean;
   onClose: () => void;
@@ -41,7 +42,11 @@ const ProfileSelectionModal = (props: TProps) => {
     [props, selectProfile, selectProfileForAddingANewRecord],
   );
   return (
-    <ModalWrapper onClose={props.onClose} visible={props.visible}>
+    <ModalWrapper
+      shouldCloseOnBackgroundPress
+      onClose={props.onClose}
+      visible={props.visible}
+    >
       <View style={styles.rootView}>
         <View
           style={[
@@ -52,8 +57,8 @@ const ProfileSelectionModal = (props: TProps) => {
           ]}
         >
           {profiles.map(item => {
-            // if (props.renderingForNewItemAdd && item.id === DEFAULT_PROFILE_ID)
-            //   return null;
+            if (props.renderingForNewItemAdd && item.id === DEFAULT_PROFILE_ID)
+              return null;
             return (
               <PressableWithFeedback
                 key={item.id}
