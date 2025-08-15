@@ -36,7 +36,7 @@ const Profiles = () => {
       style={[
         styles.container,
         {
-          paddingTop: top + 20,
+          paddingTop: top + 10,
           paddingBottom: bottom,
           backgroundColor: theme.colors.background,
         },
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   listContainer: {
-    paddingVertical: 20,
+    paddingVertical: 10,
   },
   item: {
     flexDirection: 'row',

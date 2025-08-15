@@ -45,11 +45,11 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'row',
-    height: 60,
+    // height: 60,
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 10,
+    paddingVertical: 10,
   },
   box: { flexDirection: 'row', alignItems: 'center' },
   gap: {
