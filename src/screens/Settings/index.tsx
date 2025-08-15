@@ -88,6 +88,7 @@ const Settings = () => {
           false,
         );
       }
+      showToast('Exported successfully');
     } catch (e) {
       console.error(e);
       AsyncStorage.removeItem(DIR_PATH);
@@ -135,7 +136,7 @@ const Settings = () => {
             const uniqueData = getUniqueData(data, 'id');
             setProfiles(uniqueData);
           }
-          showToast('Import success');
+          showToast('Imported successfully');
         }
       }
     } catch (e) {

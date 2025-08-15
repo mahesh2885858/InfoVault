@@ -12,7 +12,7 @@ import ModalWrapper from '../../components/ModalWrapper';
 import ButtonsForForms from '../../components/Molecules/ButtonsForForms';
 import MTextInput from '../../components/Molecules/MTextInput';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
-import { DEFAULT_PROFILE_ID, MAX_LENGTH_NAME } from '../../constants';
+import { DEFAULT_PROFILE_ID } from '../../constants';
 import { useProfileContext } from '../../context/ProfileContext';
 import { usePasswordsStore } from '../../store/passwordStore';
 import { useProfileStore } from '../../store/profileStore';
@@ -80,9 +80,7 @@ const AddPasswordModal = (props: Props) => {
   };
 
   const onChange = (text: string, field: keyof typeof passwordInputs) => {
-    if (field === 'username' || field === 'website') {
-      if (text.trim().length > MAX_LENGTH_NAME) return;
-    }
+    
     setPasswordInputs(prev => ({
       ...prev,
       [field]: { ...prev[field], value: text, error: '' },

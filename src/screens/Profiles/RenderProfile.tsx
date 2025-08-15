@@ -12,7 +12,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Typography from '../../components/atoms/Typography';
 import { TProfile } from '../../types';
 import RenderDeleteProfileModal from './RenderDeleteProfileModal';
-import { DEFAULT_PROFILE_ID } from '../../constants';
+import { DEFAULT_PROFILE_ID, HOME_PROFILE_ID } from '../../constants';
 import { useFocusEffect } from '@react-navigation/native';
 
 type TProps = {
@@ -24,8 +24,8 @@ function RightAction(
   drag: SharedValue<number>,
   onDelete: () => void,
   onEdit: () => void,
+  profileId: string,
 ) {
-  console.log({ prog, drag });
   const styleAnimation = useAnimatedStyle(() => {
     return {
       transform: [{ translateX: 100 + drag.value }],
@@ -35,18 +35,20 @@ function RightAction(
 
   return (
     <Reanimated.View style={[styleAnimation, styles.rightPanel]}>
-      <MaterialIcon
-        onPress={() => onDelete()}
-        name="delete"
-        size={24}
-        color={theme.colors.onTertiary}
-        style={[
-          styles.icon,
-          {
-            backgroundColor: theme.colors.tertiary,
-          },
-        ]}
-      />
+      {HOME_PROFILE_ID !== profileId && (
+        <MaterialIcon
+          onPress={() => onDelete()}
+          name="delete"
+          size={24}
+          color={theme.colors.onTertiary}
+          style={[
+            styles.icon,
+            {
+              backgroundColor: theme.colors.tertiary,
+            },
+          ]}
+        />
+      )}
 
       <MaterialIcon
         onPress={() => onEdit()}
@@ -98,6 +100,7 @@ const RenderProfile = (props: TProps) => {
                   swipeRef.current?.close();
                   props.onEditPress(item.id);
                 },
+                props.item.id,
               )
         }
         containerStyle={styles.container}

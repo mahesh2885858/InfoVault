@@ -23,6 +23,7 @@ import { usePasswordsStore } from '../../store/passwordStore';
 import { useProfileStore } from '../../store/profileStore';
 import { TPassword } from '../../types/passwords';
 import AddPasswordModal from './AddPasswordModal';
+import { getMaxText } from 'commonutil-core';
 const RenderPassword = (password: TPassword) => {
   const theme = usePaper();
   const [showPassword, setShowPassword] = useState(false);
@@ -191,7 +192,7 @@ const RenderPassword = (password: TPassword) => {
                       },
                     ]}
                   >
-                    {password.username}
+                    {getMaxText(password.username, 20)}
                   </Typography>
                 </View>
 
@@ -231,7 +232,9 @@ const RenderPassword = (password: TPassword) => {
                       },
                     ]}
                   >
-                    {showPassword ? password.password : '*********'}
+                    {showPassword
+                      ? getMaxText(password.password, 15)
+                      : '*********'}
                   </Typography>
                 </View>
                 <View style={{ flexDirection: 'row', gap: 10 }}>

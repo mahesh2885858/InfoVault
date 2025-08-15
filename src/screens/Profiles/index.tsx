@@ -8,6 +8,7 @@ import AddProfileModal from './AddProfileModal';
 import ProfileHeader from './ProfileHeader';
 import RenderProfile from './RenderProfile';
 import { FlashList } from '@shopify/flash-list';
+import { DEFAULT_PROFILE_ID } from '../../constants';
 
 const Profiles = () => {
   const theme = useTheme();
@@ -43,7 +44,7 @@ const Profiles = () => {
     >
       <ProfileHeader />
       <FlashList
-        data={profiles}
+        data={profiles.filter(profile => profile.id !== DEFAULT_PROFILE_ID)}
         contentContainerStyle={styles.listContainer}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (

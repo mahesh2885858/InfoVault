@@ -33,7 +33,7 @@ export const useProfileStore = create(
           },
         ],
         selectedProfileId: DEFAULT_PROFILE_ID,
-        selectedProfileForAddingANewRecord: DEFAULT_PROFILE_ID,
+        selectedProfileForAddingANewRecord: HOME_PROFILE_ID,
         addProfile: profile => {
           set(state => {
             return { profiles: [...state.profiles, profile] };

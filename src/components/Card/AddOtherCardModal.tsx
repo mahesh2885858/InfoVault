@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { v4 as uuidv4 } from 'uuid';
-import { DEFAULT_PROFILE_ID, MAX_LENGTH_NAME } from '../../constants';
+import { DEFAULT_PROFILE_ID } from '../../constants';
 import { useProfileContext } from '../../context/ProfileContext';
 import { useCardStore } from '../../store/cardStore';
 import { useProfileStore } from '../../store/profileStore';
@@ -267,7 +267,6 @@ const AddOtherCardModal = (props: Props) => {
             <MTextInput
               value={cardInputs.cardName.value}
               autoFocus
-              maxLength={MAX_LENGTH_NAME}
               ref={cardNameRef}
               onChangeText={t => onChange(t, 'cardName')}
               style={[
@@ -344,7 +343,7 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   number: {
-    width: '70%',
+    width: '100%',
   },
   profileSwitch: {
     flexDirection: 'row',
