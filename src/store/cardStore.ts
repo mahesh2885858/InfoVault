@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { TCard } from '../types/card';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { DEFAULT_PROFILE_ID } from '../constants';
+import { DEFAULT_PROFILE_ID, HOME_PROFILE_ID } from '../constants';
 import { v4 as uuidv4 } from 'uuid';
 
 type TCardStore = {
@@ -104,7 +104,7 @@ export const useCardStore = create(
           set(state => {
             const updatedCards = state.cards.map(c => {
               if (cards.some(card => card.id === c.id)) {
-                return { ...c, profileId: DEFAULT_PROFILE_ID };
+                return { ...c, profileId: HOME_PROFILE_ID };
               } else return c;
             });
             return { cards: updatedCards };
