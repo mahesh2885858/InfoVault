@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { TPassword } from '../types/passwords';
-import { DEFAULT_PROFILE_ID } from '../constants';
+import { DEFAULT_PROFILE_ID, HOME_PROFILE_ID } from '../constants';
 
 type TPasswordsStore = {
   passwords: TPassword[];
@@ -113,7 +113,7 @@ export const usePasswordsStore = create(
           set(state => {
             const updatedPasswords = passwords.map(p => ({
               ...p,
-              profileId: DEFAULT_PROFILE_ID,
+              profileId: HOME_PROFILE_ID,
             }));
             return {
               // This will remove the passwords that are being moved from the current store

@@ -9,6 +9,7 @@ import { useCardStore } from '../../store/cardStore';
 import { usePasswordsStore } from '../../store/passwordStore';
 import { TProfile } from '../../types';
 import { useProfileStore } from '../../store/profileStore';
+import { DEFAULT_PROFILE_ID, HOME_PROFILE_ID } from '../../constants';
 type TProps = {
   visible: boolean;
   onClose: () => void;
@@ -19,6 +20,8 @@ const RenderDeleteProfileModal = (props: TProps) => {
   const cards = useCardStore(state => state.cards);
   const passwords = usePasswordsStore(state => state.passwords);
   const removeProfile = useProfileStore(state => state.removeProfile);
+  const selectProfile = useProfileStore(state => state.selectProfile);
+  const profiles = useProfileStore(state => state.profiles);
   const movePasswordsToDefaultProfile = usePasswordsStore(
     state => state.movePasswordsToDefaultProfile,
   );
@@ -38,6 +41,7 @@ const RenderDeleteProfileModal = (props: TProps) => {
     if (cardsWithProfile.length > 0) {
       moveCardsToDefaultProfile(cardsWithProfile);
     }
+    selectProfile(DEFAULT_PROFILE_ID);
     removeProfile(profile.id);
     props.onClose();
   }, [
@@ -48,6 +52,7 @@ const RenderDeleteProfileModal = (props: TProps) => {
     removeProfile,
     profile.id,
     props,
+    selectProfile,
   ]);
 
   return (
@@ -98,7 +103,9 @@ const RenderDeleteProfileModal = (props: TProps) => {
           {(passwordsWithProfile.length > 0 || cardsWithProfile.length > 0) && (
             <Typography style={styles.info}>
               All of the associated passwords and cards will be moved to the
-              default profile.
+              {' ' + profiles.find(p => p.id === HOME_PROFILE_ID)?.name ||
+                'Default'}{' '}
+              Profile.
             </Typography>
           )}
         </View>

@@ -38,8 +38,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 20,
-    gap: 20,
+    paddingTop: 10,
+    gap: 10,
   },
   headerText: {
     fontSize: 20,
