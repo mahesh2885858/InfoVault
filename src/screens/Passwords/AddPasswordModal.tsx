@@ -160,7 +160,7 @@ const AddPasswordModal = (props: Props) => {
       if (!passwordInputs[key as keyof TPasswordInput].error) return null;
       return (
         <View key={key}>
-          <Typography style={{ color: theme.colors.primary }}>
+          <Typography style={{ color: theme.colors.onError }}>
             {uCFirst(key)} : {passwordInputs[key as keyof TPasswordInput].error}
           </Typography>
         </View>
@@ -181,7 +181,18 @@ const AddPasswordModal = (props: Props) => {
       visible={props.visible}
     >
       <Container style={styles.cardContainer}>
-        {anyErrors && <View style={styles.errorBox}>{renderErrors()}</View>}
+        {anyErrors && (
+          <View
+            style={[
+              styles.errorBox,
+              {
+                backgroundColor: theme.colors.error,
+              },
+            ]}
+          >
+            {renderErrors()}
+          </View>
+        )}
 
         <View style={styles.profileSwitch}>
           <Typography>{t('passwords.passwordWillBeSavedIn')} : </Typography>
