@@ -59,4 +59,10 @@ export default {
     imported: 'सफलतापूर्वक आयात किया गया',
     language: 'भाषा',
   },
+  auth: {
+    authenticate: 'प्रमाणित करें',
+    exitApp: 'ऐप से बाहर निकलें',
+    authenticating: 'उपयोगकर्ता प्रमाणित किया जा रहा है',
+    notAuthenticated: 'प्रमाणित नहीं हुआ, कृपया स्वयं को प्रमाणित करें।',
+  },
 };

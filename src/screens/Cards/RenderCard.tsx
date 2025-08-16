@@ -24,6 +24,7 @@ import Typography from '../../components/atoms/Typography';
 import { useCardStore } from '../../store/cardStore';
 import { useProfileStore } from '../../store/profileStore';
 import { TCard, TCardCreditDebit } from '../../types/card';
+import { useToastContext } from '../../context/ToastContext';
 type TProps = {
   card: TCardCreditDebit;
   listRef: RefObject<FlashListRef<TCard> | null>;
@@ -47,6 +48,8 @@ const RenderCard = (props: TProps) => {
   const selectProfileForAddingANewRecord = useProfileStore(
     state => state.selectProfileForAddingANewRecord,
   );
+
+  const { show } = useToastContext();
 
   const [showCVV, setShowCVV] = useState(false);
   const [isSwiped, setIsSwiped] = useState(false);
@@ -82,6 +85,9 @@ const RenderCard = (props: TProps) => {
 
   const copyContent = async (whatToCopy: 'NameOnCard' | 'cardNumber') => {
     Clipboard.setString(card[whatToCopy].replaceAll('-', ''));
+    show(t('common.copied'), {
+      type: 'success',
+    });
   };
 
   useEffect(() => {

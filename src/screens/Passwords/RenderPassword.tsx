@@ -24,6 +24,7 @@ import { usePasswordsStore } from '../../store/passwordStore';
 import { useProfileStore } from '../../store/profileStore';
 import { TPassword } from '../../types/passwords';
 import AddPasswordModal from './AddPasswordModal';
+import { useToastContext } from '../../context/ToastContext';
 const RenderPassword = (password: TPassword) => {
   const theme = usePaper();
   const { t } = useTranslation();
@@ -49,6 +50,7 @@ const RenderPassword = (password: TPassword) => {
   const selectProfileForAddingANewRecord = useProfileStore(
     state => state.selectProfileForAddingANewRecord,
   );
+  const { show: showToast } = useToastContext();
 
   const opacity = useSharedValue(0);
   const translateX = useSharedValue(0);
@@ -97,6 +99,7 @@ const RenderPassword = (password: TPassword) => {
 
   const copyContent = async (whatToCopy: 'username' | 'password') => {
     Clipboard.setString(password[whatToCopy]);
+    showToast(t('common.copied'));
   };
 
   useEffect(() => {

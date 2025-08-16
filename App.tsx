@@ -1,6 +1,6 @@
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider } from '@ui-kitten/components';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PaperProvider } from 'react-native-paper';
@@ -15,9 +15,16 @@ import { default as light } from './src/theme/light.json';
 import './src/translations/i18n';
 import { CustomDark, CustomLight } from './theme';
 import { ToastProvider } from './src/context/ToastContext';
+import i18n from './src/translations/i18n';
+import { LANGUAGES } from './src/constants';
 
 function App(): React.JSX.Element {
   const theme = useUiStore(state => state.theme);
+  const selectedLanguage = useUiStore(state => state.selectedLanguage);
+
+  useEffect(() => {
+    i18n.changeLanguage(LANGUAGES[selectedLanguage]?.code || 'en');
+  }, [selectedLanguage]);
 
   return (
     <ApplicationProvider

@@ -23,6 +23,7 @@ import Typography from '../../components/atoms/Typography';
 import { useCardStore } from '../../store/cardStore';
 import { useProfileStore } from '../../store/profileStore';
 import { TCard, TCardOther } from '../../types/card';
+import { useToastContext } from '../../context/ToastContext';
 type TProps = {
   card: TCardOther;
   listRef: RefObject<FlashListRef<TCard> | null>;
@@ -45,6 +46,7 @@ const RenderOtherCard = (props: TProps) => {
     state => state.selectProfileForAddingANewRecord,
   );
   const [isSwiped, setIsSwiped] = useState(false);
+  const { show } = useToastContext();
   const [renderEditModalFor, setRenderEditModalFor] =
     useState<TCardOther | null>(null);
 
@@ -65,6 +67,7 @@ const RenderOtherCard = (props: TProps) => {
 
   const copyContent = async (whatToCopy: 'cardName' | 'cardNumber') => {
     Clipboard.setString(card[whatToCopy].replaceAll('-', ''));
+    show('Copied to clipboard', { type: 'success' });
   };
 
   useEffect(() => {

@@ -17,6 +17,7 @@ export default {
     search: 'Search',
     unknownError: 'An unknown error occurred',
     default: 'Default',
+    copied: 'Copied to clipboard',
   },
   cards: {
     title: 'Cards',
@@ -59,5 +60,11 @@ export default {
     exported: 'Exported successfully',
     imported: 'Imported successfully',
     language: 'Language',
+  },
+  auth: {
+    authenticate: 'Authenticate',
+    exitApp: 'Exit the app',
+    authenticating: 'Authenticating user',
+    notAuthenticated: 'Not authenticated, please authenticate yourself.',
   },
 };
