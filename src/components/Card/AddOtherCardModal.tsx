@@ -19,6 +19,7 @@ import MTextInput from '../Molecules/MTextInput';
 
 import { Keyboard } from 'react-native';
 import { useTheme } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   visible: boolean;
@@ -42,16 +43,20 @@ const initialCardInput: TCardOtherInput = {
   },
 };
 
-const errorMessages: Record<keyof TCardOtherInput, string> = {
-  cardName: 'It should be more than 3 characters and can not be empty',
-  cardNumber: 'It should be more than 3 characters',
-  otherDetails: '',
-};
-
 const AddOtherCardModal = (props: Props) => {
   const theme = useTheme();
   const PlaceholderTextColor = theme.colors.onSurfaceDisabled;
   const { addCard, setFocusedCard, editCard } = useCardStore();
+  const { t } = useTranslation();
+
+  const errorMessages: Record<keyof TCardOtherInput, string> = useMemo(
+    () => ({
+      cardName: t('cards.cardNameError'),
+      cardNumber: t('cards.otherCardNumberError'),
+      otherDetails: '',
+    }),
+    [t],
+  );
 
   const [cardInputs, setCardInputs] = useState<TCardOtherInput>(
     props.mode === 'edit'
@@ -197,7 +202,7 @@ const AddOtherCardModal = (props: Props) => {
         <View style={{ marginBottom: 5 }} key={key}>
           <Typography
             style={{
-              color: theme.colors.onError,
+              color: theme.colors.primary,
             }}
           >
             {uCFirst(key)} : {cardInputs[key as keyof TCardOtherInput].error}
@@ -277,7 +282,7 @@ const AddOtherCardModal = (props: Props) => {
                 },
               ]}
               placeholderTextColor={PlaceholderTextColor}
-              placeholder="What kind of card is it?"
+              placeholder={t('cards.whatKindOfCard')}
               returnKeyType="next"
               onSubmitEditing={moveToNext}
               error={cardInputs.cardName.error}
@@ -296,7 +301,7 @@ const AddOtherCardModal = (props: Props) => {
                 },
               ]}
               placeholderTextColor={PlaceholderTextColor}
-              placeholder="Number"
+              placeholder={t('cards.cardNumber')}
               error={cardInputs.cardNumber.error}
               clearError={() => clearError('cardNumber')}
             />
@@ -316,7 +321,7 @@ const AddOtherCardModal = (props: Props) => {
               ref={nameOnCardRef}
               multiline
               placeholderTextColor={PlaceholderTextColor}
-              placeholder="Additional details"
+              placeholder={t('cards.additionalDetails')}
               error={cardInputs.otherDetails.error}
               clearError={() => clearError('otherDetails')}
             />

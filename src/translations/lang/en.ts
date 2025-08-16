@@ -8,5 +8,33 @@ export default {
     light: 'Light',
     system: 'System',
     delete: 'Delete',
+    hide: 'Hide',
+    view: 'View',
+    save: 'Save',
+    cancel: 'Cancel',
+  },
+  cards: {
+    title: 'Cards',
+    validUpto: 'Valid up to',
+    cardWillBeSavedIn: 'Card will be saved in',
+    cardName: 'Card Name',
+    cardNumber: 'Card Number',
+    nameOnCard: 'Name on Card',
+    CVVError: 'It should be exactly three digits and can not be empty',
+    NameOnCardError: 'It should be more than 3 characters and can not be empty',
+    cardNameError: 'It should be more than 3 characters and can not be empty',
+    cardNumberError: 'It should be 16 digits and can not be empty',
+    otherCardNumberError: 'It should be more than 3 characters',
+    whatKindOfCard: 'What kind of card is this?',
+    additionalDetails: 'Additional Details',
+  },
+  passwords: {
+    title: 'Passwords',
+  },
+  profiles: {
+    title: 'Profiles',
+  },
+  settings: {
+    title: 'Settings',
   },
 };

@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect} from 'react';
-import {TextInput, TextInputProps, Vibration} from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import { TextInput, TextInputProps, Vibration } from 'react-native';
 import Animated, {
   ReduceMotion,
   useAnimatedStyle,
@@ -7,9 +7,8 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
-// import {myTheme} from '../../../theme';
-import {StyleSheet} from 'react-native';
-import {useTheme} from '@ui-kitten/components';
+import { StyleSheet } from 'react-native';
+import { useTheme } from '@ui-kitten/components';
 
 type TProps = TextInputProps & {
   error?: string;
@@ -18,12 +17,12 @@ type TProps = TextInputProps & {
 };
 
 const MTextInput = (props: TProps) => {
-  const {error, ...restProps} = props;
+  const { error, ...restProps } = props;
   const offset = useSharedValue<number>(0);
   const borderWidth = useSharedValue(0);
   const theme = useTheme();
   const stylesX = useAnimatedStyle(() => ({
-    transform: [{translateX: offset.value}],
+    transform: [{ translateX: offset.value }],
     borderWidth: borderWidth.value,
     borderColor: theme['warning-bg'],
   }));

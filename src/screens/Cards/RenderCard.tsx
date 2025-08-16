@@ -24,6 +24,7 @@ import { useToastContext } from '../../context/ToastContext';
 import { useCardStore } from '../../store/cardStore';
 import { useProfileStore } from '../../store/profileStore';
 import { TCard, TCardCreditDebit } from '../../types/card';
+import { useTranslation } from 'react-i18next';
 type TProps = {
   card: TCardCreditDebit;
   listRef: RefObject<FlashListRef<TCard> | null>;
@@ -31,6 +32,7 @@ type TProps = {
 const RenderCard = (props: TProps) => {
   const opacity = useSharedValue(1);
   const paper = usePaper();
+  const { t } = useTranslation();
   const { card } = props;
 
   const breath = useAnimatedStyle(() => ({
@@ -185,7 +187,7 @@ const RenderCard = (props: TProps) => {
                       { color: paper.colors.onSurfaceVariant },
                     ]}
                   >
-                    Valid Thru
+                    {t('cards.validUpto')}
                   </Typography>
                   <Typography
                     style={[styles.cardText, { color: paper.colors.onSurface }]}
@@ -220,7 +222,9 @@ const RenderCard = (props: TProps) => {
                       color: paper.colors.inverseOnSurface,
                     }}
                   >
-                    {showCVV ? 'Hide CVV' : 'View CVV'}
+                    {showCVV
+                      ? t('common.hide') + ' CVV'
+                      : t('common.view') + ' CVV'}
                   </Typography>
                 </PressableWithFeedback>
               </View>

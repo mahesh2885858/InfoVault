@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import Button from '../atoms/Button';
 import Box from '../atoms/Box';
+import { useTranslation } from 'react-i18next';
 
 type TProps = {
   onSave: () => void;
@@ -9,10 +10,11 @@ type TProps = {
 };
 
 const ButtonsForForms = (props: TProps) => {
+  const { t } = useTranslation();
   return (
     <Box style={styles.buttonsBox}>
-      <Button label="Cancel" onButtonPress={props.onCancel} />
-      <Button label="Save" onButtonPress={props.onSave} />
+      <Button label={t('common.cancel')} onButtonPress={props.onCancel} />
+      <Button label={t('common.save')} onButtonPress={props.onSave} />
     </Box>
   );
 };
