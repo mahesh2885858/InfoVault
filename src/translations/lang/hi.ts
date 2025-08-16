@@ -32,6 +32,8 @@ export default {
     otherCardNumberError: 'यह 3 अक्षरों से अधिक होना चाहिए',
     whatKindOfCard: 'यह किस प्रकार का कार्ड है?',
     additionalDetails: 'अतिरिक्त विवरण',
+    debitOrCreditCard: 'डेबिट/क्रेडिट कार्ड',
+    otherCard: 'अन्य कार्ड',
   },
   passwords: {
     title: 'पासवर्ड',

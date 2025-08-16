@@ -12,10 +12,11 @@ const Fab = (props: { callBack: () => void }) => {
         mode="elevated"
         icon="plus"
         onPress={props.callBack}
-        rippleColor={theme.colors.onSurface}
+        rippleColor={theme.colors.surface}
         style={{
-          backgroundColor: theme.colors.tertiaryContainer,
+          backgroundColor: theme.colors.onSurface,
         }}
+        color={theme.colors.surface}
       />
     </View>
   );

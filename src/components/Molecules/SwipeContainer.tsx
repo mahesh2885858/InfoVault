@@ -17,6 +17,7 @@ type TProps = {
   onDelete: () => void;
   onEdit: () => void;
   getSwipedValue: (value: boolean) => void;
+  isSwipeEnabled?: boolean; // New prop to control swipe functionality
   ref?: React.RefObject<SwipeableMethods | null>;
 };
 
@@ -83,6 +84,7 @@ const SwipeContainer = (props: TProps) => {
   );
   return (
     <Swipeable
+      enabled={props.isSwipeEnabled ?? true} // Use the new prop to control swipe functionality
       ref={swipeRef}
       renderRightActions={(prog, drag) =>
         RightAction(

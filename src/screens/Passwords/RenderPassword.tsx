@@ -86,7 +86,10 @@ const RenderPassword = (password: TPassword) => {
     if (isSwiped) return;
     if (selectedPasswords.length >= 1) {
       togglePasswordSelection(password.id);
+      return;
     }
+    selectProfileForAddingANewRecord(password.profileId);
+    setRenderEditModal(true);
   };
 
   const handleLongPress = (_event: GestureResponderEvent) => {
@@ -135,6 +138,7 @@ const RenderPassword = (password: TPassword) => {
           style={styles.cardContainer}
         >
           <SwipeContainer
+            isSwipeEnabled={selectedPasswords.length < 1}
             getSwipedValue={value => setIsSwiped(value)}
             onDelete={() => removeItem(password.id)}
             onEdit={() => {

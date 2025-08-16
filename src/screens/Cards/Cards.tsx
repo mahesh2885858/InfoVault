@@ -17,11 +17,13 @@ import CardHeaders from './CardHeaders';
 import RenderCard from './RenderCard';
 import AddOtherCardModal from '../../components/Card/AddOtherCardModal';
 import RenderOtherCard from './RenderOtherCard';
+import { useTranslation } from 'react-i18next';
 
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
   const [renderOtherModal, setRenderOtherModal] = useState(false);
   const theme = useTheme();
+  const { t } = useTranslation();
   const { bottom } = useSafeAreaInsets();
   const selectedCards = useCardStore(state => state.selectedCards);
   const cards = useCardStore(state => state.cards);
@@ -113,8 +115,8 @@ const Cards = () => {
         onSecondAction={() => {
           setRenderOtherModal(true);
         }}
-        firstIcon="credit-card"
-        secondIcon="card"
+        firstLabel={t('cards.debitOrCreditCard')}
+        secondLabel={t('cards.otherCard')}
       />
       <View>
         {visible && (

@@ -33,6 +33,8 @@ export default {
     otherCardNumberError: 'It should be more than 3 characters',
     whatKindOfCard: 'What kind of card is this?',
     additionalDetails: 'Additional Details',
+    debitOrCreditCard: 'Debit/Credit Cards',
+    otherCard: 'Other Cards',
   },
   passwords: {
     title: 'Passwords',

@@ -32,6 +32,8 @@ export default {
     otherCardNumberError: 'ఇది 3 అక్షరాలకు మించి ఉండాలి',
     whatKindOfCard: 'ఇది ఏ రకమైన కార్డు?',
     additionalDetails: 'అదనపు వివరాలు',
+    debitOrCreditCard: 'డెబిట్/క్రెడిట్ కార్డులు',
+    otherCard: 'ఇతర కార్డులు',
   },
   passwords: {
     title: 'పాస్‌వర్డ్‌లు',

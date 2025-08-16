@@ -54,7 +54,10 @@ const RenderOtherCard = (props: TProps) => {
     if (isSwiped) return;
     if (selectedCards.length >= 1) {
       toggleCardSelection(card.id);
+      return;
     }
+    selectProfileForAddingANewRecord(card.profileId);
+    setRenderEditModalFor(card);
   };
 
   const handleLongPress = (_event?: GestureResponderEvent) => {
@@ -104,6 +107,7 @@ const RenderOtherCard = (props: TProps) => {
           style={[styles.cardContainer]}
         >
           <SwipeContainer
+            isSwipeEnabled={selectedCards.length < 1}
             getSwipedValue={value => {
               setIsSwiped(value);
             }}
