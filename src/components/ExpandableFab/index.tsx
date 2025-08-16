@@ -1,29 +1,29 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { FAB, useTheme } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withTiming,
   interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
 } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Typography from '../atoms/Typography';
+import PressableWithFeedback from '../PressableWithFeedback';
 
 interface ExpandableFabProps {
   onFirstAction: () => void;
   onSecondAction: () => void;
-  firstIcon?: string;
-  secondIcon?: string;
-  firstLabel?: string;
-  secondLabel?: string;
+
+  firstLabel: string;
+  secondLabel: string;
 }
 
 const ExpandableFab = ({
   onFirstAction,
   onSecondAction,
-  firstIcon = 'note-plus',
-  secondIcon = 'folder-plus',
+  firstLabel,
+  secondLabel,
 }: ExpandableFabProps) => {
   const { bottom } = useSafeAreaInsets();
   const theme = useTheme();
@@ -35,9 +35,8 @@ const ExpandableFab = ({
   const toggleExpanded = () => {
     const toValue = isExpanded ? 0 : 1;
 
-    animatedValue.value = withSpring(toValue, {
-      damping: 15,
-      stiffness: 150,
+    animatedValue.value = withTiming(toValue, {
+      duration: 500,
     });
 
     rotateValue.value = withTiming(toValue, {
@@ -66,23 +65,20 @@ const ExpandableFab = ({
   });
 
   const firstButtonAnimatedStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(animatedValue.value, [0, 1], [0, -70]);
-    const translateX = interpolate(animatedValue.value, [0, 1], [0, -70]);
+    const translateY = interpolate(animatedValue.value, [0, 1], [0, -80]);
     const opacity = interpolate(animatedValue.value, [0, 1], [0, 1]);
 
     return {
-      transform: [{ translateY }, { translateX }],
+      transform: [{ translateY }],
       opacity,
     };
   });
 
   const secondButtonAnimatedStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(animatedValue.value, [0, 1], [0, -70]);
-    const translateX = interpolate(animatedValue.value, [0, 1], [0, +70]);
+    const translateY = interpolate(animatedValue.value, [0, 1], [0, -140]);
     const opacity = interpolate(animatedValue.value, [0, 1], [0, 1]);
-
     return {
-      transform: [{ translateY }, { translateX }],
+      transform: [{ translateY }],
       opacity,
     };
   });
@@ -91,28 +87,46 @@ const ExpandableFab = ({
     <View style={[styles.container, { bottom: bottom }]}>
       {/* Second Action Button */}
       <Animated.View style={[styles.subButton, secondButtonAnimatedStyle]}>
-        <FAB
-          mode="elevated"
-          icon={secondIcon}
+        <PressableWithFeedback
           onPress={handleSecondAction}
           style={[
             styles.actionButton,
-            { backgroundColor: theme.colors.primaryContainer },
+            { backgroundColor: theme.colors.onSurface },
           ]}
-        />
+        >
+          <Typography
+            style={[
+              styles.buttonLabel,
+              {
+                color: theme.colors.surface,
+              },
+            ]}
+          >
+            {secondLabel}
+          </Typography>
+        </PressableWithFeedback>
       </Animated.View>
 
       {/* First Action Button */}
       <Animated.View style={[styles.subButton, firstButtonAnimatedStyle]}>
-        <FAB
-          mode="elevated"
-          icon={firstIcon}
+        <PressableWithFeedback
           onPress={handleFirstAction}
           style={[
             styles.actionButton,
-            { backgroundColor: theme.colors.primaryContainer },
+            { backgroundColor: theme.colors.onSurface },
           ]}
-        />
+        >
+          <Typography
+            style={[
+              styles.buttonLabel,
+              {
+                color: theme.colors.surface,
+              },
+            ]}
+          >
+            {firstLabel}
+          </Typography>
+        </PressableWithFeedback>
       </Animated.View>
 
       {/* Main FAB */}
@@ -121,10 +135,11 @@ const ExpandableFab = ({
           mode="elevated"
           icon="plus"
           onPress={toggleExpanded}
-          rippleColor={theme.colors.onSurface}
+          rippleColor={theme.colors.surface}
           style={{
-            backgroundColor: theme.colors.tertiaryContainer,
+            backgroundColor: theme.colors.onSurface,
           }}
+          color={theme.colors.surface}
         />
       </Animated.View>
     </View>
@@ -151,6 +166,12 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     elevation: 4,
+    padding: 10,
+    borderRadius: 10,
+    paddingHorizontal: 15,
+  },
+  buttonLabel: {
+    fontSize: 15,
   },
 });
 
