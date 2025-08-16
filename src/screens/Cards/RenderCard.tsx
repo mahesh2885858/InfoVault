@@ -2,6 +2,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import { FlashListRef } from '@shopify/flash-list';
 import { getMaxText } from 'commonutil-core';
 import React, { RefObject, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { GestureResponderEvent, StyleSheet, View } from 'react-native';
 import { useTheme as usePaper } from 'react-native-paper';
 import Animated, {
@@ -20,10 +21,10 @@ import AddCardModal from '../../components/Card/AddCardModal';
 import SwipeContainer from '../../components/Molecules/SwipeContainer';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Typography from '../../components/atoms/Typography';
-import { useToastContext } from '../../context/ToastContext';
 import { useCardStore } from '../../store/cardStore';
 import { useProfileStore } from '../../store/profileStore';
 import { TCard, TCardCreditDebit } from '../../types/card';
+import { useToastContext } from '../../context/ToastContext';
 type TProps = {
   card: TCardCreditDebit;
   listRef: RefObject<FlashListRef<TCard> | null>;
@@ -31,6 +32,7 @@ type TProps = {
 const RenderCard = (props: TProps) => {
   const opacity = useSharedValue(1);
   const paper = usePaper();
+  const { t } = useTranslation();
   const { card } = props;
 
   const breath = useAnimatedStyle(() => ({
@@ -47,11 +49,12 @@ const RenderCard = (props: TProps) => {
     state => state.selectProfileForAddingANewRecord,
   );
 
+  const { show } = useToastContext();
+
   const [showCVV, setShowCVV] = useState(false);
   const [isSwiped, setIsSwiped] = useState(false);
   const [renderEditModalFor, setRenderEditModalFor] =
     useState<TCardCreditDebit | null>(null);
-  const toast = useToastContext();
 
   const toggleCvv = async () => {
     try {
@@ -82,7 +85,9 @@ const RenderCard = (props: TProps) => {
 
   const copyContent = async (whatToCopy: 'NameOnCard' | 'cardNumber') => {
     Clipboard.setString(card[whatToCopy].replaceAll('-', ''));
-    toast.show(`${whatToCopy} is copied.`);
+    show(t('common.copied'), {
+      type: 'success',
+    });
   };
 
   useEffect(() => {
@@ -125,7 +130,6 @@ const RenderCard = (props: TProps) => {
             onDelete={() => removeCards([card.id])}
             onEdit={() => {
               setRenderEditModalFor(card);
-              console.log({ card });
               selectProfileForAddingANewRecord(card.profileId);
             }}
           >
@@ -185,7 +189,7 @@ const RenderCard = (props: TProps) => {
                       { color: paper.colors.onSurfaceVariant },
                     ]}
                   >
-                    Valid Thru
+                    {t('cards.validUpto')}
                   </Typography>
                   <Typography
                     style={[styles.cardText, { color: paper.colors.onSurface }]}
@@ -220,7 +224,9 @@ const RenderCard = (props: TProps) => {
                       color: paper.colors.inverseOnSurface,
                     }}
                   >
-                    {showCVV ? 'Hide CVV' : 'View CVV'}
+                    {showCVV
+                      ? t('common.hide') + ' CVV'
+                      : t('common.view') + ' CVV'}
                   </Typography>
                 </PressableWithFeedback>
               </View>

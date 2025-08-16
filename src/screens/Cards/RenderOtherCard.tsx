@@ -20,10 +20,10 @@ import AddOtherCardModal from '../../components/Card/AddOtherCardModal';
 import SwipeContainer from '../../components/Molecules/SwipeContainer';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Typography from '../../components/atoms/Typography';
-import { useToastContext } from '../../context/ToastContext';
 import { useCardStore } from '../../store/cardStore';
 import { useProfileStore } from '../../store/profileStore';
 import { TCard, TCardOther } from '../../types/card';
+import { useToastContext } from '../../context/ToastContext';
 type TProps = {
   card: TCardOther;
   listRef: RefObject<FlashListRef<TCard> | null>;
@@ -46,9 +46,9 @@ const RenderOtherCard = (props: TProps) => {
     state => state.selectProfileForAddingANewRecord,
   );
   const [isSwiped, setIsSwiped] = useState(false);
+  const { show } = useToastContext();
   const [renderEditModalFor, setRenderEditModalFor] =
     useState<TCardOther | null>(null);
-  const toast = useToastContext();
 
   const handlePress = (_event: GestureResponderEvent) => {
     if (isSwiped) return;
@@ -67,7 +67,7 @@ const RenderOtherCard = (props: TProps) => {
 
   const copyContent = async (whatToCopy: 'cardName' | 'cardNumber') => {
     Clipboard.setString(card[whatToCopy].replaceAll('-', ''));
-    toast.show(`${whatToCopy} is copied.`);
+    show('Copied to clipboard', { type: 'success' });
   };
 
   useEffect(() => {

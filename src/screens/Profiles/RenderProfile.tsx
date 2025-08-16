@@ -135,10 +135,11 @@ const styles = StyleSheet.create({
   },
   rightPanel: {
     width: 100,
-
     alignItems: 'center',
     gap: 2,
     flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginRight: 5,
   },
   icon: {
     paddingHorizontal: 10,

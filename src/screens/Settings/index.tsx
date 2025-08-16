@@ -17,6 +17,8 @@ import { TCard, TPassword, TProfile } from '../../types';
 import { validateImportedData } from '../../utils/validateImportedData';
 import SettingsHeader from './Header';
 import ThemeSwitcherModal from './ThemeSwitcherModal';
+import LanguageSwitcher from './LanguageSwitcher';
+import { LANGUAGES } from '../../constants';
 const FILE_NAME = 'data.json';
 const DIR_PATH = 'exportPath';
 
@@ -35,10 +37,12 @@ const Settings = () => {
   const setProfiles = useProfileStore(state => state.setProfiles);
 
   const theme = useUiStore(state => state.theme);
+  const language = useUiStore(state => state.selectedLanguage);
 
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [openThemeSwitcher, setOpenThemeSwitcher] = useState(false);
+  const [openLanguageSwitcher, setOpenLanguageSwitcher] = useState(false);
 
   const pickTheDirectory = async () => {
     return (await ScopedStorage.openDocumentTree(true)).uri;
@@ -88,7 +92,7 @@ const Settings = () => {
           false,
         );
       }
-      showToast('Exported successfully');
+      showToast(t('settings.exported'));
     } catch (e) {
       console.error(e);
       AsyncStorage.removeItem(DIR_PATH);
@@ -136,11 +140,12 @@ const Settings = () => {
             const uniqueData = getUniqueData(data, 'id');
             setProfiles(uniqueData);
           }
-          showToast('Imported successfully');
+          showToast(t('settings.imported'));
         }
       }
     } catch (e) {
       console.error(e);
+      showToast((e as Error).message || t('common.unknownError'));
     } finally {
       setIsImporting(false);
     }
@@ -149,6 +154,22 @@ const Settings = () => {
   return (
     <Container style={styles.container}>
       <SettingsHeader />
+      <PressableWithFeedback
+        onPress={() => setOpenLanguageSwitcher(true)}
+        style={[styles.setting, styles.lanSetting]}
+      >
+        <Typography style={styles.text}>{t('settings.language')}</Typography>
+        <Typography
+          style={[
+            styles.subText,
+            {
+              color: paper.colors.onSurfaceDisabled,
+            },
+          ]}
+        >
+          {LANGUAGES[language]?.localizedName ?? uCFirst(language)}
+        </Typography>
+      </PressableWithFeedback>
       <PressableWithFeedback
         disabled={isImporting}
         onPress={importData}
@@ -178,13 +199,19 @@ const Settings = () => {
             },
           ]}
         >
-          {uCFirst(theme ?? '')}
+          {t(`common.${theme}`) ?? uCFirst(theme ?? '')}
         </Typography>
       </PressableWithFeedback>
       {openThemeSwitcher && (
         <ThemeSwitcherModal
           onClose={() => setOpenThemeSwitcher(false)}
           visible={openThemeSwitcher}
+        />
+      )}
+      {openLanguageSwitcher && (
+        <LanguageSwitcher
+          onClose={() => setOpenLanguageSwitcher(false)}
+          visible={openLanguageSwitcher}
         />
       )}
     </Container>
@@ -211,6 +238,12 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   themeSetting: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    paddingRight: 0,
+  },
+  lanSetting: {
     flexDirection: 'column',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',

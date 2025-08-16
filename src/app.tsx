@@ -9,12 +9,14 @@ import Profiles from './screens/Profiles';
 import Settings from './screens/Settings';
 import { DrawerParamsList, RootStackParamList } from './types';
 import { useTheme } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator<DrawerParamsList>();
 
 function DrawerNavigator() {
   const theme = useTheme();
+  const { t } = useTranslation();
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -32,6 +34,7 @@ function DrawerNavigator() {
         component={Cards}
         options={{
           headerShown: false,
+          title: t('cards.title'),
         }}
       />
       <Drawer.Screen
@@ -39,6 +42,7 @@ function DrawerNavigator() {
         component={Passwords}
         options={{
           headerShown: false,
+          title: t('passwords.title'),
         }}
       />
       <Drawer.Screen
@@ -46,6 +50,7 @@ function DrawerNavigator() {
         component={Profiles}
         options={{
           headerShown: false,
+          title: t('profiles.title'),
         }}
       />
     </Drawer.Navigator>
@@ -53,6 +58,7 @@ function DrawerNavigator() {
 }
 
 function AppNavigator(): React.JSX.Element {
+  const { t } = useTranslation();
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Drawer">
@@ -66,6 +72,7 @@ function AppNavigator(): React.JSX.Element {
           component={Settings}
           options={{
             headerShown: false,
+            title: t('settings.title'),
           }}
         />
       </Stack.Navigator>

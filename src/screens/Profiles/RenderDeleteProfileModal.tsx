@@ -10,6 +10,7 @@ import { usePasswordsStore } from '../../store/passwordStore';
 import { TProfile } from '../../types';
 import { useProfileStore } from '../../store/profileStore';
 import { DEFAULT_PROFILE_ID, HOME_PROFILE_ID } from '../../constants';
+import { useTranslation } from 'react-i18next';
 type TProps = {
   visible: boolean;
   onClose: () => void;
@@ -17,6 +18,7 @@ type TProps = {
 };
 const RenderDeleteProfileModal = (props: TProps) => {
   const theme = useTheme();
+  const { t } = useTranslation();
   const cards = useCardStore(state => state.cards);
   const passwords = usePasswordsStore(state => state.passwords);
   const removeProfile = useProfileStore(state => state.removeProfile);
@@ -72,11 +74,10 @@ const RenderDeleteProfileModal = (props: TProps) => {
       >
         <View>
           <Typography style={styles.profileText}>
-            Profile Name: {profile.name}
+            {t('profiles.profileName')}: {profile.name}
           </Typography>
           <Typography style={styles.descText}>
-            Are you sure you want to delete this profile? This action cannot be
-            undone.
+            {t('profiles.profileDeleteConfirmText')}
           </Typography>
         </View>
 
@@ -87,8 +88,9 @@ const RenderDeleteProfileModal = (props: TProps) => {
                 color: theme.colors.onErrorContainer,
               }}
             >
-              This profile is associated with {passwordsWithProfile.length}{' '}
-              password(s).
+              {t('profiles.associatedPasswords', {
+                noOfPasswords: passwordsWithProfile.length,
+              })}
             </Typography>
           )}
           {cardsWithProfile.length > 0 && (
@@ -97,22 +99,25 @@ const RenderDeleteProfileModal = (props: TProps) => {
                 color: theme.colors.onErrorContainer,
               }}
             >
-              This profile is associated with {cardsWithProfile.length} card(s).
+              {t('profiles.associatedCards', {
+                noOfCards: cardsWithProfile.length,
+              })}
             </Typography>
           )}
           {(passwordsWithProfile.length > 0 || cardsWithProfile.length > 0) && (
             <Typography style={styles.info}>
-              All of the associated passwords and cards will be moved to the
-              {' ' + profiles.find(p => p.id === HOME_PROFILE_ID)?.name ||
-                'Default'}{' '}
-              Profile.
+              {t('profiles.itemsMovedToDefaultProfile', {
+                name:
+                  profiles.find(p => p.id === HOME_PROFILE_ID)?.name ||
+                  t('common.default'),
+              })}
             </Typography>
           )}
         </View>
 
         <View style={styles.buttons}>
-          <Button label="Cancel" onButtonPress={props.onClose} />
-          <Button label="Delete" onButtonPress={handleDelete} />
+          <Button label={t('common.cancel')} onButtonPress={props.onClose} />
+          <Button label={t('common.delete')} onButtonPress={handleDelete} />
         </View>
       </Surface>
     </ModalWrapper>

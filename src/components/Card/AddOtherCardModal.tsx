@@ -1,4 +1,3 @@
-import { uCFirst } from 'commonutil-core';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,6 +16,7 @@ import PressableWithFeedback from '../PressableWithFeedback';
 import { TCardOther, TCardOtherInput } from '../../types';
 import MTextInput from '../Molecules/MTextInput';
 
+import { useTranslation } from 'react-i18next';
 import { Keyboard } from 'react-native';
 import { useTheme } from 'react-native-paper';
 
@@ -42,16 +42,20 @@ const initialCardInput: TCardOtherInput = {
   },
 };
 
-const errorMessages: Record<keyof TCardOtherInput, string> = {
-  cardName: 'It should be more than 3 characters and can not be empty',
-  cardNumber: 'It should be more than 3 characters',
-  otherDetails: '',
-};
-
 const AddOtherCardModal = (props: Props) => {
   const theme = useTheme();
   const PlaceholderTextColor = theme.colors.onSurfaceDisabled;
   const { addCard, setFocusedCard, editCard } = useCardStore();
+  const { t } = useTranslation();
+
+  const errorMessages: Record<keyof TCardOtherInput, string> = useMemo(
+    () => ({
+      cardName: t('cards.cardNameError'),
+      cardNumber: t('cards.otherCardNumberError'),
+      otherDetails: '',
+    }),
+    [t],
+  );
 
   const [cardInputs, setCardInputs] = useState<TCardOtherInput>(
     props.mode === 'edit'
@@ -194,18 +198,19 @@ const AddOtherCardModal = (props: Props) => {
     return Object.keys(cardInputs).map(key => {
       if (!cardInputs[key as keyof TCardOtherInput].error) return null;
       return (
-        <View style={{ marginBottom: 5 }} key={key}>
+        <View style={[styles.errorItem]} key={key}>
           <Typography
             style={{
               color: theme.colors.onError,
             }}
           >
-            {uCFirst(key)} : {cardInputs[key as keyof TCardOtherInput].error}
+            {t(`cards.${key}`)} :{' '}
+            {cardInputs[key as keyof TCardOtherInput].error}
           </Typography>
         </View>
       );
     });
-  }, [cardInputs, theme]);
+  }, [cardInputs, theme, t]);
 
   const close = useCallback(() => {
     setCardInputs(initialCardInput);
@@ -228,7 +233,18 @@ const AddOtherCardModal = (props: Props) => {
           },
         ]}
       >
-        {anyErrors && <View style={styles.errorBox}>{renderErrors()}</View>}
+        {anyErrors && (
+          <View
+            style={[
+              styles.errorBox,
+              {
+                backgroundColor: theme.colors.error,
+              },
+            ]}
+          >
+            {renderErrors()}
+          </View>
+        )}
         <View style={styles.profileSwitch}>
           <Typography>Card will be saved in : </Typography>
           <PressableWithFeedback
@@ -277,7 +293,7 @@ const AddOtherCardModal = (props: Props) => {
                 },
               ]}
               placeholderTextColor={PlaceholderTextColor}
-              placeholder="What kind of card is it?"
+              placeholder={t('cards.whatKindOfCard')}
               returnKeyType="next"
               onSubmitEditing={moveToNext}
               error={cardInputs.cardName.error}
@@ -296,7 +312,7 @@ const AddOtherCardModal = (props: Props) => {
                 },
               ]}
               placeholderTextColor={PlaceholderTextColor}
-              placeholder="Number"
+              placeholder={t('cards.cardNumber')}
               error={cardInputs.cardNumber.error}
               clearError={() => clearError('cardNumber')}
             />
@@ -316,7 +332,7 @@ const AddOtherCardModal = (props: Props) => {
               ref={nameOnCardRef}
               multiline
               placeholderTextColor={PlaceholderTextColor}
-              placeholder="Additional details"
+              placeholder={t('cards.additionalDetails')}
               error={cardInputs.otherDetails.error}
               clearError={() => clearError('otherDetails')}
             />
@@ -407,6 +423,9 @@ const styles = StyleSheet.create({
   cardNumberText: {
     fontSize: 15,
     fontWeight: '700',
+  },
+  errorItem: {
+    marginBottom: 5,
   },
 
   cardText: {

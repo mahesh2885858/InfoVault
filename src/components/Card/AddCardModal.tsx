@@ -23,6 +23,7 @@ import MTextInput from '../Molecules/MTextInput';
 
 import { Keyboard } from 'react-native';
 import { useTheme } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   visible: boolean;
@@ -54,16 +55,19 @@ const initialCardInput: TCardCreditDebitInput = {
   },
 };
 
-const errorMessages: Record<keyof TCardCreditDebitInput, string> = {
-  CVV: 'It should be exactly three digits and can not be empty',
-  NameOnCard: 'It should be more than 3 characters and can not be empty',
-  cardName: 'It should be more than 3 characters and can not be empty',
-  cardNumber: 'It should be 16 digits and can not be empty',
-  expiry: '',
-};
-
 const AddCardModal = (props: Props) => {
   const theme = useTheme();
+  const { t } = useTranslation();
+  const errorMessages: Record<keyof TCardCreditDebitInput, string> = useMemo(
+    () => ({
+      CVV: t('cards.CVVError'),
+      NameOnCard: t('cards.NameOnCardError'),
+      cardName: t('cards.cardNameError'),
+      cardNumber: t('cards.cardNumberError'),
+      expiry: '',
+    }),
+    [t],
+  );
   const PlaceholderTextColor = theme.colors.onSurfaceDisabled;
   const { addCard, setFocusedCard, editCard } = useCardStore();
 
@@ -260,13 +264,13 @@ const AddCardModal = (props: Props) => {
     return Object.keys(cardInputs).map(key => {
       if (!cardInputs[key as keyof TCardInput].error) return null;
       return (
-        <View style={{ marginBottom: 5 }} key={key}>
+        <View style={[styles.errorItem]} key={key}>
           <Typography
             style={{
               color: theme.colors.onError,
             }}
           >
-            {uCFirst(key)} : {cardInputs[key as keyof TCardInput].error}
+            {uCFirst(key)}: {cardInputs[key as keyof TCardInput].error}
           </Typography>
         </View>
       );
@@ -277,7 +281,6 @@ const AddCardModal = (props: Props) => {
     setCardInputs(initialCardInput);
     props.setVisible(false);
   }, [props]);
-  console.log({ selectedProfileForNew, selectedProfileForAddingANewRecord });
   return (
     <ModalWrapper
       width={'90%'}
@@ -294,9 +297,20 @@ const AddCardModal = (props: Props) => {
           },
         ]}
       >
-        {anyErrors && <View style={styles.errorBox}>{renderErrors()}</View>}
+        {anyErrors && (
+          <View
+            style={[
+              styles.errorBox,
+              {
+                backgroundColor: theme.colors.error,
+              },
+            ]}
+          >
+            {renderErrors()}
+          </View>
+        )}
         <View style={styles.profileSwitch}>
-          <Typography>Card will be saved in : </Typography>
+          <Typography>{t('cards.cardWillBeSavedIn')} : </Typography>
           <PressableWithFeedback
             onPress={() => openProfileSelection({ renderForNew: true })}
             style={[
@@ -344,7 +358,7 @@ const AddCardModal = (props: Props) => {
                 },
               ]}
               placeholderTextColor={PlaceholderTextColor}
-              placeholder="Card name"
+              placeholder={t('cards.cardName')}
               returnKeyType="next"
               onSubmitEditing={moveToNext}
               error={cardInputs.cardName.error}
@@ -365,7 +379,7 @@ const AddCardModal = (props: Props) => {
                 },
               ]}
               placeholderTextColor={PlaceholderTextColor}
-              placeholder="Number"
+              placeholder={t('cards.cardNumber')}
               error={cardInputs.cardNumber.error}
               clearError={() => clearError('cardNumber')}
             />
@@ -380,7 +394,7 @@ const AddCardModal = (props: Props) => {
                   },
                 ]}
               >
-                Valid Thru
+                {t('cards.validUpto')}
               </Typography>
               <MTextInput
                 ref={expiryRef}
@@ -446,7 +460,7 @@ const AddCardModal = (props: Props) => {
               maxLength={MAX_LENGTH_NAME}
               ref={nameOnCardRef}
               placeholderTextColor={PlaceholderTextColor}
-              placeholder="Name on card"
+              placeholder={t('cards.nameOnCard')}
               error={cardInputs.NameOnCard.error}
               clearError={() => clearError('NameOnCard')}
             />
@@ -533,6 +547,9 @@ const styles = StyleSheet.create({
     color: 'text-primary',
     fontSize: 15,
     fontWeight: '600',
+  },
+  errorItem: {
+    marginBottom: 5,
   },
   cardNumberText: {
     fontSize: 15,

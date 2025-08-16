@@ -12,8 +12,10 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import Typography from '../components/atoms/Typography';
+import { ToastOptions } from '../types';
+import { useTheme } from 'react-native-paper';
 type ToastContext = {
-  show: (text: string) => void;
+  show: (text: string, toastOptions?: ToastOptions) => void;
   visible: boolean;
   close: () => void;
 };
@@ -32,15 +34,27 @@ export const ToastProvider = (props: { children: React.ReactNode }) => {
   const { top } = useSafeAreaInsets();
   const [renderToast, setRenderToast] = useState(false);
   const [message, setMessage] = useState('');
-
-  const showToast = (text: string) => {
+  const [options, setOptions] = useState<ToastOptions>({
+    duration: 2000,
+    type: 'success',
+  });
+  const theme = useTheme();
+  const showToast = (text: string, toastOptions?: ToastOptions) => {
+    if (renderToast) {
+      // close the existing toast before showing a new one
+      closeToast();
+    }
     setMessage(text);
     setRenderToast(true);
+    if (toastOptions) {
+      setOptions(p => ({ ...p, ...toastOptions }));
+    }
   };
 
   const closeToast = useCallback(() => {
     setMessage('');
     setRenderToast(false);
+    setOptions({ duration: 2000, type: 'success' });
   }, []);
 
   useEffect(() => {
@@ -81,9 +95,30 @@ export const ToastProvider = (props: { children: React.ReactNode }) => {
           <Animated.View
             entering={SlideInUp}
             exiting={SlideOutUp}
-            style={[styles.toast]}
+            style={[
+              styles.toast,
+              {
+                backgroundColor:
+                  options.type === 'success'
+                    ? theme.colors.primary
+                    : options.type === 'error'
+                    ? theme.colors.errorContainer
+                    : theme.colors.tertiary,
+              },
+            ]}
           >
-            <Typography>{message}</Typography>
+            <Typography
+              style={{
+                color:
+                  options.type === 'success'
+                    ? theme.colors.onPrimary
+                    : options.type === 'error'
+                    ? theme.colors.onErrorContainer
+                    : theme.colors.onTertiary,
+              }}
+            >
+              {message}
+            </Typography>
           </Animated.View>
         </SafeAreaView>
       )}

@@ -10,6 +10,7 @@ import Button from '../components/atoms/Button';
 import Typography from '../components/atoms/Typography';
 import { authenticateLocal } from '../utils/authenticateLocal';
 import { useTheme } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 
 export const AuthContext = createContext<{
   setIsAuthenticated: (choice: boolean) => void;
@@ -26,6 +27,7 @@ export const AuthContextProvider = ({
   children: React.ReactNode;
 }) => {
   const theme = useTheme();
+  const { t } = useTranslation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
@@ -69,13 +71,16 @@ export const AuthContextProvider = ({
               }}
             >
               {isAuthenticating
-                ? 'Authenticating user'
-                : 'Not authenticated please authenticate your self.'}
+                ? t('auth.authenticating')
+                : t('auth.notAuthenticated')}
             </Typography>
             {!isAuthenticating && (
               <View style={styles.buttonBox}>
-                <Button label="Authenticate" onButtonPress={authenticate} />
-                <Button label="Exit the app" onButtonPress={exit} />
+                <Button
+                  label={t('auth.authenticate')}
+                  onButtonPress={authenticate}
+                />
+                <Button label={t('auth.exitApp')} onButtonPress={exit} />
               </View>
             )}
           </View>

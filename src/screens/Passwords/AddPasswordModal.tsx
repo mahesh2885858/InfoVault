@@ -17,6 +17,7 @@ import { useProfileContext } from '../../context/ProfileContext';
 import { usePasswordsStore } from '../../store/passwordStore';
 import { useProfileStore } from '../../store/profileStore';
 import { TBaseInput, TPassword, TPasswordInput } from '../../types';
+import { useTranslation } from 'react-i18next';
 type Props = {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -64,6 +65,7 @@ const AddPasswordModal = (props: Props) => {
   const passwordRef = useRef<TextInput>(null);
   const websiteRef = useRef<TextInput>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const { t } = useTranslation();
 
   const profiles = useProfileStore(state => state.profiles);
   const selectedProfileForAddingANewRecord = useProfileStore(
@@ -80,7 +82,6 @@ const AddPasswordModal = (props: Props) => {
   };
 
   const onChange = (text: string, field: keyof typeof passwordInputs) => {
-    
     setPasswordInputs(prev => ({
       ...prev,
       [field]: { ...prev[field], value: text, error: '' },
@@ -96,7 +97,7 @@ const AddPasswordModal = (props: Props) => {
           ...prev,
           [field]: {
             ...prev[field],
-            error: 'The input should be more than three characters',
+            error: t('passwords.passwordInputError'),
           },
         }));
         r = false;
@@ -159,7 +160,7 @@ const AddPasswordModal = (props: Props) => {
       if (!passwordInputs[key as keyof TPasswordInput].error) return null;
       return (
         <View key={key}>
-          <Typography style={{ color: theme.colors.onError }}>
+          <Typography style={{ color: theme.colors.primary }}>
             {uCFirst(key)} : {passwordInputs[key as keyof TPasswordInput].error}
           </Typography>
         </View>
@@ -183,7 +184,7 @@ const AddPasswordModal = (props: Props) => {
         {anyErrors && <View style={styles.errorBox}>{renderErrors()}</View>}
 
         <View style={styles.profileSwitch}>
-          <Typography>Password will be saved in : </Typography>
+          <Typography>{t('passwords.passwordWillBeSavedIn')} : </Typography>
           <PressableWithFeedback
             onPress={() => openProfileSelection({ renderForNew: true })}
             style={[
@@ -231,7 +232,7 @@ const AddPasswordModal = (props: Props) => {
                 },
               ]}
               placeholderTextColor={PlaceholderTextColor}
-              placeholder="Web site"
+              placeholder={t('passwords.website')}
               returnKeyType="next"
               onSubmitEditing={() => moveToNext(userNameRef)}
               error={passwordInputs.website.error}
@@ -252,7 +253,7 @@ const AddPasswordModal = (props: Props) => {
                 },
               ]}
               placeholderTextColor={PlaceholderTextColor}
-              placeholder="Username"
+              placeholder={t('passwords.username')}
               returnKeyType="next"
               onSubmitEditing={() => moveToNext(passwordRef)}
               clearError={() => clearError('username')}
@@ -276,7 +277,7 @@ const AddPasswordModal = (props: Props) => {
                   },
                 ]}
                 placeholderTextColor={PlaceholderTextColor}
-                placeholder="Password"
+                placeholder={t('passwords.password')}
                 returnKeyType="next"
                 secureTextEntry={!showPassword}
                 clearError={() => clearError('password')}
