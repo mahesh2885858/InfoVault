@@ -3,9 +3,11 @@ import { StyleSheet, View } from 'react-native';
 import Typography from '../../components/atoms/Typography';
 import BackButton from '../../components/Molecules/BackButton';
 import { useTheme } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 
 const SettingsHeader = () => {
   const theme = useTheme();
+  const { t } = useTranslation();
   return (
     <View
       style={[
@@ -24,7 +26,7 @@ const SettingsHeader = () => {
           },
         ]}
       >
-        Settings
+        {t('settings.title')}
       </Typography>
     </View>
   );

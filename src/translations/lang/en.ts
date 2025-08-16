@@ -14,6 +14,7 @@ export default {
     cancel: 'Cancel',
     add: 'Add',
     update: 'Update',
+    search: 'Search',
   },
   cards: {
     title: 'Cards',

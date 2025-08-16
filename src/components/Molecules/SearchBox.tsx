@@ -3,6 +3,7 @@ import { StyleSheet, TextInput, View } from 'react-native';
 import BackButton from './BackButton';
 import { useMiscStore } from '../../store/miscStore';
 import { useTheme } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 type TProps = {
   visible?: boolean;
   onClose: () => void;
@@ -10,6 +11,7 @@ type TProps = {
 };
 const SearchBox = (props: TProps) => {
   const theme = useTheme();
+  const { t } = useTranslation();
   const search = useMiscStore(state => state.search);
   const setSearch = useMiscStore(state => state.setSearch);
   if (!props.visible) return null;
@@ -24,7 +26,7 @@ const SearchBox = (props: TProps) => {
       <TextInput
         value={search}
         onChangeText={text => setSearch(text)}
-        placeholder="Search..."
+        placeholder={t('common.search') + '...'}
         placeholderTextColor={theme.colors.onSurfaceDisabled}
         style={[
           styles.textInput,
