@@ -17,3 +17,18 @@ export const MONTHS = [
 ];
 
 export const EXPIRY_REGEX = /^(0[1-9]|1[0-2])\/([0-9]{2})$/;
+
+export const LANGUAGES: Record<string, Record<string, string>> = {
+  english: {
+    code: 'en',
+    localizedName: 'English',
+  },
+  hindi: {
+    code: 'hi',
+    localizedName: 'हिन्दी',
+  },
+  telugu: {
+    code: 'te',
+    localizedName: 'తెలుగు',
+  },
+};

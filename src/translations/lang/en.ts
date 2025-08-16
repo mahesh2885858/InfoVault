@@ -58,5 +58,6 @@ export default {
     title: 'Settings',
     exported: 'Exported successfully',
     imported: 'Imported successfully',
+    language: 'Language',
   },
 };
