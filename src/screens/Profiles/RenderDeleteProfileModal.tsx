@@ -109,15 +109,15 @@ const RenderDeleteProfileModal = (props: TProps) => {
               {t('profiles.itemsMovedToDefaultProfile', {
                 name:
                   profiles.find(p => p.id === HOME_PROFILE_ID)?.name ||
-                  'Default',
+                  t('common.default'),
               })}
             </Typography>
           )}
         </View>
 
         <View style={styles.buttons}>
-          <Button label="Cancel" onButtonPress={props.onClose} />
-          <Button label="Delete" onButtonPress={handleDelete} />
+          <Button label={t('common.cancel')} onButtonPress={props.onClose} />
+          <Button label={t('common.delete')} onButtonPress={handleDelete} />
         </View>
       </Surface>
     </ModalWrapper>

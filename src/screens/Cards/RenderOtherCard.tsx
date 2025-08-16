@@ -20,7 +20,6 @@ import AddOtherCardModal from '../../components/Card/AddOtherCardModal';
 import SwipeContainer from '../../components/Molecules/SwipeContainer';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
 import Typography from '../../components/atoms/Typography';
-import { useToastContext } from '../../context/ToastContext';
 import { useCardStore } from '../../store/cardStore';
 import { useProfileStore } from '../../store/profileStore';
 import { TCard, TCardOther } from '../../types/card';
@@ -48,7 +47,6 @@ const RenderOtherCard = (props: TProps) => {
   const [isSwiped, setIsSwiped] = useState(false);
   const [renderEditModalFor, setRenderEditModalFor] =
     useState<TCardOther | null>(null);
-  const toast = useToastContext();
 
   const handlePress = (_event: GestureResponderEvent) => {
     if (isSwiped) return;
@@ -67,7 +65,6 @@ const RenderOtherCard = (props: TProps) => {
 
   const copyContent = async (whatToCopy: 'cardName' | 'cardNumber') => {
     Clipboard.setString(card[whatToCopy].replaceAll('-', ''));
-    toast.show(`${whatToCopy} is copied.`);
   };
 
   useEffect(() => {

@@ -15,6 +15,8 @@ export default {
     add: 'Add',
     update: 'Update',
     search: 'Search',
+    unknownError: 'An unknown error occurred',
+    default: 'Default',
   },
   cards: {
     title: 'Cards',
@@ -54,5 +56,7 @@ export default {
   },
   settings: {
     title: 'Settings',
+    exported: 'Exported successfully',
+    imported: 'Imported successfully',
   },
 };

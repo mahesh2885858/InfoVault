@@ -88,7 +88,7 @@ const Settings = () => {
           false,
         );
       }
-      showToast('Exported successfully');
+      showToast(t('settings.exported'));
     } catch (e) {
       console.error(e);
       AsyncStorage.removeItem(DIR_PATH);
@@ -136,11 +136,12 @@ const Settings = () => {
             const uniqueData = getUniqueData(data, 'id');
             setProfiles(uniqueData);
           }
-          showToast('Imported successfully');
+          showToast(t('settings.imported'));
         }
       }
     } catch (e) {
       console.error(e);
+      showToast((e as Error).message || t('common.unknownError'));
     } finally {
       setIsImporting(false);
     }
