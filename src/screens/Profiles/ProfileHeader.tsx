@@ -5,10 +5,12 @@ import { useTheme } from 'react-native-paper';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Typography from '../../components/atoms/Typography';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
+import { useTranslation } from 'react-i18next';
 
 const ProfileHeader = () => {
   const theme = useTheme();
   const navigation = useNavigation();
+  const { t } = useTranslation();
 
   return (
     <View
@@ -40,7 +42,7 @@ const ProfileHeader = () => {
               },
             ]}
           >
-            Profiles
+            {t('profiles.title')}
           </Typography>
         </View>
       </View>

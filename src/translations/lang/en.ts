@@ -12,6 +12,8 @@ export default {
     view: 'View',
     save: 'Save',
     cancel: 'Cancel',
+    add: 'Add',
+    update: 'Update',
   },
   cards: {
     title: 'Cards',
@@ -30,9 +32,24 @@ export default {
   },
   passwords: {
     title: 'Passwords',
+    username: 'Username',
+    password: 'Password',
+    website: 'Website',
+    passwordWillBeSavedIn: 'Password will be saved in',
+    passwordInputError:
+      'It should be more than 3 characters and can not be empty',
   },
   profiles: {
     title: 'Profiles',
+    profileName: 'Profile Name',
+    profileDeleteConfirmText:
+      'Are you sure you want to delete this profile? This action cannot be undone.',
+    itemsMovedToDefaultProfile:
+      'All of the associated passwords and cards will be moved to the {{name}} Profile.',
+    associatedCards: 'This profile is associated with {{noOfCards}} card(s).',
+    associatedPasswords:
+      'This profile is associated with {{noOfPasswords}} password(s).',
+    profilePlaceholder: 'Click here to enter profile name',
   },
   settings: {
     title: 'Settings',

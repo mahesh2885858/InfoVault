@@ -1,5 +1,7 @@
 import Clipboard from '@react-native-clipboard/clipboard';
+import { getMaxText } from 'commonutil-core';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { GestureResponderEvent, StyleSheet, View } from 'react-native';
 import { useTheme as usePaper } from 'react-native-paper';
 import Animated, {
@@ -18,14 +20,13 @@ import Box from '../../components/atoms/Box';
 import Typography from '../../components/atoms/Typography';
 import SwipeContainer from '../../components/Molecules/SwipeContainer';
 import PressableWithFeedback from '../../components/PressableWithFeedback';
-import { useToastContext } from '../../context/ToastContext';
 import { usePasswordsStore } from '../../store/passwordStore';
 import { useProfileStore } from '../../store/profileStore';
 import { TPassword } from '../../types/passwords';
 import AddPasswordModal from './AddPasswordModal';
-import { getMaxText } from 'commonutil-core';
 const RenderPassword = (password: TPassword) => {
   const theme = usePaper();
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const [isSwiped, setIsSwiped] = useState(false);
   const [renderEditModal, setRenderEditModal] = useState(false);
@@ -42,7 +43,6 @@ const RenderPassword = (password: TPassword) => {
   const focusedId = usePasswordsStore(state => state.focusedPassword);
   const setFocusedId = usePasswordsStore(state => state.setFocusedPassword);
   const unpinPassword = usePasswordsStore(state => state.unPinPassword);
-  const toast = useToastContext();
   const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
 
   const removeItem = usePasswordsStore(state => state.removePassword);
@@ -97,7 +97,6 @@ const RenderPassword = (password: TPassword) => {
 
   const copyContent = async (whatToCopy: 'username' | 'password') => {
     Clipboard.setString(password[whatToCopy]);
-    toast.show(`${whatToCopy} is copied.`);
   };
 
   useEffect(() => {
@@ -182,7 +181,7 @@ const RenderPassword = (password: TPassword) => {
                       },
                     ]}
                   >
-                    User name
+                    {t('passwords.username')}
                   </Typography>
                   <Typography
                     style={[
@@ -222,7 +221,7 @@ const RenderPassword = (password: TPassword) => {
                       },
                     ]}
                   >
-                    Password
+                    {t('passwords.password')}
                   </Typography>
                   <Typography
                     style={[

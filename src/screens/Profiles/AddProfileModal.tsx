@@ -5,6 +5,7 @@ import ModalWrapper from '../../components/ModalWrapper';
 
 import { useTheme } from 'react-native-paper';
 import { useProfileStore } from '../../store/profileStore';
+import { useTranslation } from 'react-i18next';
 
 type TProps = {
   onClose: () => void;
@@ -15,6 +16,7 @@ type TProps = {
 const AddProfileModal = (props: TProps) => {
   const { mode = 'new' } = props;
   const theme = useTheme();
+  const { t } = useTranslation();
 
   const selectedId = useProfileStore(state => state.selectedProfileId);
   const selectedProfile = useProfileStore(state => state.getSelectedProfile);
@@ -59,11 +61,11 @@ const AddProfileModal = (props: TProps) => {
               backgroundColor: theme.colors.surface,
             },
           ]}
-          placeholder="Click here to enter profile name"
+          placeholder={t('profiles.profilePlaceholder')}
           placeholderTextColor={theme.colors.onSurfaceVariant}
         />
         <Button
-          label={mode === 'new' ? 'Add' : 'Update'}
+          label={mode === 'new' ? t('common.add') : t('common.update')}
           onButtonPress={onSave}
         />
       </View>
