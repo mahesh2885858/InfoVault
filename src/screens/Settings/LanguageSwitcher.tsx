@@ -8,16 +8,25 @@ import Typography from '../../components/atoms/Typography';
 import { LANGUAGES } from '../../constants';
 import { useUiStore } from '../../store/UiStore';
 import { TCommonModalProps } from '../../types';
+import { useToastContext } from '../../context/ToastContext';
+import { useTranslation } from 'react-i18next';
 
 const LanguageSwitcher = (props: TCommonModalProps) => {
   const paper = useTheme();
+  const { t } = useTranslation();
 
   const selectLanguage = useUiStore(state => state.selectLanguage);
   const language = useUiStore(state => state.selectedLanguage);
+  const { show: showToast } = useToastContext();
 
   const switchLanguage = (lan: string) => {
     selectLanguage(lan);
-    changeLanguage(LANGUAGES[lan].code ?? 'en');
+    changeLanguage(LANGUAGES[lan].code ?? 'en').catch(err => {
+      console.error('Error changing language:', err);
+      showToast((err as Error).message ?? t('common.unknownError'), {
+        type: 'error',
+      });
+    });
     props.onClose();
   };
 
