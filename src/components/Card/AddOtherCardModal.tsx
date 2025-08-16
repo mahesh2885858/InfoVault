@@ -1,4 +1,3 @@
-import { uCFirst } from 'commonutil-core';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,9 +16,9 @@ import PressableWithFeedback from '../PressableWithFeedback';
 import { TCardOther, TCardOtherInput } from '../../types';
 import MTextInput from '../Molecules/MTextInput';
 
+import { useTranslation } from 'react-i18next';
 import { Keyboard } from 'react-native';
 import { useTheme } from 'react-native-paper';
-import { useTranslation } from 'react-i18next';
 
 type Props = {
   visible: boolean;
@@ -199,18 +198,19 @@ const AddOtherCardModal = (props: Props) => {
     return Object.keys(cardInputs).map(key => {
       if (!cardInputs[key as keyof TCardOtherInput].error) return null;
       return (
-        <View style={{ marginBottom: 5 }} key={key}>
+        <View style={[styles.errorItem]} key={key}>
           <Typography
             style={{
-              color: theme.colors.primary,
+              color: theme.colors.onError,
             }}
           >
-            {uCFirst(key)} : {cardInputs[key as keyof TCardOtherInput].error}
+            {t(`cards.${key}`)} :{' '}
+            {cardInputs[key as keyof TCardOtherInput].error}
           </Typography>
         </View>
       );
     });
-  }, [cardInputs, theme]);
+  }, [cardInputs, theme, t]);
 
   const close = useCallback(() => {
     setCardInputs(initialCardInput);
@@ -233,7 +233,18 @@ const AddOtherCardModal = (props: Props) => {
           },
         ]}
       >
-        {anyErrors && <View style={styles.errorBox}>{renderErrors()}</View>}
+        {anyErrors && (
+          <View
+            style={[
+              styles.errorBox,
+              {
+                backgroundColor: theme.colors.error,
+              },
+            ]}
+          >
+            {renderErrors()}
+          </View>
+        )}
         <View style={styles.profileSwitch}>
           <Typography>Card will be saved in : </Typography>
           <PressableWithFeedback
@@ -412,6 +423,9 @@ const styles = StyleSheet.create({
   cardNumberText: {
     fontSize: 15,
     fontWeight: '700',
+  },
+  errorItem: {
+    marginBottom: 5,
   },
 
   cardText: {

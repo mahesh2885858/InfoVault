@@ -264,10 +264,10 @@ const AddCardModal = (props: Props) => {
     return Object.keys(cardInputs).map(key => {
       if (!cardInputs[key as keyof TCardInput].error) return null;
       return (
-        <View style={{ marginBottom: 5 }} key={key}>
+        <View style={[styles.errorItem]} key={key}>
           <Typography
             style={{
-              color: theme.colors.primary,
+              color: theme.colors.onError,
             }}
           >
             {uCFirst(key)}: {cardInputs[key as keyof TCardInput].error}
@@ -297,7 +297,18 @@ const AddCardModal = (props: Props) => {
           },
         ]}
       >
-        {anyErrors && <View style={styles.errorBox}>{renderErrors()}</View>}
+        {anyErrors && (
+          <View
+            style={[
+              styles.errorBox,
+              {
+                backgroundColor: theme.colors.error,
+              },
+            ]}
+          >
+            {renderErrors()}
+          </View>
+        )}
         <View style={styles.profileSwitch}>
           <Typography>{t('cards.cardWillBeSavedIn')} : </Typography>
           <PressableWithFeedback
@@ -536,6 +547,9 @@ const styles = StyleSheet.create({
     color: 'text-primary',
     fontSize: 15,
     fontWeight: '600',
+  },
+  errorItem: {
+    marginBottom: 5,
   },
   cardNumberText: {
     fontSize: 15,
