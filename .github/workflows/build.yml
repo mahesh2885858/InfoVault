@@ -1,5 +1,8 @@
 name: 'android-build'
 
+permissions:
+  contents: write
+
 on:
   push:
     branches: [main]
