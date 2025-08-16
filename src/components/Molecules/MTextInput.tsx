@@ -28,7 +28,7 @@ const MTextInput = (props: TProps) => {
   }));
 
   const checkAndWarn = useCallback(() => {
-    Vibration.vibrate();
+    Vibration.vibrate(75);
     offset.value = withRepeat(
       withTiming(10, {
         duration: 50,
