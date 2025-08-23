@@ -1,5 +1,5 @@
 import { FlashList } from '@shopify/flash-list';
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import { Container, Typography } from '../../../components/atoms';
@@ -8,10 +8,12 @@ import { useExpenseTrackerStore } from '../../../store/expenseTrackerStore';
 import { TAccount } from '../../../types';
 import AccountsHeader from './header';
 import RenderAccount from './RenderAccount';
+import AddAccountModal from './AddAccountModal';
 
 const Accounts = () => {
   const accounts = useExpenseTrackerStore(state => state.accounts);
   const { t } = useTranslation();
+  const [renderAddAccountModal, setRenderAddAccountModal] = useState(false);
   const dumyData: TAccount[] = [
     {
       id: '1',
@@ -85,7 +87,19 @@ const Accounts = () => {
           />
         </View>
       )}
-      <Fab callBack={() => {}} />
+      <Fab
+        callBack={() => {
+          setRenderAddAccountModal(true);
+        }}
+      />
+      {renderAddAccountModal && (
+        <AddAccountModal
+          visible={renderAddAccountModal}
+          onClose={() => {
+            setRenderAddAccountModal(false);
+          }}
+        />
+      )}
     </Container>
   );
 };
