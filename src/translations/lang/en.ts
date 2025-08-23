@@ -74,5 +74,6 @@ export default {
     accounts: 'Accounts',
     noAccountsFound: 'No Accounts found',
     clickBelowToAddAccount: 'Click on below add button to start',
+    availableBalance: 'Available balance',
   },
 };
