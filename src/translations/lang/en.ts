@@ -69,4 +69,10 @@ export default {
     authenticating: 'Authenticating user',
     notAuthenticated: 'Not authenticated, please authenticate yourself.',
   },
+  tracker: {
+    title: 'Expense Tracker',
+    accounts: 'Accounts',
+    noAccountsFound: 'No Accounts found',
+    clickBelowToAddAccount: 'Click on below add button to start',
+  },
 };

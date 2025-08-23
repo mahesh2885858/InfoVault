@@ -10,6 +10,7 @@ import Settings from './screens/Settings';
 import { DrawerParamsList, RootStackParamList } from './types';
 import { useTheme } from 'react-native-paper';
 import { useTranslation } from 'react-i18next';
+import ExpenseTracker from './screens/ExpenseTracker';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator<DrawerParamsList>();
@@ -51,6 +52,14 @@ function DrawerNavigator() {
         options={{
           headerShown: false,
           title: t('profiles.title'),
+        }}
+      />
+      <Drawer.Screen
+        name="Expense Tracker"
+        component={ExpenseTracker}
+        options={{
+          headerShown: false,
+          title: t('tracker.title'),
         }}
       />
     </Drawer.Navigator>

@@ -32,3 +32,6 @@ export const LANGUAGES: Record<string, Record<string, string>> = {
     localizedName: 'తెలుగు',
   },
 };
+
+export const DEFAULT_CATEGORY_ID = 'default-category-id';
+export const DEFAULT_CATEGORY_NAME = 'General';
