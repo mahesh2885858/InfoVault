@@ -5,7 +5,7 @@ import { BackHandler, StatusBar, StyleSheet, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import Fab from '../../components/Fab';
 import Container from '../../components/atoms/Container';
-import { DEFAULT_PROFILE_ID } from '../../constants';
+import { DEFAULT_PROFILE_ID, HOME_PROFILE_ID } from '../../constants';
 import { useMiscStore } from '../../store/miscStore';
 import { usePasswordsStore } from '../../store/passwordStore';
 import { useProfileStore } from '../../store/profileStore';
@@ -24,6 +24,9 @@ const Passwords = () => {
   const focusedId = usePasswordsStore(state => state.focusedPassword);
   const selectedProfile = useProfileStore(state => state.selectedProfileId);
   const search = useMiscStore(state => state.search);
+  const selectProfileForAddingANewRecord = useProfileStore(
+    state => state.selectProfileForAddingANewRecord,
+  );
   const passwordsToRender = passwords
     .filter(
       password =>
@@ -93,6 +96,11 @@ const Passwords = () => {
 
       <Fab
         callBack={() => {
+          selectProfileForAddingANewRecord(
+            selectedProfile === DEFAULT_PROFILE_ID
+              ? HOME_PROFILE_ID
+              : selectedProfile,
+          );
           setVisibility(true);
         }}
       />
