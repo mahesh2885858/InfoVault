@@ -5,10 +5,12 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SearchBox from '../../../../components/Molecules/SearchBox';
 import HeaderTitleWithBackButton from './HeaderTitleWithBackButton';
 import HeaderRight from './HeaderRight';
+import useManageAccounts from '../../../../hooks/useManageAccounts';
 
 const AccountsHeader = () => {
   const theme = useTheme();
   const [renderSearch, setRenderSearch] = useState(false);
+  const { selectedAccountsCount } = useManageAccounts();
 
   return (
     <View
@@ -24,12 +26,14 @@ const AccountsHeader = () => {
         <View style={styles.box}>
           <HeaderTitleWithBackButton />
           <View style={[styles.box, styles.gap]}>
-            <MaterialIcon
-              onPress={() => setRenderSearch(true)}
-              name="magnify"
-              size={25}
-              color={theme.colors.onBackground}
-            />
+            {selectedAccountsCount === 0 && (
+              <MaterialIcon
+                onPress={() => setRenderSearch(true)}
+                name="magnify"
+                size={25}
+                color={theme.colors.onBackground}
+              />
+            )}
             <HeaderRight />
           </View>
         </View>
