@@ -1,8 +1,15 @@
+import { TBaseInput } from './passwords';
+
 export type TAccount = {
   id: string;
   name: string;
   initialBalance?: number;
   selected?: boolean;
+};
+
+export type TAccountInput = {
+  name: TBaseInput;
+  initialBalance: TBaseInput;
 };
 
 export type TCategory = {

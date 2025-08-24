@@ -77,5 +77,7 @@ export default {
     availableBalance: 'Available balance',
     accountName: 'Account name',
     initialBalance: 'Initial balance',
+    accountNameRequired:
+      'Account name is required and should be more than 2 characters',
   },
 };
