@@ -1,26 +1,28 @@
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { StyleService, useStyleSheet, useTheme } from '@ui-kitten/components';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useTranslation } from 'react-i18next';
 import PressableWithFeedback from '../../../../components/PressableWithFeedback';
 import { Typography } from '../../../../components/atoms';
+import useManageAccounts from '../../../../hooks/useManageAccounts';
 
 const HeaderTitleWithBackButton = () => {
   const styles = useStyleSheet(themedStyles);
   const theme = useTheme();
   const navigation = useNavigation();
   const { t } = useTranslation();
+  const { selectedAccountsCount, deselectAll } = useManageAccounts();
 
   return (
     <View style={styles.container}>
-      {/* <PressableWithFeedback
-        // hidden={selectedCards.length === 0}
+      <PressableWithFeedback
+        hidden={selectedAccountsCount === 0}
         onPress={() => {
-          //   if (selectedCards.length > 0) {
-          //     deSelectAll();
-          //   }
+          if (selectedAccountsCount > 0) {
+            deselectAll();
+          }
         }}
       >
         <MaterialIcon
@@ -28,15 +30,15 @@ const HeaderTitleWithBackButton = () => {
           size={24}
           color={theme['text-primary']}
         />
-      </PressableWithFeedback> */}
+      </PressableWithFeedback>
       <PressableWithFeedback
-        // hidden={selectedCards.length > 0}
+        hidden={selectedAccountsCount > 0}
         onPress={() => {
-          //   if (selectedCards.length === 0) {
-          //     navigation.dispatch(DrawerActions.openDrawer());
-          //   } else {
-          //     // navigation.goBack();
-          //   }
+          if (selectedAccountsCount === 0) {
+            navigation.dispatch(DrawerActions.openDrawer());
+          } else {
+            navigation.goBack();
+          }
           navigation.dispatch(DrawerActions.openDrawer());
         }}
       >
@@ -46,6 +48,7 @@ const HeaderTitleWithBackButton = () => {
     </View>
   );
 };
+
 const themedStyles = StyleService.create({
   container: {
     flexDirection: 'row',

@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useExpenseTrackerStore } from '../store/expenseTrackerStore';
 import { TAccount } from '../types';
 import useHandleErrors from './useHandleErrors';
@@ -6,7 +6,13 @@ import { v4 as uuidv4 } from 'uuid';
 
 const useManageAccounts = () => {
   const addAccount = useExpenseTrackerStore(state => state.addItem);
-  const removeAccount = useExpenseTrackerStore(state => state.removeItem);
+  const removeAccounts = useExpenseTrackerStore(state => state.removeItems);
+  const deselectAllItems = useExpenseTrackerStore(state => state.deselectAll);
+  const accounts = useExpenseTrackerStore(state => state.accounts);
+  const selectedAccounts = useMemo(
+    () => accounts.filter(acc => acc.selected),
+    [accounts],
+  );
   const { showErrorMessage } = useHandleErrors();
 
   const addNewAccount = useCallback(
@@ -38,17 +44,33 @@ const useManageAccounts = () => {
         if (!id) {
           throw new Error('Id not provided');
         }
-        removeAccount('account', id);
+        removeAccounts('account', [id]);
       } catch (error) {
         showErrorMessage(error);
       }
     },
-    [showErrorMessage, removeAccount],
+    [showErrorMessage, removeAccounts],
   );
+
+  const deleteSelectedAccounts = useCallback(() => {
+    try {
+      if (selectedAccounts.length === 0) {
+        throw new Error('None selected');
+      }
+      const ids = selectedAccounts.map(i => i.id);
+      removeAccounts('account', ids);
+    } catch (error) {
+      showErrorMessage(error);
+    }
+  }, [showErrorMessage, removeAccounts, selectedAccounts]);
 
   return {
     addNewAccount,
     deleteAccount,
+    selectedAccounts,
+    deleteSelectedAccounts,
+    selectedAccountsCount: selectedAccounts.length,
+    deselectAll: () => deselectAllItems('account'),
   };
 };
 

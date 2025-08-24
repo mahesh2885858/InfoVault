@@ -1,45 +1,26 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PressableWithFeedback from '../../../../components/PressableWithFeedback';
+import useManageAccounts from '../../../../hooks/useManageAccounts';
 
 const CardHeaderRight = () => {
   const theme = useTheme();
+  const { deleteSelectedAccounts, selectedAccountsCount } = useManageAccounts();
 
-  const selectedCards: any[] = [];
-
-  if (selectedCards.length === 0) {
-    return (
-      <PressableWithFeedback
-        onPress={() => {}}
-        style={[
-          styles.switch,
-          {
-            backgroundColor: theme.colors.surfaceVariant,
-          },
-        ]}
-      >
-        <MaterialIcon
-          onPress={() => {}}
-          name="chevron-down"
-          color={theme.colors.onBackground}
-          size={25}
-        />
-      </PressableWithFeedback>
-    );
-  }
+  if (selectedAccountsCount === 0) return null;
 
   return (
     <>
       <PressableWithFeedback onPress={() => {}}>
         <MaterialIcon
+          onPress={deleteSelectedAccounts}
           name="delete"
           size={24}
           color={theme.colors.onBackground}
         />
       </PressableWithFeedback>
-      {selectedCards.length === 1 && (
+      {selectedAccountsCount === 1 && (
         <PressableWithFeedback onPress={() => {}}>
           <MaterialIcon
             name="pin"
@@ -53,13 +34,3 @@ const CardHeaderRight = () => {
 };
 
 export default CardHeaderRight;
-
-const styles = StyleSheet.create({
-  switch: {
-    flexDirection: 'row',
-    paddingHorizontal: 5,
-    alignItems: 'center',
-    gap: 10,
-    borderRadius: 5,
-  },
-});

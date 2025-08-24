@@ -63,6 +63,7 @@ const AddAccountModal = (props: TProps) => {
 
   const onSave = useCallback(() => {
     try {
+      console.log({ inputs });
       if (!inputs.name || inputs.name.value.trim().length < 3) {
         setInputs(prev => ({
           ...prev,
@@ -74,7 +75,6 @@ const AddAccountModal = (props: TProps) => {
         return;
       }
       //parse initial balance
-      console.log({ inputs });
       const digits = getDigits(inputs.initialBalance.value || '0');
       addNewAccount({
         name: inputs.name.value,

@@ -1,20 +1,51 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Typography } from '../../../components/atoms';
-import { TAccount } from '../../../types';
-import { useTheme } from 'react-native-paper';
-import { sizes } from '../../../globals';
+import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { StyleSheet, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import { Typography } from '../../../components/atoms';
+import PressableWithFeedback from '../../../components/PressableWithFeedback';
+import { sizes } from '../../../globals';
+import { useExpenseTrackerStore } from '../../../store/expenseTrackerStore';
+import { TAccount } from '../../../types';
 
 const RenderAccount = (prop: TAccount) => {
   const theme = useTheme();
   const { t } = useTranslation();
+  const selectAccount = useExpenseTrackerStore(state => state.selectItem);
+  const deselectAccount = useExpenseTrackerStore(state => state.deselectItem);
+  const getSelectedItemsCount = useExpenseTrackerStore(
+    state => state.getSelectedItemsCount,
+  );
+
+  const toggleSelection = useCallback(() => {
+    if (getSelectedItemsCount('account') === 0) return;
+    if (prop.selected) {
+      deselectAccount('account', prop.id);
+    } else {
+      selectAccount('account', prop.id);
+    }
+  }, [deselectAccount, selectAccount, prop, getSelectedItemsCount]);
+
+  const onLongPress = useCallback(() => {
+    if (getSelectedItemsCount('account') > 0) return;
+    if (prop.selected) {
+      deselectAccount('account', prop.id);
+    } else {
+      selectAccount('account', prop.id);
+    }
+  }, [deselectAccount, selectAccount, prop, getSelectedItemsCount]);
+
+  if (!prop.id) return null;
   return (
-    <View
+    <PressableWithFeedback
+      onPress={toggleSelection}
+      onLongPress={onLongPress}
       style={[
         styles.card,
         {
-          backgroundColor: theme.colors.surfaceVariant,
+          backgroundColor: prop.selected
+            ? theme.colors.surfaceDisabled
+            : theme.colors.surfaceVariant,
         },
       ]}
     >
@@ -23,7 +54,7 @@ const RenderAccount = (prop: TAccount) => {
         <Typography>{t('tracker.availableBalance')}</Typography>
         <Typography>{prop.initialBalance ?? 0}</Typography>
       </View>
-    </View>
+    </PressableWithFeedback>
   );
 };
 

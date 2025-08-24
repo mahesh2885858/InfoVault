@@ -30,7 +30,7 @@ const AccountsHeader = () => {
               size={25}
               color={theme.colors.onBackground}
             />
-            {/* <HeaderRight /> */}
+            <HeaderRight />
           </View>
         </View>
       )}

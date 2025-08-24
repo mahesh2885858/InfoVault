@@ -22,26 +22,20 @@ type TAddItemParams =
       item: TIncome;
     };
 
+type TItemType = 'account' | 'category' | 'expense' | 'income';
+
 type TExpenseTrackerStore = {
   accounts: TAccount[];
   categories: TCategory[];
   expenses: TExpense[];
   incomes: TIncome[];
   addItem: (params: TAddItemParams) => void;
-  removeItem: (
-    type: 'account' | 'category' | 'expense' | 'income',
-    itemId: string,
-  ) => void;
+  removeItems: (type: TItemType, itemIds: string[]) => void;
   updateItem: (params: TAddItemParams) => void;
-  selectItem: (
-    type: 'account' | 'category' | 'expense' | 'income',
-    itemId: string,
-  ) => void;
-  deselectItem: (
-    type: 'account' | 'category' | 'expense' | 'income',
-    itemId: string,
-  ) => void;
-  deselectAll: (type: 'account' | 'category' | 'expense' | 'income') => void;
+  selectItem: (type: TItemType, itemId: string) => void;
+  deselectItem: (type: TItemType, itemId: string) => void;
+  deselectAll: (type: TItemType) => void;
+  getSelectedItemsCount: (type: TItemType) => number;
 };
 const DEFAULT_CATEGORY = {
   id: DEFAULT_CATEGORY_ID,
@@ -49,7 +43,7 @@ const DEFAULT_CATEGORY = {
 };
 export const useExpenseTrackerStore = create(
   persist<TExpenseTrackerStore>(
-    set => {
+    (set, get) => {
       return {
         accounts: [],
         categories: [DEFAULT_CATEGORY],
@@ -81,26 +75,32 @@ export const useExpenseTrackerStore = create(
               console.warn('Invalid type for addItem');
           }
         },
-        removeItem: (type, itemId) => {
+        removeItems: (type, itemIds) => {
           switch (type) {
             case 'account':
               set(state => ({
-                accounts: state.accounts.filter(acc => acc.id !== itemId),
+                accounts: state.accounts.filter(
+                  acc => !itemIds.includes(acc.id),
+                ),
               }));
               break;
             case 'category':
               set(state => ({
-                categories: state.categories.filter(cat => cat.id !== itemId),
+                categories: state.categories.filter(
+                  cat => !itemIds.includes(cat.id),
+                ),
               }));
               break;
             case 'expense':
               set(state => ({
-                expenses: state.expenses.filter(exp => exp.id !== itemId),
+                expenses: state.expenses.filter(
+                  exp => !itemIds.includes(exp.id),
+                ),
               }));
               break;
             case 'income':
               set(state => ({
-                incomes: state.incomes.filter(inc => inc.id !== itemId),
+                incomes: state.incomes.filter(inc => !itemIds.includes(inc.id)),
               }));
               break;
             default:
@@ -217,7 +217,7 @@ export const useExpenseTrackerStore = create(
               console.warn('Invalid type for deselectItem');
           }
         },
-        deselectAll: (type: 'account' | 'category' | 'expense' | 'income') => {
+        deselectAll: type => {
           switch (type) {
             case 'account':
               set(state => ({
@@ -254,6 +254,21 @@ export const useExpenseTrackerStore = create(
             default:
               console.warn('Invalid type for deselectAll');
           }
+        },
+        getSelectedItemsCount: type => {
+          switch (type) {
+            case 'account':
+              return get().accounts.filter(acc => acc.selected).length;
+            case 'category':
+              return get().categories.filter(cat => cat.selected).length;
+            case 'expense':
+              return get().expenses.filter(exp => exp.selected).length;
+            case 'income':
+              return get().incomes.filter(inc => inc.selected).length;
+            default:
+              break;
+          }
+          return 0;
         },
       };
     },
