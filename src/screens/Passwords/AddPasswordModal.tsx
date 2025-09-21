@@ -239,7 +239,6 @@ const AddPasswordModal = (props: Props) => {
                 styles.cardText,
                 {
                   color: theme.colors.onSurfaceVariant,
-                  borderColor: theme.colors.outline,
                 },
               ]}
               placeholderTextColor={PlaceholderTextColor}
@@ -260,7 +259,6 @@ const AddPasswordModal = (props: Props) => {
                 styles.cardText,
                 {
                   color: theme.colors.onSurfaceVariant,
-                  borderColor: theme.colors.outline,
                 },
               ]}
               placeholderTextColor={PlaceholderTextColor}
@@ -284,7 +282,6 @@ const AddPasswordModal = (props: Props) => {
                   { paddingRight: 50 },
                   {
                     color: theme.colors.onSurfaceVariant,
-                    borderColor: theme.colors.outline,
                   },
                 ]}
                 placeholderTextColor={PlaceholderTextColor}
@@ -335,8 +332,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     padding: 10,
     borderRadius: 5,
-    borderWidth: 1,
-    borderColor: 'text-primary',
   },
   buttonsBox: {
     flexDirection: 'row',
@@ -428,7 +423,7 @@ const styles = StyleSheet.create({
   },
   eyeIcon: {
     position: 'absolute',
-    bottom: 7,
+    bottom: 10,
     right: 10,
   },
   switch: {

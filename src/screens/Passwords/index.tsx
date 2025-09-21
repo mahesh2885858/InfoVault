@@ -5,7 +5,7 @@ import { BackHandler, StatusBar, StyleSheet, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import Fab from '../../components/Fab';
 import Container from '../../components/atoms/Container';
-import { DEFAULT_PROFILE_ID } from '../../constants';
+import { DEFAULT_PROFILE_ID, HOME_PROFILE_ID } from '../../constants';
 import { useMiscStore } from '../../store/miscStore';
 import { usePasswordsStore } from '../../store/passwordStore';
 import { useProfileStore } from '../../store/profileStore';
@@ -13,9 +13,12 @@ import { TPassword } from '../../types';
 import AddPasswordModal from './AddPasswordModal';
 import PasswordHeader from './PasswordHeader';
 import RenderPassword from './RenderPassword';
+import Typography from '../../components/atoms/Typography';
+import { useTranslation } from 'react-i18next';
 
 const Passwords = () => {
   const [visible, setVisibility] = useState(false);
+  const { t } = useTranslation();
   const theme = useTheme();
   const listRef = useRef<FlashListRef<TPassword>>(null);
   const selectedPasswords = usePasswordsStore(state => state.selectedPasswords);
@@ -24,6 +27,9 @@ const Passwords = () => {
   const focusedId = usePasswordsStore(state => state.focusedPassword);
   const selectedProfile = useProfileStore(state => state.selectedProfileId);
   const search = useMiscStore(state => state.search);
+  const selectProfileForAddingANewRecord = useProfileStore(
+    state => state.selectProfileForAddingANewRecord,
+  );
   const passwordsToRender = passwords
     .filter(
       password =>
@@ -80,19 +86,51 @@ const Passwords = () => {
       <View style={styles.header}>
         <PasswordHeader />
       </View>
-      <FlashList
-        ref={listRef}
-        data={passwordsToRender}
-        contentContainerStyle={styles.cardContainer}
-        renderItem={item => {
-          listRef.current?.prepareForLayoutAnimationRender();
-          return <RenderPassword {...item.item} />;
-        }}
-        keyExtractor={item => item.id}
-      />
+      {passwordsToRender.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Typography
+            style={[
+              styles.emptyText,
+              {
+                color: theme.colors.onTertiaryContainer,
+                fontSize: theme.fonts.headlineMedium.fontSize,
+              },
+            ]}
+          >
+            {t('passwords.noPasswords')}
+          </Typography>
+          <Typography
+            style={[
+              styles.emptyText,
+              {
+                color: theme.colors.onTertiaryContainer,
+                fontSize: theme.fonts.bodyLarge.fontSize,
+              },
+            ]}
+          >
+            {t('passwords.noPasswordsDesc')}
+          </Typography>
+        </View>
+      ) : (
+        <FlashList
+          ref={listRef}
+          data={passwordsToRender}
+          contentContainerStyle={styles.cardContainer}
+          renderItem={item => {
+            listRef.current?.prepareForLayoutAnimationRender();
+            return <RenderPassword {...item.item} />;
+          }}
+          keyExtractor={item => item.id}
+        />
+      )}
 
       <Fab
         callBack={() => {
+          selectProfileForAddingANewRecord(
+            selectedProfile === DEFAULT_PROFILE_ID
+              ? HOME_PROFILE_ID
+              : selectedProfile,
+          );
           setVisibility(true);
         }}
       />
@@ -110,7 +148,15 @@ const styles = StyleSheet.create({
     gap: 13,
     paddingBottom: 100,
   },
-
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
   header: {
     paddingVertical: 10,
   },

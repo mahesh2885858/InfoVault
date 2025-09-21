@@ -34,6 +34,8 @@ export default {
     additionalDetails: 'అదనపు వివరాలు',
     debitOrCreditCard: 'డెబిట్/క్రెడిట్ కార్డులు',
     otherCard: 'ఇతర కార్డులు',
+    noCards: 'ఏ కార్డులు కనబడలేదు',
+    noCardsDesc: 'కింద ఉన్న చిహ్నాన్ని నొక్కి కార్డులను జోడించండి',
   },
   passwords: {
     title: 'పాస్‌వర్డ్‌లు',
@@ -42,6 +44,8 @@ export default {
     website: 'వెబ్‌సైట్',
     passwordWillBeSavedIn: 'పాస్‌వర్డ్ ఇందులో సేవ్ చేయబడుతుంది',
     passwordInputError: 'ఇది 3 అక్షరాలకు మించి ఉండాలి మరియు ఖాళీగా ఉండకూడదు',
+    noPasswords: 'ఏ పాస్‌వర్డ్లు కనబడలేదు',
+    noPasswordsDesc: 'కింద ఉన్న చిహ్నాన్ని నొక్కి పాస్‌వర్డ్లను జోడించండి',
   },
   profiles: {
     title: 'ప్రొఫైళ్ళు',
