@@ -8,7 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AddCardModal from '../../components/Card/AddCardModal';
 import ExpandableFab from '../../components/ExpandableFab';
 import Container from '../../components/atoms/Container';
-import { DEFAULT_PROFILE_ID } from '../../constants';
+import { DEFAULT_PROFILE_ID, HOME_PROFILE_ID } from '../../constants';
 import { useCardStore } from '../../store/cardStore';
 import { useMiscStore } from '../../store/miscStore';
 import { useProfileStore } from '../../store/profileStore';
@@ -33,6 +33,9 @@ const Cards = () => {
   const listRef = useRef<FlashListRef<TCard>>(null);
   const selectedProfile = useProfileStore(state => state.selectedProfileId);
   const search = useMiscStore(state => state.search);
+  const selectProfileForAddingANewRecord = useProfileStore(
+    state => state.selectProfileForAddingANewRecord,
+  );
   const cardsToRender = cards
     .filter(
       card =>
@@ -110,9 +113,19 @@ const Cards = () => {
 
       <ExpandableFab
         onFirstAction={() => {
+          selectProfileForAddingANewRecord(
+            selectedProfile === DEFAULT_PROFILE_ID
+              ? HOME_PROFILE_ID
+              : selectedProfile,
+          );
           setVisibility(true);
         }}
         onSecondAction={() => {
+          selectProfileForAddingANewRecord(
+            selectedProfile === DEFAULT_PROFILE_ID
+              ? HOME_PROFILE_ID
+              : selectedProfile,
+          );
           setRenderOtherModal(true);
         }}
         firstLabel={t('cards.debitOrCreditCard')}
