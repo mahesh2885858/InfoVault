@@ -35,6 +35,8 @@ export default {
     additionalDetails: 'Additional Details',
     debitOrCreditCard: 'Debit/Credit Cards',
     otherCard: 'Other Cards',
+    noCards: 'No cards found',
+    noCardsDesc: 'Add cards by pressing the icon below',
   },
   passwords: {
     title: 'Passwords',
@@ -44,6 +46,8 @@ export default {
     passwordWillBeSavedIn: 'Password will be saved in',
     passwordInputError:
       'It should be more than 3 characters and can not be empty',
+    noPasswords: 'No passwords found',
+    noPasswordsDesc: 'Add Passwords by pressing the icon below',
   },
   profiles: {
     title: 'Profiles',

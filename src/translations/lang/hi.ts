@@ -34,6 +34,8 @@ export default {
     additionalDetails: 'अतिरिक्त विवरण',
     debitOrCreditCard: 'डेबिट/क्रेडिट कार्ड',
     otherCard: 'अन्य कार्ड',
+    noCards: 'कोई कार्ड नहीं मिला',
+    noCardsDesc: 'नीचे दिए गए आइकन पर दबाकर कार्ड जोड़ें',
   },
   passwords: {
     title: 'पासवर्ड',
@@ -42,6 +44,8 @@ export default {
     website: 'वेबसाइट',
     passwordWillBeSavedIn: 'पासवर्ड इसमें सहेजा जाएगा',
     passwordInputError: 'यह 3 अक्षरों से अधिक होना चाहिए और खाली नहीं हो सकता',
+    noPasswords: 'कोई पासवर्ड नहीं मिला',
+    noPasswordsDesc: 'नीचे दिए गए आइकन पर दबाकर पासवर्ड जोड़ें',
   },
   profiles: {
     title: 'प्रोफाइल',

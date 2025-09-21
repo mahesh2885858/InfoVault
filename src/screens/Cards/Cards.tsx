@@ -18,6 +18,7 @@ import RenderCard from './RenderCard';
 import AddOtherCardModal from '../../components/Card/AddOtherCardModal';
 import RenderOtherCard from './RenderOtherCard';
 import { useTranslation } from 'react-i18next';
+import Typography from '../../components/atoms/Typography';
 
 const Cards = () => {
   const [visible, setVisibility] = useState(false);
@@ -95,22 +96,48 @@ const Cards = () => {
     >
       <StatusBar backgroundColor={theme.colors.background} />
       <CardHeaders />
-      <FlashList
-        extraData={focusedId}
-        data={cardsToRender}
-        contentContainerStyle={styles.cardConatiner}
-        renderItem={item => {
-          listRef.current?.prepareForLayoutAnimationRender();
-          return item.item.type === 'other' ? (
-            <RenderOtherCard card={item.item} listRef={listRef} />
-          ) : (
-            <RenderCard listRef={listRef} card={item.item} />
-          );
-        }}
-        ref={listRef}
-        keyExtractor={item => item.id || item.cardNumber}
-      />
-
+      {cardsToRender.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Typography
+            style={[
+              styles.emptyText,
+              {
+                color: theme.colors.onTertiaryContainer,
+                fontSize: theme.fonts.headlineMedium.fontSize,
+              },
+            ]}
+          >
+            {t('cards.noCards')}
+          </Typography>
+          <Typography
+            style={[
+              styles.emptyText,
+              {
+                color: theme.colors.onTertiaryContainer,
+                fontSize: theme.fonts.bodyLarge.fontSize,
+              },
+            ]}
+          >
+            {t('cards.noCardsDesc')}
+          </Typography>
+        </View>
+      ) : (
+        <FlashList
+          extraData={focusedId}
+          data={cardsToRender}
+          contentContainerStyle={styles.cardContainer}
+          renderItem={item => {
+            listRef.current?.prepareForLayoutAnimationRender();
+            return item.item.type === 'other' ? (
+              <RenderOtherCard card={item.item} listRef={listRef} />
+            ) : (
+              <RenderCard listRef={listRef} card={item.item} />
+            );
+          }}
+          ref={listRef}
+          keyExtractor={item => item.id || item.cardNumber}
+        />
+      )}
       <ExpandableFab
         onFirstAction={() => {
           selectProfileForAddingANewRecord(
@@ -149,7 +176,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  cardConatiner: {
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  cardContainer: {
     gap: 5,
     paddingBottom: 100,
     // paddingTop: 0,
