@@ -40,7 +40,7 @@ jobs:
       - name: Decode and save keystore
         run: |
           echo "${{ secrets.RELEASE_STORE_FILE }}" | base64 --decode > android/app/my-upload-key.keystore
-          echo "RELEASE_STORE_FILE=app/my-upload-key.keystore" >> $GITHUB_ENV
+          echo "RELEASE_STORE_FILE=my-upload-key.keystore" >> $GITHUB_ENV
           echo "RELEASE_KEY_ALIAS=${{ secrets.RELEASE_KEY_ALIAS }}" >> $GITHUB_ENV
           echo "RELEASE_STORE_PASSWORD=${{ secrets.RELEASE_STORE_PASSWORD }}" >> $GITHUB_ENV
           echo "RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}" >> $GITHUB_ENV
