@@ -14,7 +14,7 @@ export const validateImportedData = (data: TProps): boolean => {
   if (data.cards && data.cards.length > 0) {
     data.cards.forEach(card => {
       if (card.type === 'other') {
-        if (!card.cardName || !card.cardNumber || !card.otherDetails) {
+        if (!card.cardName || !card.cardNumber) {
           console.log('invalid other card data');
           r = false;
         }
